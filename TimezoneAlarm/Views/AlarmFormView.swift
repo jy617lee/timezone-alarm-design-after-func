@@ -263,6 +263,9 @@ struct AlarmFormView: View {
             viewModel.addAlarm(alarm)
         }
         
+        // 테스트용: 5초 후 알람 실행
+        viewModel.scheduleTestAlarm(alarm)
+        
         dismiss()
     }
     

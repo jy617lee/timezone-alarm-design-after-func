@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Alarm: Identifiable, Codable {
+struct Alarm: Identifiable, Codable, Equatable {
     let id: UUID
     var name: String
     var hour: Int
@@ -63,6 +63,11 @@ struct Alarm: Identifiable, Codable {
             return formatter.string(from: date)
         }
         return "\(hour):\(String(format: "%02d", minute))"
+    }
+    
+    // Equatable 구현
+    static func == (lhs: Alarm, rhs: Alarm) -> Bool {
+        lhs.id == rhs.id
     }
 }
 

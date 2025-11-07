@@ -10,6 +10,8 @@ import SwiftUI
 struct ContentView: View {
     @State private var viewModel = AlarmViewModel()
     @State private var showAlarmForm = false
+    @State private var showAlarmAlert = false
+    @EnvironmentObject var notificationDelegate: NotificationDelegate
     
     var body: some View {
         NavigationView {
@@ -71,6 +73,31 @@ struct ContentView: View {
                     .sheet(isPresented: $showAlarmForm) {
                         AlarmFormView(viewModel: viewModel)
                     }
+            }
+        }
+        .onAppear {
+            // 앱이 포그라운드로 올 때 알람 재스케줄링 (타임존 변경 대응)
+            viewModel.rescheduleAllAlarms()
+        }
+        .onChange(of: viewModel.activeAlarm) { oldValue, newValue in
+            if newValue != nil {
+                print("🔔 알람 알림 화면 표시: \(newValue?.name ?? "Unknown")")
+                showAlarmAlert = true
+            }
+        }
+        .onChange(of: notificationDelegate.activeAlarm) { oldValue, newValue in
+            if newValue != nil {
+                print("🔔 알림에서 알람 실행: \(newValue?.name ?? "Unknown")")
+                showAlarmAlert = true
+            }
+        }
+        .fullScreenCover(isPresented: $showAlarmAlert) {
+            if let alarm = viewModel.activeAlarm ?? notificationDelegate.activeAlarm {
+                AlarmAlertView(alarm: alarm) {
+                    viewModel.activeAlarm = nil
+                    notificationDelegate.activeAlarm = nil
+                    showAlarmAlert = false
+                }
             }
         }
     }

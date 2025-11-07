@@ -8,8 +8,11 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 @Observable
 class AlarmViewModel {
+    // 테스트용: 5초 후 실행될 알람
+    var activeAlarm: Alarm? = nil
     var alarms: [Alarm] = [] {
         didSet {
             // 알람이 변경될 때마다 저장
@@ -22,6 +25,29 @@ class AlarmViewModel {
     init() {
         // 저장된 알람 로드
         loadAlarms()
+        
+        // 타임존 변경 감지
+        NotificationCenter.default.addObserver(
+            forName: .NSSystemTimeZoneDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            print("🕐 시스템 타임존 변경 감지 - 알람 재스케줄링")
+            Task { @MainActor in
+                self?.rescheduleAllAlarms()
+            }
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // 모든 알람 재스케줄링 (타임존 변경 시)
+    func rescheduleAllAlarms() {
+        for alarm in alarms where alarm.isEnabled {
+            AlarmScheduler.shared.scheduleTestAlarm(alarm)
+        }
     }
     
     // 저장된 알람 로드
@@ -109,6 +135,11 @@ class AlarmViewModel {
         if let index = alarms.firstIndex(where: { $0.id == alarm.id }) {
             alarms[index] = alarm
         }
+    }
+    
+    // 테스트용: 5초 후 알람 실행 (로컬 알림 사용)
+    func scheduleTestAlarm(_ alarm: Alarm) {
+        AlarmScheduler.shared.scheduleTestAlarm(alarm)
     }
 }
 
