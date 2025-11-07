@@ -9,7 +9,13 @@ import SwiftUI
 
 struct AlarmListView: View {
     @Bindable var viewModel: AlarmViewModel
+    @Binding var showAlarmForm: Bool
     @State private var editMode: EditMode = .inactive
+    
+    init(viewModel: AlarmViewModel, showAlarmForm: Binding<Bool> = .constant(false)) {
+        self.viewModel = viewModel
+        self._showAlarmForm = showAlarmForm
+    }
     
     var body: some View {
         List {

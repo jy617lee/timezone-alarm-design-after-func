@@ -73,5 +73,17 @@ class AlarmViewModel {
             alarms[index].sortOrder = index
         }
     }
+    
+    func addAlarm(_ alarm: Alarm) {
+        var newAlarm = alarm
+        newAlarm.sortOrder = alarms.count
+        alarms.append(newAlarm)
+    }
+    
+    func updateAlarm(_ alarm: Alarm) {
+        if let index = alarms.firstIndex(where: { $0.id == alarm.id }) {
+            alarms[index] = alarm
+        }
+    }
 }
 

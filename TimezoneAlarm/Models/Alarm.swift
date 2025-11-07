@@ -16,6 +16,7 @@ struct Alarm: Identifiable, Codable {
     var countryName: String
     var countryFlag: String
     var selectedWeekdays: Set<Int> // 1=Sunday, 2=Monday, ..., 7=Saturday
+    var selectedDate: Date? // 날짜 선택 (반복과 상호배타적)
     var isEnabled: Bool
     var createdAt: Date
     var sortOrder: Int // 드래그 앤 드롭으로 변경된 순서
@@ -29,6 +30,7 @@ struct Alarm: Identifiable, Codable {
         countryName: String,
         countryFlag: String,
         selectedWeekdays: Set<Int> = [],
+        selectedDate: Date? = nil,
         isEnabled: Bool = true,
         createdAt: Date = Date(),
         sortOrder: Int = 0
@@ -41,6 +43,7 @@ struct Alarm: Identifiable, Codable {
         self.countryName = countryName
         self.countryFlag = countryFlag
         self.selectedWeekdays = selectedWeekdays
+        self.selectedDate = selectedDate
         self.isEnabled = isEnabled
         self.createdAt = createdAt
         self.sortOrder = sortOrder
