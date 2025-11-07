@@ -65,6 +65,18 @@ This project is an iOS app for managing alarms across multiple timezones. Users 
 
 ## Development Workflow
 
+**GitHub Issue-Based Workflow**
+1. When a GitHub issue is provided:
+   - Create a branch named `issue-{number}` (e.g., `issue-1`, `issue-2`)
+   - Work on the issue in that branch
+   - Include issue number in commit messages (e.g., `feat: 홈 화면 구현 #1`)
+   - Use `Closes #1` or `Fixes #1` in commit body to auto-link and close the issue
+
+2. When user says "PR" or requests a pull request:
+   - Create a pull request with the issue number linked in the title (e.g., `feat: 홈 화면 구현 #1`)
+   - Include `Closes #1` in the PR description to automatically close the issue when merged
+   - Push the branch and create the PR
+
 **Test-Driven Development (TDD)**
 1. Write unit tests first for each feature
 2. Implement the feature to make tests pass
