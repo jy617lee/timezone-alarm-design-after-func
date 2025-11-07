@@ -8,13 +8,68 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 @Observable
 class AlarmViewModel {
-    var alarms: [Alarm] = []
+    // 테스트용: 5초 후 실행될 알람
+    var activeAlarm: Alarm? = nil
+    var alarms: [Alarm] = [] {
+        didSet {
+            // 알람이 변경될 때마다 저장
+            saveAlarms()
+        }
+    }
+    
+    private let alarmsKey = "savedAlarms"
     
     init() {
-        // 테스트용 샘플 데이터
-        loadSampleData()
+        // 저장된 알람 로드
+        loadAlarms()
+        
+        // 앱 시작 시에는 스케줄링하지 않음 (알람 생성/수정 시에만 스케줄링)
+        // 타임존 변경 시에만 재스케줄링
+        
+        // 타임존 변경 감지
+        NotificationCenter.default.addObserver(
+            forName: .NSSystemTimeZoneDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            print("🕐 시스템 타임존 변경 감지 - 알람 재스케줄링")
+            Task { @MainActor in
+                self?.rescheduleAllAlarms()
+            }
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // 모든 알람 재스케줄링 (타임존 변경 시)
+    func rescheduleAllAlarms() {
+        print("🔄 모든 알람 재스케줄링 시작 (활성화된 알람: \(alarms.filter { $0.isEnabled }.count)개)")
+        for alarm in alarms where alarm.isEnabled {
+            AlarmScheduler.shared.scheduleTestAlarm(alarm)
+        }
+    }
+    
+    // 저장된 알람 로드
+    private func loadAlarms() {
+        guard let data = UserDefaults.standard.data(forKey: alarmsKey),
+              let decoded = try? JSONDecoder().decode([Alarm].self, from: data) else {
+            // 저장된 데이터가 없으면 빈 배열로 시작 (샘플 데이터 로드하지 않음)
+            alarms = []
+            return
+        }
+        alarms = decoded
+    }
+    
+    // 알람 저장
+    private func saveAlarms() {
+        if let encoded = try? JSONEncoder().encode(alarms) {
+            UserDefaults.standard.set(encoded, forKey: alarmsKey)
+        }
     }
     
     private func loadSampleData() {
@@ -58,11 +113,23 @@ class AlarmViewModel {
     
     func toggleAlarm(_ alarm: Alarm) {
         if let index = alarms.firstIndex(where: { $0.id == alarm.id }) {
+            let wasEnabled = alarms[index].isEnabled
             alarms[index].isEnabled.toggle()
+            
+            // 알람이 비활성화되면 스케줄링 취소
+            if wasEnabled && !alarms[index].isEnabled {
+                AlarmScheduler.shared.cancelAlarm(alarms[index])
+            } else if !wasEnabled && alarms[index].isEnabled {
+                // 알람이 활성화되면 스케줄링
+                AlarmScheduler.shared.scheduleTestAlarm(alarms[index])
+            }
         }
     }
     
     func deleteAlarm(_ alarm: Alarm) {
+        // 알림 스케줄링 취소
+        AlarmScheduler.shared.cancelAlarm(alarm)
+        // 알람 삭제
         alarms.removeAll { $0.id == alarm.id }
     }
     
@@ -78,12 +145,29 @@ class AlarmViewModel {
         var newAlarm = alarm
         newAlarm.sortOrder = alarms.count
         alarms.append(newAlarm)
+        
+        // 알람이 활성화되어 있으면 스케줄링
+        if newAlarm.isEnabled {
+            AlarmScheduler.shared.scheduleTestAlarm(newAlarm)
+        }
     }
     
     func updateAlarm(_ alarm: Alarm) {
         if let index = alarms.firstIndex(where: { $0.id == alarm.id }) {
+            let oldAlarm = alarms[index]
             alarms[index] = alarm
+            
+            // 기존 알림 취소 후 재스케줄링
+            AlarmScheduler.shared.cancelAlarm(oldAlarm)
+            if alarm.isEnabled {
+                AlarmScheduler.shared.scheduleTestAlarm(alarm)
+            }
         }
+    }
+    
+    // 테스트용: 5초 후 알람 실행 (로컬 알림 사용)
+    func scheduleTestAlarm(_ alarm: Alarm) {
+        AlarmScheduler.shared.scheduleTestAlarm(alarm)
     }
 }
 

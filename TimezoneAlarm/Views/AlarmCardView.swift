@@ -83,18 +83,41 @@ struct AlarmCardView: View {
                         .foregroundColor(.secondary)
                 }
                 
-                // 요일 표시
-                HStack(spacing: 8) {
-                    ForEach(Array(zip(weekdays, weekdayIndices)), id: \.1) { weekday, index in
-                        Text(weekday)
+                // 날짜 또는 요일 표시
+                if let selectedDate = alarm.selectedDate {
+                    // 날짜가 선택된 경우
+                    HStack(spacing: 8) {
+                        Image(systemName: "calendar")
                             .font(.caption)
-                            .fontWeight(.semibold)
-                            .foregroundColor(alarm.selectedWeekdays.contains(index) ? .white : .secondary)
-                            .frame(width: 28, height: 28)
-                            .background(
-                                Circle()
-                                    .fill(alarm.selectedWeekdays.contains(index) ? Color.accentColor : Color.clear)
-                            )
+                            .foregroundColor(.secondary)
+                        Text(formatDate(selectedDate))
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                } else if !alarm.selectedWeekdays.isEmpty {
+                    // 요일이 선택된 경우
+                    HStack(spacing: 8) {
+                        ForEach(Array(zip(weekdays, weekdayIndices)), id: \.1) { weekday, index in
+                            Text(weekday)
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(alarm.selectedWeekdays.contains(index) ? .white : .secondary)
+                                .frame(width: 28, height: 28)
+                                .background(
+                                    Circle()
+                                        .fill(alarm.selectedWeekdays.contains(index) ? Color.accentColor : Color.clear)
+                                )
+                        }
+                    }
+                } else {
+                    // 날짜도 요일도 선택되지 않은 경우
+                    HStack(spacing: 8) {
+                        Image(systemName: "clock")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Text("Once")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
                 }
             }
@@ -130,6 +153,13 @@ struct AlarmCardView: View {
             )
         }
         .clipped()
+    }
+    
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter.string(from: date)
     }
 }
 
