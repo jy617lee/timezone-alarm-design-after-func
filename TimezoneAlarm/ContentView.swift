@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var viewModel = AlarmViewModel()
+    @State private var showAlarmForm = false
     
     var body: some View {
         NavigationView {
@@ -34,7 +35,7 @@ struct ContentView: View {
                     
                     // Add New Alarm 버튼
                     Button(action: {
-                        // TODO: Add alarm action
+                        showAlarmForm = true
                     }) {
                         Text("Add New Alarm")
                             .font(.headline)
@@ -51,10 +52,25 @@ struct ContentView: View {
                 }
                 .padding()
                 .navigationTitle("Alarms")
+                .sheet(isPresented: $showAlarmForm) {
+                    AlarmFormView(viewModel: viewModel)
+                }
             } else {
                 // Alarm List
-                AlarmListView(viewModel: viewModel)
+                AlarmListView(viewModel: viewModel, showAlarmForm: $showAlarmForm)
                     .navigationTitle("Alarms")
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                showAlarmForm = true
+                            }) {
+                                Image(systemName: "plus")
+                            }
+                        }
+                    }
+                    .sheet(isPresented: $showAlarmForm) {
+                        AlarmFormView(viewModel: viewModel)
+                    }
             }
         }
     }
