@@ -3,202 +3,175 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2375AB8C5E354FA28371D34D56E10009 /* TimezoneAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDABCD03BF5C41C195CB6EEEC2ED1A74 /* TimezoneAlarmApp.swift */; };
-		F08E1A562E3040428A774B50DEAFC40A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55797E6E54043B0911ABCA6A8B15218 /* ContentView.swift */; };
-		A253E6983D0C48019337B898177BC99A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A409738559074C4F87F747A947CEC644 /* Info.plist */; };
-		35A2DF6A9847441F973516449E315643 /* TimezoneAlarmAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ECF951F50454BD5BA38F550A8D85310 /* TimezoneAlarmAppTests.swift */; };
+		51C503CA6D2F46F88D80A5DF /* TimezoneAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB57D6CC548EA702320A886 /* TimezoneAlarmApp.swift */; };
+		9BCFF78819A255F7ECC7C92C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB581C9CBC9D09BF2208EFC /* ContentView.swift */; };
+		C44098253B5754E1A1CEA007 /* TimezoneAlarmAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 564C6309D5D3FC8B7E05E25F /* TimezoneAlarmAppTests.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		44DB57A8F03B23B69C034BEF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CC2C981CACCA30FFE0C4517A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 26C790505A4A5E14A0448590;
+			remoteInfo = TimezoneAlarm;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
-		EDABCD03BF5C41C195CB6EEEC2ED1A74 /* TimezoneAlarmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneAlarmApp.swift; sourceTree = "<group>"; };
-		A55797E6E54043B0911ABCA6A8B15218 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		A409738559074C4F87F747A947CEC644 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		808893489D574CD78CEDCB64511773B3 /* TimezoneAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimezoneAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6ECF951F50454BD5BA38F550A8D85310 /* TimezoneAlarmAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneAlarmAppTests.swift; sourceTree = "<group>"; };
-		3123342453974951B611070CC80B2D17 /* TimezoneAlarmTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimezoneAlarmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		564C6309D5D3FC8B7E05E25F /* TimezoneAlarmAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneAlarmAppTests.swift; sourceTree = "<group>"; };
+		5D25D70292A40C0AA7B7CE59 /* TimezoneAlarm.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TimezoneAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7BB57D6CC548EA702320A886 /* TimezoneAlarmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneAlarmApp.swift; sourceTree = "<group>"; };
+		BAB581C9CBC9D09BF2208EFC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C9280CEC28D1C9EB1F6C08BB /* TimezoneAlarmTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TimezoneAlarmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB864B139FD73FF46A788586 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFrameworksBuildPhase section */
-		5A1E1D784CDA4B5A8019845E3F727F46 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		36941729E62A4081BADF2D3D213AE477 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
 /* Begin PBXGroup section */
-		AFFD4A2BB7F94EA99E42A6DA3A339A89 /* TimezoneAlarm */ = {
+		0068AC6726624D66FB8EE254 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EDABCD03BF5C41C195CB6EEEC2ED1A74 /* TimezoneAlarmApp.swift */,
-				A55797E6E54043B0911ABCA6A8B15218 /* ContentView.swift */,
-				A409738559074C4F87F747A947CEC644 /* Info.plist */,
+				5D25D70292A40C0AA7B7CE59 /* TimezoneAlarm.app */,
+				C9280CEC28D1C9EB1F6C08BB /* TimezoneAlarmTests.xctest */,
 			);
-			path = TimezoneAlarm;
+			name = Products;
 			sourceTree = "<group>";
 		};
-		35BBC7D3238A4FB2982B5A13C034C02C /* TimezoneAlarmTests */ = {
+		304F26C114F1E943094D4896 /* TimezoneAlarmTests */ = {
 			isa = PBXGroup;
 			children = (
-				6ECF951F50454BD5BA38F550A8D85310 /* TimezoneAlarmAppTests.swift */,
+				564C6309D5D3FC8B7E05E25F /* TimezoneAlarmAppTests.swift */,
 			);
 			path = TimezoneAlarmTests;
 			sourceTree = "<group>";
 		};
-		853245AF98E6406FA88A608B913277D5 = {
+		4D4F748C6E198882F1BB0967 = {
 			isa = PBXGroup;
 			children = (
-				AFFD4A2BB7F94EA99E42A6DA3A339A89 /* TimezoneAlarm */,
-				35BBC7D3238A4FB2982B5A13C034C02C /* TimezoneAlarmTests */,
+				9EEB44242BB470AE76C4B6AF /* TimezoneAlarm */,
+				304F26C114F1E943094D4896 /* TimezoneAlarmTests */,
+				0068AC6726624D66FB8EE254 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		D6115AB8396C41A6B55EC993200D8288 /* Products */ = {
+		9EEB44242BB470AE76C4B6AF /* TimezoneAlarm */ = {
 			isa = PBXGroup;
 			children = (
-				808893489D574CD78CEDCB64511773B3 /* TimezoneAlarm.app */,
-				3123342453974951B611070CC80B2D17 /* TimezoneAlarmTests.xctest */,
+				BAB581C9CBC9D09BF2208EFC /* ContentView.swift */,
+				CB864B139FD73FF46A788586 /* Info.plist */,
+				7BB57D6CC548EA702320A886 /* TimezoneAlarmApp.swift */,
 			);
-			name = Products;
+			path = TimezoneAlarm;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		808893489D574CD78CEDCB64511773B3 /* TimezoneAlarm */ = {
+		0396BEDD57F6DBC7B3B36485 /* TimezoneAlarmTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 060CFA6434254100A18F5BFC6DC67A2F /* Build configuration list for PBXNativeTarget "TimezoneAlarm" */;
+			buildConfigurationList = 9D722795994490302E808B41 /* Build configuration list for PBXNativeTarget "TimezoneAlarmTests" */;
 			buildPhases = (
-				13C9707851724233865CFCAD12F6ECFB /* Sources */,
-				0CCC30C171AF4982B0235AAA05FAEF1F /* Frameworks */,
-				B5A6143A00774E079FB8446E9C7EED9C /* Resources */,
+				F566001E6DC3C4646BB12D55 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FB49C54ABECDA0C646A6934D /* PBXTargetDependency */,
+			);
+			name = TimezoneAlarmTests;
+			packageProductDependencies = (
+			);
+			productName = TimezoneAlarmTests;
+			productReference = C9280CEC28D1C9EB1F6C08BB /* TimezoneAlarmTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		26C790505A4A5E14A0448590 /* TimezoneAlarm */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 118E8054DF119DBD74443302 /* Build configuration list for PBXNativeTarget "TimezoneAlarm" */;
+			buildPhases = (
+				185D159576A6B5CC4F9F0D6C /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = TimezoneAlarm;
+			packageProductDependencies = (
+			);
 			productName = TimezoneAlarm;
-			productReference = 808893489D574CD78CEDCB64511773B3 /* TimezoneAlarm.app */;
+			productReference = 5D25D70292A40C0AA7B7CE59 /* TimezoneAlarm.app */;
 			productType = "com.apple.product-type.application";
-		};
-		3123342453974951B611070CC80B2D17 /* TimezoneAlarmTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F0702B72612A4ADCBF7866501031C639 /* Build configuration list for PBXNativeTarget "TimezoneAlarmTests" */;
-			buildPhases = (
-				E655BB5B216147CB8F0967EEF72AD76A /* Sources */,
-				17169B5D89744E95BDDF325246A6001C /* Frameworks */,
-				A9960CA9F9EA4358AFF22942E4716215 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F95A8D3B20154981BF3965CEF41F5F4C /* PBXTargetDependency */,
-			);
-			name = TimezoneAlarmTests;
-			productName = TimezoneAlarmTests;
-			productReference = 3123342453974951B611070CC80B2D17 /* TimezoneAlarmTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		85375962ED38442180FC8D2BCE3C526F /* Project object */ = {
+		CC2C981CACCA30FFE0C4517A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1500;
-				TargetAttributes = {
-					808893489D574CD78CEDCB64511773B3 = {
-						CreatedOnToolsVersion = 15.0;
-					};
-					3123342453974951B611070CC80B2D17 = {
-						CreatedOnToolsVersion = 15.0;
-						TestTargetID = 808893489D574CD78CEDCB64511773B3;
-					};
-				};
 			};
-			buildConfigurationList = 1C7665F3D12046F789088087BA5D86B6 /* Build configuration list for PBXProject "TimezoneAlarm" */;
+			buildConfigurationList = 2DC542B08516ED1D02293294 /* Build configuration list for PBXProject "TimezoneAlarm" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				en,
 			);
-			mainGroup = A2930118427E4DA2A6E2C6322D4BC0B9;
-			productRefGroup = 1705CD260FA648FE89BB9F583CF33997 /* Products */;
+			mainGroup = 4D4F748C6E198882F1BB0967;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				808893489D574CD78CEDCB64511773B3 /* TimezoneAlarm */,
-				3123342453974951B611070CC80B2D17 /* TimezoneAlarmTests */,
+				26C790505A4A5E14A0448590 /* TimezoneAlarm */,
+				0396BEDD57F6DBC7B3B36485 /* TimezoneAlarmTests */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		85A2F5C1DA3C41DB9454AB27C0E54A5A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A253E6983D0C48019337B898177BC99A /* Info.plist in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		DE45184298934C098AAB87A5D93F6565 /* Sources */ = {
+		185D159576A6B5CC4F9F0D6C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2375AB8C5E354FA28371D34D56E10009 /* TimezoneAlarmApp.swift in Sources */,
-				F08E1A562E3040428A774B50DEAFC40A /* ContentView.swift in Sources */,
+				9BCFF78819A255F7ECC7C92C /* ContentView.swift in Sources */,
+				51C503CA6D2F46F88D80A5DF /* TimezoneAlarmApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4D777625401545A78D2EB90F3BC81026 /* Sources */ = {
+		F566001E6DC3C4646BB12D55 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35A2DF6A9847441F973516449E315643 /* TimezoneAlarmAppTests.swift in Sources */,
+				C44098253B5754E1A1CEA007 /* TimezoneAlarmAppTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		D3BA7FC70B484697BF4B3681A5DD06F4 /* PBXTargetDependency */ = {
+		FB49C54ABECDA0C646A6934D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 808893489D574CD78CEDCB64511773B3 /* TimezoneAlarm */;
-			targetProxy = A15FAF1C42E649C0942ED2E3C7BF13DF /* PBXContainerItemProxy */;
+			target = 26C790505A4A5E14A0448590 /* TimezoneAlarm */;
+			targetProxy = 44DB57A8F03B23B69C034BEF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		1BDC58AEA81F43D38878BA4603BD43BD /* Debug */ = {
+		18DBE6B8EE2F46F81306507A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -228,14 +201,13 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
 					"$(inherited)",
+					"DEBUG=1",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -244,24 +216,101 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		B5A7315327B94C43BF1A165AC8C43241 /* Release */ = {
+		26111A5CE0E59A7D6B32EC1B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.appTests;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TimezoneAlarm.app/TimezoneAlarm";
+			};
+			name = Release;
+		};
+		2FDFF429C8B066FBD2C96657 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = TimezoneAlarm/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.app;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		36F910E58F7697F7A951AE91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.appTests;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TimezoneAlarm.app/TimezoneAlarm";
+			};
+			name = Debug;
+		};
+		52C17A95A4C78908CBCCF6CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = TimezoneAlarm/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.app;
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B15D880D0711F04EE7652375 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -291,8 +340,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -301,167 +349,47 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		4F4D96C691BC4C86BCB7821B1E6132BA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = TimezoneAlarm/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.app;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 6.0;
-				SWIFT_STRICT_CONCURRENCY = complete;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		7C69F8FCDF3C4BE7B94F1BC712651A66 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = TimezoneAlarm/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.app;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 6.0;
-				SWIFT_STRICT_CONCURRENCY = complete;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		FB83762A211F46CE9EF9E8D44096F2AA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.appTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 6.0;
-				SWIFT_STRICT_CONCURRENCY = complete;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TimezoneAlarm.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TimezoneAlarm";
-			};
-			name = Debug;
-		};
-		F9FA3F510B4D404089AAF45D19D76549 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.appTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 6.0;
-				SWIFT_STRICT_CONCURRENCY = complete;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TimezoneAlarm.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TimezoneAlarm";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		30B5DFB1E54C4B41AED010FACFAD6054 /* Build configuration list for PBXNativeTarget "TimezoneAlarm" */ = {
+		118E8054DF119DBD74443302 /* Build configuration list for PBXNativeTarget "TimezoneAlarm" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F53F938B0B034076BC95B98E099107EF /* Debug */,
-				3BBE419894B84D288937794B43B89216 /* Release */,
+				2FDFF429C8B066FBD2C96657 /* Debug */,
+				52C17A95A4C78908CBCCF6CB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		277A3EC2C8B84CCDA663A61D818B7EA7 /* Build configuration list for PBXNativeTarget "TimezoneAlarmTests" */ = {
+		2DC542B08516ED1D02293294 /* Build configuration list for PBXProject "TimezoneAlarm" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2A173F7D912B416B87F5424856B13279 /* Debug */,
-				46EE3520BC034405A24AC3DD7E2A78A3 /* Release */,
+				18DBE6B8EE2F46F81306507A /* Debug */,
+				B15D880D0711F04EE7652375 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		C536CBC97F3F401783125400D2219285 /* Build configuration list for PBXProject "TimezoneAlarm" */ = {
+		9D722795994490302E808B41 /* Build configuration list for PBXNativeTarget "TimezoneAlarmTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CA242322BE564AD6BDD3466703B38C9C /* Debug */,
-				22454A9BAD6E410EA7131D0C85E216C5 /* Release */,
+				36F910E58F7697F7A951AE91 /* Debug */,
+				26111A5CE0E59A7D6B32EC1B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 85375962ED38442180FC8D2BCE3C526F /* Project object */;
+	rootObject = CC2C981CACCA30FFE0C4517A /* Project object */;
 }
