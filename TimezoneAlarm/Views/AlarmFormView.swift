@@ -257,16 +257,18 @@ struct AlarmFormView: View {
             sortOrder: editingAlarm?.sortOrder ?? viewModel.alarms.count
         )
         
-        if editingAlarm != nil {
-            viewModel.updateAlarm(alarm)
-        } else {
-            viewModel.addAlarm(alarm)
-        }
-        
-        // 테스트용: 5초 후 알람 실행
-        viewModel.scheduleTestAlarm(alarm)
-        
-        dismiss()
+            if editingAlarm != nil {
+                viewModel.updateAlarm(alarm)
+            } else {
+                viewModel.addAlarm(alarm)
+            }
+            
+            // addAlarm/updateAlarm에서 이미 스케줄링 처리됨
+            print("📝 알람 저장 완료: \(alarm.name)")
+            print("   - 날짜: \(alarm.selectedDate?.description ?? "nil")")
+            print("   - 요일: \(alarm.selectedWeekdays)")
+            
+            dismiss()
     }
     
     private func formatDate(_ date: Date) -> String {

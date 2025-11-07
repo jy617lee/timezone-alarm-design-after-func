@@ -16,9 +16,11 @@ final class AlarmScheduler: @unchecked Sendable {
     // 알람 권한 요청
     func requestAuthorization() async -> Bool {
         do {
-            return try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
+            let granted = try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
+            print("🔔 알림 권한 요청 결과: \(granted ? "허용됨" : "거부됨")")
+            return granted
         } catch {
-            print("알람 권한 요청 실패: \(error)")
+            print("❌ 알람 권한 요청 실패: \(error)")
             return false
         }
     }
@@ -28,10 +30,13 @@ final class AlarmScheduler: @unchecked Sendable {
     // 중요: 알람 생성 시점의 로컬 시간대가 아닌, 알람이 실제로 울릴 때의 로컬 시간대를 사용
     // 사용자가 다른 국가로 이동해도 정확한 시간에 알람이 울림
     func scheduleTestAlarm(_ alarm: Alarm) {
+        print("🎯 scheduleTestAlarm 호출됨: \(alarm.name)")
+        
         // 기존 알림 제거
         cancelAlarm(alarm)
         
         let content = createNotificationContent(for: alarm)
+        print("📦 알림 콘텐츠 생성 완료")
         
         // 알람이 설정된 국가의 시간대
         guard let alarmTimezone = TimeZone(identifier: alarm.timezoneIdentifier) else {
@@ -42,6 +47,11 @@ final class AlarmScheduler: @unchecked Sendable {
         let now = Date()
         let calendar = Calendar.current
         
+        // 테스트용: 항상 5초 후에 울리도록 설정 (요일/날짜 선택 여부와 관계없이)
+        // TODO: 실제 배포 시에는 아래 주석 처리하고 원래 로직 사용
+        scheduleSingleAlarm(alarm: alarm, alarmTimezone: alarmTimezone, content: content, calendar: calendar, now: now)
+        
+        /* 실제 배포 시 사용할 로직
         // 반복 요일이 있는 경우
         if !alarm.selectedWeekdays.isEmpty {
             scheduleRepeatingAlarm(alarm: alarm, alarmTimezone: alarmTimezone, content: content, calendar: calendar, now: now)
@@ -52,133 +62,76 @@ final class AlarmScheduler: @unchecked Sendable {
             // 단일 알람 (테스트용: 5초 후 또는 실제 알람 시간)
             scheduleSingleAlarm(alarm: alarm, alarmTimezone: alarmTimezone, content: content, calendar: calendar, now: now)
         }
+        */
     }
     
-    // 반복 요일 알람 스케줄링 (매주 금요일 등)
-    private func scheduleRepeatingAlarm(alarm: Alarm, alarmTimezone: TimeZone, content: UNMutableNotificationContent, calendar: Calendar, now: Date) {
-        // 각 선택된 요일마다 반복 알람 생성
-        for weekday in alarm.selectedWeekdays {
-            // 1. 알람 시간대에서 해당 요일의 알람 시간 계산
-            // 알람 시간대의 현재 시간에서 다음 해당 요일 찾기
-            var alarmComponents = DateComponents()
-            alarmComponents.hour = alarm.hour
-            alarmComponents.minute = alarm.minute
-            alarmComponents.second = 0
-            alarmComponents.weekday = weekday // 1=일요일, 2=월요일, ..., 6=금요일, 7=토요일
-            
-            // 알람 시간대의 현재 시간
-            let alarmTimezoneNow = calendar.dateComponents(in: alarmTimezone, from: now)
-            
-            // 알람 시간대에서 다음 해당 요일 찾기
-            var nextWeekdayComponents = DateComponents()
-            nextWeekdayComponents.year = alarmTimezoneNow.year
-            nextWeekdayComponents.month = alarmTimezoneNow.month
-            nextWeekdayComponents.day = alarmTimezoneNow.day
-            nextWeekdayComponents.hour = alarm.hour
-            nextWeekdayComponents.minute = alarm.minute
-            nextWeekdayComponents.second = 0
-            nextWeekdayComponents.weekday = weekday
-            nextWeekdayComponents.timeZone = alarmTimezone
-            
-            // 알람 시간대에서 해당 요일의 알람 시간을 UTC로 변환
-            if let alarmTimeInTimezone = calendar.date(from: nextWeekdayComponents) {
-                // 오늘이 해당 요일이면 오늘 시간 사용, 아니면 다음 주
-                let targetTime = alarmTimeInTimezone > now ? alarmTimeInTimezone : calendar.date(byAdding: .weekOfYear, value: 1, to: alarmTimeInTimezone) ?? alarmTimeInTimezone
-                scheduleRepeatingWeekdayAlarm(alarm: alarm, weekday: weekday, alarmTimeUTC: targetTime, content: content, alarmTimezone: alarmTimezone)
-            } else {
-                // 오늘 해당 요일이 아니면 다음 주로
-                var nextWeekComponents = nextWeekdayComponents
-                if let tempDate = calendar.date(from: nextWeekdayComponents),
-                   let nextWeek = calendar.date(byAdding: .weekOfYear, value: 1, to: tempDate) {
-                    nextWeekComponents = calendar.dateComponents(in: alarmTimezone, from: nextWeek)
-                    nextWeekComponents.hour = alarm.hour
-                    nextWeekComponents.minute = alarm.minute
-                    nextWeekComponents.second = 0
-                    nextWeekComponents.weekday = weekday
-                    nextWeekComponents.timeZone = alarmTimezone
-                } else {
-                    // 다음 주 계산 실패 시 현재 시간 기준으로 다음 주 계산
-                    if let nextWeek = calendar.date(byAdding: .weekOfYear, value: 1, to: now) {
-                        nextWeekComponents = calendar.dateComponents(in: alarmTimezone, from: nextWeek)
-                        nextWeekComponents.hour = alarm.hour
-                        nextWeekComponents.minute = alarm.minute
-                        nextWeekComponents.second = 0
-                        nextWeekComponents.weekday = weekday
-                        nextWeekComponents.timeZone = alarmTimezone
-                    }
-                }
-                guard let alarmTimeUTC = calendar.date(from: nextWeekComponents) else {
-                    print("⚠️ 요일 알람 시간 생성 실패: weekday=\(weekday)")
-                    continue
-                }
-                scheduleRepeatingWeekdayAlarm(alarm: alarm, weekday: weekday, alarmTimeUTC: alarmTimeUTC, content: content, alarmTimezone: alarmTimezone)
-            }
-        }
-    }
-    
-    // 반복 요일 알람 스케줄링 (각 요일별)
-    // 중요: 알람 시간대의 요일/시간을 항상 유지
-    // 예: 한국 시간 매주 수요일 6시 PM → 미국에 가도 한국 시간 수요일 6시 PM에 울림
-    // 해결: 알람 시간대의 요일/시간을 UTC로 저장하고, 현재 로컬 시간대로 변환하여 스케줄링
-    // 타임존이 바뀔 때마다 재스케줄링하여 항상 알람 시간대 기준으로 정확히 울림
-    private func scheduleRepeatingWeekdayAlarm(alarm: Alarm, weekday: Int, alarmTimeUTC: Date, content: UNMutableNotificationContent, alarmTimezone: TimeZone) {
+    // 공통 헬퍼: 알람 시간대의 시간을 로컬 시간대 DateComponents로 변환
+    private func convertAlarmTimeToLocalComponents(alarm: Alarm, alarmTimezone: TimeZone, date: Date, weekday: Int? = nil) -> DateComponents? {
         let calendar = Calendar.current
-        let localTimezone = TimeZone.current
+        var alarmComponents = calendar.dateComponents(in: alarmTimezone, from: date)
+        alarmComponents.hour = alarm.hour
+        alarmComponents.minute = alarm.minute
+        alarmComponents.second = 0
+        if let weekday = weekday {
+            alarmComponents.weekday = weekday
+        }
+        alarmComponents.timeZone = alarmTimezone
         
-        // 알람 시간대의 요일/시간을 UTC로 저장 (alarmTimeUTC)
-        // 현재 로컬 시간대에서 이 UTC 시간이 몇 시/요일인지 계산
-        let localComponents = calendar.dateComponents(in: localTimezone, from: alarmTimeUTC)
+        guard let alarmTimeUTC = calendar.date(from: alarmComponents) else { return nil }
         
-        // 로컬 시간대에서 알람이 울려야 할 요일/시간
-        // 알람 시간대의 요일/시간(UTC)을 현재 로컬 시간대로 변환
-        var localAlarmComponents = DateComponents()
-        localAlarmComponents.weekday = localComponents.weekday // 로컬 시간대의 요일
-        localAlarmComponents.hour = localComponents.hour // 로컬 시간대의 시간
-        localAlarmComponents.minute = localComponents.minute
-        localAlarmComponents.second = 0
-        
-        // UNCalendarNotificationTrigger는 로컬 시간대를 사용
-        // 타임존이 바뀔 때마다 재스케줄링하면 항상 알람 시간대 기준으로 정확히 울림
-        let trigger = UNCalendarNotificationTrigger(dateMatching: localAlarmComponents, repeats: true)
-        let identifier = "\(alarm.id.uuidString)-weekday-\(weekday)"
-        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-        
-        // 로컬 시간대 정보를 클로저 외부에서 캡처
-        let localHour = localComponents.hour ?? 0
-        let localMinute = localComponents.minute ?? 0
-        let localWeekday = localComponents.weekday ?? weekday
+        // UTC를 로컬 시간대로 변환
+        var localComponents = calendar.dateComponents(in: TimeZone.current, from: alarmTimeUTC)
+        localComponents.second = 0
+        return localComponents
+    }
+    
+    // 반복 요일 알람 스케줄링
+    private func scheduleRepeatingAlarm(alarm: Alarm, alarmTimezone: TimeZone, content: UNMutableNotificationContent, calendar: Calendar, now: Date) {
         let weekdayNames = ["", "일", "월", "화", "수", "목", "금", "토"]
         
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("❌ 반복 알람 스케줄링 실패 (요일 \(weekday)): \(error.localizedDescription)")
+        for weekday in alarm.selectedWeekdays {
+            // 알람 시간대에서 다음 해당 요일 찾기
+            var targetDate = now
+            if let localComponents = convertAlarmTimeToLocalComponents(alarm: alarm, alarmTimezone: alarmTimezone, date: now, weekday: weekday) {
+                // 오늘 해당 요일인지 확인
+                let todayComponents = calendar.dateComponents(in: alarmTimezone, from: now)
+                if todayComponents.weekday == weekday {
+                    // 오늘이 해당 요일이면 오늘 시간 사용
+                    targetDate = now
+                } else {
+                    // 다음 주 해당 요일로
+                    targetDate = calendar.date(byAdding: .weekOfYear, value: 1, to: now) ?? now
+                }
             } else {
-                print("✅ 반복 알람 스케줄링 성공: \(alarm.name) - 매주 \(weekdayNames[weekday])요일")
-                print("   - 알람 시간대: \(alarm.timezoneIdentifier) (\(alarm.countryName))")
-                print("   - 알람 시간 (알람 시간대): \(alarm.hour):\(String(format: "%02d", alarm.minute))")
-                print("   - 로컬 시간대에서 울릴 시간: \(localHour):\(String(format: "%02d", localMinute))")
-                print("   - 로컬 시간대에서 울릴 요일: \(weekdayNames[localWeekday])요일")
+                // 변환 실패 시 다음 주로
+                targetDate = calendar.date(byAdding: .weekOfYear, value: 1, to: now) ?? now
+            }
+            
+            guard let localComponents = convertAlarmTimeToLocalComponents(alarm: alarm, alarmTimezone: alarmTimezone, date: targetDate, weekday: weekday) else {
+                print("⚠️ 요일 알람 시간 생성 실패: weekday=\(weekday)")
+                continue
+            }
+            
+            let trigger = UNCalendarNotificationTrigger(dateMatching: localComponents, repeats: true)
+            let identifier = "\(alarm.id.uuidString)-weekday-\(weekday)"
+            let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error = error {
+                    print("❌ 반복 알람 스케줄링 실패 (요일 \(weekday)): \(error.localizedDescription)")
+                } else {
+                    print("✅ 반복 알람 스케줄링 성공: \(alarm.name) - 매주 \(weekdayNames[weekday])요일")
+                }
             }
         }
     }
     
     // 특정 날짜 알람 스케줄링
     private func scheduleDateAlarm(alarm: Alarm, selectedDate: Date, alarmTimezone: TimeZone, content: UNMutableNotificationContent, calendar: Calendar, now: Date) {
-        // 알람 시간대에서 선택된 날짜의 알람 시간 생성
-        var alarmComponents = calendar.dateComponents(in: alarmTimezone, from: selectedDate)
-        alarmComponents.hour = alarm.hour
-        alarmComponents.minute = alarm.minute
-        alarmComponents.second = 0
-        alarmComponents.timeZone = alarmTimezone
-        
-        guard let alarmTimeUTC = calendar.date(from: alarmComponents) else {
+        guard let localComponents = convertAlarmTimeToLocalComponents(alarm: alarm, alarmTimezone: alarmTimezone, date: selectedDate) else {
             print("⚠️ 날짜 알람 시간 생성 실패")
             return
         }
-        
-        // 로컬 시간대로 변환
-        var localComponents = calendar.dateComponents(in: TimeZone.current, from: alarmTimeUTC)
-        localComponents.second = 0
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: localComponents, repeats: false)
         let request = UNNotificationRequest(identifier: alarm.id.uuidString, content: content, trigger: trigger)
@@ -192,39 +145,148 @@ final class AlarmScheduler: @unchecked Sendable {
         }
     }
     
-    // 단일 알람 스케줄링 (테스트용)
+    // 단일 알람 스케줄링
     private func scheduleSingleAlarm(alarm: Alarm, alarmTimezone: TimeZone, content: UNMutableNotificationContent, calendar: Calendar, now: Date) {
-        // 1. 알람 시간대에서 오늘 날짜의 알람 시간(DateComponents) 생성
-        var alarmComponents = DateComponents()
-        alarmComponents.year = calendar.component(.year, from: now)
-        alarmComponents.month = calendar.component(.month, from: now)
-        alarmComponents.day = calendar.component(.day, from: now)
-        alarmComponents.hour = alarm.hour
-        alarmComponents.minute = alarm.minute
-        alarmComponents.second = 0
-        alarmComponents.timeZone = alarmTimezone
+        // 테스트용: 5초 후에 울리도록 설정
+        let testInterval: TimeInterval = 5.0
         
-        // 2. 알람 시간대의 알람 시간을 UTC Date로 변환
-        guard let alarmTimeUTC = calendar.date(from: alarmComponents) else {
-            print("⚠️ 알람 UTC 시간 생성 실패")
+        print("🔔 단일 알람 스케줄링 시작: \(alarm.name)")
+        print("   - 현재 시간: \(now)")
+        print("   - 5초 후 실행 예정: \(now.addingTimeInterval(testInterval))")
+        
+        // 권한 확인
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            print("📱 알림 권한 상태: \(settings.authorizationStatus.rawValue)")
+            
+            guard settings.authorizationStatus == .authorized else {
+                print("❌ 알림 권한이 없습니다. 권한 상태: \(settings.authorizationStatus.rawValue)")
+                return
+            }
+            
+            // 첫 번째 알림 스케줄링
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: testInterval, repeats: false)
+            let request = UNNotificationRequest(identifier: alarm.id.uuidString, content: content, trigger: trigger)
+            
+            // 트리거 정보 확인
+            if let nextTriggerDate = trigger.nextTriggerDate() {
+                print("   - 트리거 다음 실행 시간: \(nextTriggerDate)")
+                let timeUntilTrigger = nextTriggerDate.timeIntervalSinceNow
+                print("   - 남은 시간: \(String(format: "%.2f", timeUntilTrigger))초")
+            } else {
+                print("   ⚠️ 트리거 다음 실행 시간을 가져올 수 없음 (nil)")
+            }
+            
+            print("📤 첫 번째 알림 요청 전송 중...")
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error = error {
+                    print("❌ 알람 스케줄링 실패: \(error.localizedDescription)")
+                } else {
+                    print("✅ 첫 번째 알람 스케줄링 성공: \(alarm.name)")
+                    
+                    // 백그라운드/종료 상태에서도 작동하도록 체인 알림을 미리 여러 개 예약
+                    // willPresent는 포그라운드에서만 호출되므로, 백그라운드/종료 상태를 위해 미리 예약
+                    print("🔗 체인 알림 미리 예약 시작 (백그라운드/종료 상태 대응)...")
+                    let chainCount = 60 // 60개 예약 (60 * 10초 = 10분)
+                    let chainInterval: TimeInterval = 10.0 // 10초 간격
+                    
+                    var scheduledCount = 0
+                    var failedCount = 0
+                    
+                    for i in 0..<chainCount {
+                        let chainContent = self.createNotificationContent(for: alarm)
+                        // 첫 번째 알림이 5초 후이므로, 체인 알림은 5초 + 10초, 5초 + 20초, ... 형식
+                        let chainTimeInterval = testInterval + chainInterval * Double(i + 1)
+                        let chainTrigger = UNTimeIntervalNotificationTrigger(
+                            timeInterval: chainTimeInterval,
+                            repeats: false
+                        )
+                        let chainIdentifier = "\(alarm.id.uuidString)-chain-\(i)"
+                        let chainRequest = UNNotificationRequest(identifier: chainIdentifier, content: chainContent, trigger: chainTrigger)
+                        
+                        UNUserNotificationCenter.current().add(chainRequest) { chainError in
+                            if let chainError = chainError {
+                                failedCount += 1
+                                print("❌ 체인 알림 \(i) 스케줄링 실패: \(chainError.localizedDescription)")
+                            } else {
+                                scheduledCount += 1
+                                if i < 5 || i == chainCount - 1 {
+                                    // 처음 5개와 마지막 1개만 로그 출력
+                                    print("✅ 체인 알림 \(i) 스케줄링 성공: \(String(format: "%.1f", chainTimeInterval))초 후")
+                                }
+                                if scheduledCount == chainCount {
+                                    print("✅ 체인 알림 미리 예약 완료 (성공: \(scheduledCount)개, 실패: \(failedCount)개)")
+                                }
+                            }
+                        }
+                    }
+                    
+                    // 스케줄링 확인 (약간의 지연 후 확인하여 모든 체인 알림이 추가된 후 확인)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+                            print("📋 대기 중인 알림 개수: \(requests.count)")
+                            
+                            // 해당 알람의 알림만 필터링
+                            let alarmRequests = requests.filter { $0.identifier.hasPrefix(alarm.id.uuidString) }
+                            print("📋 해당 알람의 알림 개수: \(alarmRequests.count)")
+                            
+                            // 첫 번째 알림 확인
+                            if let scheduled = requests.first(where: { $0.identifier == alarm.id.uuidString }) {
+                                print("✅ 첫 번째 알람이 스케줄링되었습니다!")
+                                print("   - ID: \(scheduled.identifier)")
+                                if let timeIntervalTrigger = scheduled.trigger as? UNTimeIntervalNotificationTrigger {
+                                    print("   - 트리거 타입: TimeInterval")
+                                    print("   - 간격: \(timeIntervalTrigger.timeInterval)초")
+                                    if let nextDate = timeIntervalTrigger.nextTriggerDate() {
+                                        let timeUntil = nextDate.timeIntervalSinceNow
+                                        print("   - 다음 실행 시간: \(nextDate)")
+                                        print("   - 남은 시간: \(String(format: "%.2f", timeUntil))초")
+                                    }
+                                }
+                            } else {
+                                print("⚠️ 첫 번째 알람이 스케줄링 목록에 없습니다!")
+                            }
+                            
+                            // 체인 알림 확인 (처음 5개만)
+                            let chainRequests = alarmRequests.filter { $0.identifier.contains("-chain-") }
+                            print("📋 체인 알림 개수: \(chainRequests.count)")
+                            for (index, chainReq) in chainRequests.prefix(5).enumerated() {
+                                if let timeIntervalTrigger = chainReq.trigger as? UNTimeIntervalNotificationTrigger {
+                                    if let nextDate = timeIntervalTrigger.nextTriggerDate() {
+                                        let timeUntil = nextDate.timeIntervalSinceNow
+                                        print("   - 체인 알림 \(index): \(chainReq.identifier) - \(String(format: "%.1f", timeUntil))초 후")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        /* 실제 배포 시 사용할 로직
+        guard let localComponents = convertAlarmTimeToLocalComponents(alarm: alarm, alarmTimezone: alarmTimezone, date: now) else {
+            print("⚠️ 알람 시간 생성 실패")
             return
         }
         
-        // 3. 알람 시간이 이미 지났다면 다음 날로 설정
-        let targetAlarmTimeUTC = alarmTimeUTC > now ? alarmTimeUTC : calendar.date(byAdding: .day, value: 1, to: alarmTimeUTC) ?? alarmTimeUTC
+        // 알람 시간이 이미 지났다면 다음 날로
+        var targetDate = now
+        if let alarmTimeUTC = calendar.date(from: {
+            var comps = calendar.dateComponents(in: alarmTimezone, from: now)
+            comps.hour = alarm.hour
+            comps.minute = alarm.minute
+            comps.second = 0
+            comps.timeZone = alarmTimezone
+            return comps
+        }()), alarmTimeUTC <= now {
+            targetDate = calendar.date(byAdding: .day, value: 1, to: now) ?? now
+        }
         
-        // 4. UTC 기준 interval 계산
-        let timeInterval = targetAlarmTimeUTC.timeIntervalSince(now)
+        guard let finalComponents = convertAlarmTimeToLocalComponents(alarm: alarm, alarmTimezone: alarmTimezone, date: targetDate) else {
+            return
+        }
         
-        // 테스트용: 최소 5초 후에 실행되도록 설정
-        let testInterval = max(5.0, timeInterval)
-        
-        print("🔔 단일 알람 스케줄링: \(alarm.name)")
-        print("   - 알람 시간대: \(alarm.timezoneIdentifier) (\(alarm.countryName))")
-        print("   - 알람 시간 (알람 시간대): \(alarm.hour):\(String(format: "%02d", alarm.minute))")
-        print("   - 실행까지 남은 시간: \(Int(testInterval))초 (\(Int(testInterval / 60))분)")
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: testInterval, repeats: false)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: finalComponents, repeats: false)
         let request = UNNotificationRequest(identifier: alarm.id.uuidString, content: content, trigger: trigger)
         
         UNUserNotificationCenter.current().add(request) { error in
@@ -234,6 +296,7 @@ final class AlarmScheduler: @unchecked Sendable {
                 print("✅ 알람 스케줄링 성공: \(alarm.name)")
             }
         }
+        */
     }
     
     // 알림 콘텐츠 생성
@@ -241,7 +304,27 @@ final class AlarmScheduler: @unchecked Sendable {
         let content = UNMutableNotificationContent()
         content.title = alarm.name
         content.body = "\(alarm.formattedTime) - \(alarm.countryFlag) \(alarm.countryName)"
-        content.sound = .default
+        
+        // 알람 사운드 설정
+        // 백그라운드에서도 소리가 나도록 커스텀 사운드 사용
+        // 백그라운드 오디오와 함께 사용하여 연속 재생 효과
+        if Bundle.main.url(forResource: "alarm", withExtension: "wav") != nil {
+            // 커스텀 사운드 파일 사용 (28.86초, 30초 이하 - 백그라운드 호환)
+            content.sound = UNNotificationSound(named: UNNotificationSoundName("alarm.wav"))
+            print("   - 커스텀 알람 사운드 사용: alarm.wav (백그라운드 호환)")
+        } else {
+            // 폴백: 기본 알람 사운드
+            content.sound = .default
+            print("   ⚠️ alarm.wav 파일을 찾을 수 없어 기본 사운드 사용")
+        }
+        
+        // iOS 15+ Time Sensitive 알림 설정
+        // Do Not Disturb를 우회하고 더 눈에 띄게 표시됨
+        if #available(iOS 15.0, *) {
+            content.interruptionLevel = .timeSensitive
+            print("   - interruptionLevel: .timeSensitive 설정됨")
+        }
+        
         content.userInfo = [
             "alarmId": alarm.id.uuidString,
             "alarmName": alarm.name,
@@ -255,17 +338,116 @@ final class AlarmScheduler: @unchecked Sendable {
         return content
     }
     
-    // 알람 취소
+    // 체인 알림 예약 (10초 간격으로 다음 알림 예약)
+    func scheduleChainNotification(for alarm: Alarm, chainIndex: Int) {
+        let content = createNotificationContent(for: alarm)
+        
+        // 10초 후에 울리도록 설정
+        let chainInterval: TimeInterval = 10.0
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: chainInterval, repeats: false)
+        
+        // 체인 알림 ID: {alarm.id}-chain-{index}
+        let identifier = "\(alarm.id.uuidString)-chain-\(chainIndex)"
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("❌ 체인 알림 스케줄링 실패 (chain-\(chainIndex)): \(error.localizedDescription)")
+            } else {
+                print("✅ 체인 알림 스케줄링 성공: \(alarm.name) (chain-\(chainIndex), 5초 후)")
+            }
+        }
+    }
+    
+    // 알람 취소 (대기 중인 알림 제거 - 체인 알림 포함)
     func cancelAlarm(_ alarm: Alarm) {
-        var identifiers = [alarm.id.uuidString] // 단일 알람
+        // 알람 ID로 시작하는 모든 알림 ID 패턴 생성
+        var identifiers: [String] = []
+        
+        // 단일 알람 ID
+        identifiers.append(alarm.id.uuidString)
         
         // 반복 알람의 경우 모든 요일별 알림 ID 추가
         for weekday in alarm.selectedWeekdays {
             identifiers.append("\(alarm.id.uuidString)-weekday-\(weekday)")
         }
         
+        // 체인 알림 ID 패턴 추가 (모든 체인 인덱스)
+        // 최대 100개까지 체인 알림이 있을 수 있다고 가정
+        for i in 0..<100 {
+            identifiers.append("\(alarm.id.uuidString)-chain-\(i)")
+        }
+        
+        // 동기적으로 즉시 제거
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
-        print("알람 취소: \(alarm.name) (ID: \(alarm.id.uuidString))")
+        print("🚫 알람 취소: \(alarm.name) (ID: \(alarm.id.uuidString))")
+        print("   취소할 알림 ID 개수: \(identifiers.count)")
+        
+        // 취소 확인 (비동기, 로깅용)
+        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+            let remaining = requests.filter { req in
+                req.identifier.hasPrefix(alarm.id.uuidString)
+            }
+            if !remaining.isEmpty {
+                print("⚠️ 알람 취소 후에도 남은 알림이 있습니다: \(remaining.map { $0.identifier })")
+            } else {
+                print("✅ 알람 취소 완료")
+            }
+        }
+    }
+    
+    // 이미 표시된 알림 제거 (dismiss 시 푸시 알림도 제거 - 체인 알림 포함)
+    func removeDeliveredNotification(for alarm: Alarm) {
+        // 먼저 모든 표시된 알림을 가져와서 해당 알람의 모든 알림 ID 수집
+        UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
+            var identifiers: [String] = []
+            
+            // 알람 ID로 시작하는 모든 알림 찾기
+            for notification in notifications {
+                if notification.request.identifier.hasPrefix(alarm.id.uuidString) {
+                    identifiers.append(notification.request.identifier)
+                }
+            }
+            
+            // 단일 알람 ID도 추가 (혹시 모를 경우를 위해)
+            if !identifiers.contains(alarm.id.uuidString) {
+                identifiers.append(alarm.id.uuidString)
+            }
+            
+            // 반복 알람의 경우 모든 요일별 알림 ID 추가
+            for weekday in alarm.selectedWeekdays {
+                let weekdayId = "\(alarm.id.uuidString)-weekday-\(weekday)"
+                if !identifiers.contains(weekdayId) {
+                    identifiers.append(weekdayId)
+                }
+            }
+            
+            // 체인 알림 ID 패턴 추가 (모든 체인 인덱스)
+            // 최대 100개까지 체인 알림이 있을 수 있다고 가정
+            for i in 0..<100 {
+                let chainId = "\(alarm.id.uuidString)-chain-\(i)"
+                if !identifiers.contains(chainId) {
+                    identifiers.append(chainId)
+                }
+            }
+            
+            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: identifiers)
+            print("🗑️ 표시된 알림 제거: \(alarm.name) (ID: \(alarm.id.uuidString), 개수: \(identifiers.count))")
+        }
+    }
+    
+    // 모든 대기 중인 알림 제거 (디버깅용)
+    func cancelAllNotifications() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        print("🗑️ 모든 대기 중인 알림 제거 완료")
+    }
+    
+    // 모든 알람의 알림 취소 (앱 시작 시 중복 방지용)
+    func cancelAllAlarms(_ alarms: [Alarm]) {
+        print("🗑️ 모든 알람의 알림 취소 시작 (총 \(alarms.count)개)")
+        for alarm in alarms {
+            cancelAlarm(alarm)
+        }
     }
 }
 
