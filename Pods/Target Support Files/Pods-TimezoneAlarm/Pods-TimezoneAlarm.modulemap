@@ -1,0 +1,6 @@
+framework module Pods_TimezoneAlarm {
+  umbrella header "Pods-TimezoneAlarm-umbrella.h"
+
+  export *
+  module * { export * }
+}
