@@ -18,6 +18,7 @@
 		51C503CA6D2F46F88D80A5DF /* TimezoneAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB57D6CC548EA702320A886 /* TimezoneAlarmApp.swift */; };
 		9BCFF78819A255F7ECC7C92C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB581C9CBC9D09BF2208EFC /* ContentView.swift */; };
 		4d7f560ed097476cae0cd291 /* alarm.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5012fb61d559485e91c01c68 /* alarm.wav */; };
+		F8E9D0A1B2C3D4E5F6A7B8C9 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		CB864B139FD73FF46A788586 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		c0d93f8293644af99db05acb /* AlarmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmViewModel.swift; sourceTree = "<group>"; };
 		5012fb61d559485e91c01c68 /* alarm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = alarm.wav; sourceTree = "<group>"; };
+		A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -109,6 +111,14 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		E1F2A3B4C5D6E7F8A9B0C1D2 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		5ca6f3a1a00749b09ff7ed7b /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +134,7 @@
 				818c7eabc63a49d5936a8312 /* ViewModels */,
 				a8e2f555970d4e4ebacc98a0 /* Views */,
 				b1c2d3e4f5a6b7c8d9e0f1a2 /* Services */,
+				E1F2A3B4C5D6E7F8A9B0C1D2 /* Utils */,
 				5ca6f3a1a00749b09ff7ed7b /* Resources */,
 				BAB581C9CBC9D09BF2208EFC /* ContentView.swift */,
 				CB864B139FD73FF46A788586 /* Info.plist */,
@@ -215,6 +226,7 @@
 				694c41ecac5043e7aa3f3d070dd315aa /* AlarmScheduler.swift in Sources */,
 				9BCFF78819A255F7ECC7C92C /* ContentView.swift in Sources */,
 				51C503CA6D2F46F88D80A5DF /* TimezoneAlarmApp.swift in Sources */,
+				F8E9D0A1B2C3D4E5F6A7B8C9 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

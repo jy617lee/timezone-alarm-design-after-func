@@ -267,9 +267,9 @@ struct AlarmFormView: View {
             }
             
             // addAlarm/updateAlarm에서 이미 스케줄링 처리됨
-            print("📝 알람 저장 완료: \(alarm.name)")
-            print("   - 날짜: \(alarm.selectedDate?.description ?? "nil")")
-            print("   - 요일: \(alarm.selectedWeekdays)")
+            debugLog("📝 알람 저장 완료: \(alarm.name)")
+            debugLog("   - 날짜: \(alarm.selectedDate?.description ?? "nil")")
+            debugLog("   - 요일: \(alarm.selectedWeekdays)")
             
             dismiss()
     }

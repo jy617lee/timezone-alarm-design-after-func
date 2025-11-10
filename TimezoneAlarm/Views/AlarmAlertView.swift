@@ -87,7 +87,7 @@ struct AlarmAlertView: View {
     private func playAlarmSound() {
         // 30초 오디오 파일을 무한 루프로 재생
         guard let soundURL = Bundle.main.url(forResource: "alarm", withExtension: "wav") else {
-            print("⚠️ alarm.wav 파일을 찾을 수 없습니다")
+            debugLog("⚠️ alarm.wav 파일을 찾을 수 없습니다")
             // 폴백: 시스템 알람 사운드 사용
             AudioServicesPlaySystemSound(1005)
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
@@ -104,7 +104,7 @@ struct AlarmAlertView: View {
             audioPlayer?.numberOfLoops = -1 // 무한 루프
             audioPlayer?.volume = 1.0 // 최대 볼륨
             audioPlayer?.play()
-            print("🔊 알람 사운드 재생 시작 (무한 루프)")
+            debugLog("🔊 알람 사운드 재생 시작 (무한 루프)")
             
             // 진동도 함께 반복 (약 29초마다, 파일 길이에 맞춤)
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
@@ -112,7 +112,7 @@ struct AlarmAlertView: View {
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
             }
         } catch {
-            print("❌ 오디오 재생 실패: \(error.localizedDescription)")
+            debugLog("❌ 오디오 재생 실패: \(error.localizedDescription)")
             // 폴백: 시스템 알람 사운드 사용
             AudioServicesPlaySystemSound(1005)
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
@@ -132,7 +132,7 @@ struct AlarmAlertView: View {
         audioPlayer?.stop()
         audioPlayer = nil
         
-        print("🔇 알람 사운드 정지")
+        debugLog("🔇 알람 사운드 정지")
     }
 }
 
