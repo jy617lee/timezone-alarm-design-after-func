@@ -99,6 +99,8 @@ extension Color {
     static let appMutedBackground = Color(red: 241/255.0, green: 232/255.0, blue: 232/255.0)
     /// Popover background color: #ffffff
     static let appPopoverBackground = Color(red: 255/255.0, green: 255/255.0, blue: 255/255.0)
+    /// Header background color: #FFF0F3 60% opacity
+    static let appHeaderBackground = Color(red: 255/255.0, green: 240/255.0, blue: 243/255.0).opacity(0.6)
     
     // MARK: - Text Colors
     /// Primary text color: #6B4423 (진한 쿠키 브라운)
