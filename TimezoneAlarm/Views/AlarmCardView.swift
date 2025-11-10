@@ -132,8 +132,12 @@ struct AlarmCardView: View {
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(cardPalette.background)
-            .cornerRadius(16)
-            .shadow(color: Color.appShadow, radius: 5, x: 0, y: 2)
+            .cornerRadius(24)
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .stroke(Color.appCardBorder, lineWidth: 1)
+            )
+            .shadow(color: Color.appShadow.opacity(0.3), radius: 8, x: 0, y: 4)
             .offset(x: dragOffset)
             .simultaneousGesture(
                 DragGesture(minimumDistance: 10)

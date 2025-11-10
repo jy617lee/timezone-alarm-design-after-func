@@ -141,6 +141,8 @@ extension Color {
     // MARK: - Border & Ring Colors
     /// Border color: #e8dcdc
     static let appBorder = Color(red: 232/255.0, green: 220/255.0, blue: 220/255.0)
+    /// Card border color: #000000 10% opacity
+    static let appCardBorder = Color(red: 0/255.0, green: 0/255.0, blue: 0/255.0).opacity(0.1)
     /// Ring color: #b87b8f
     static let appRing = Color(red: 184/255.0, green: 123/255.0, blue: 143/255.0)
     
