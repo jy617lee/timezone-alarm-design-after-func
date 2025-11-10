@@ -21,6 +21,8 @@ struct AlarmFormView: View {
     @State private var tempTime: Date = Date()
     @State private var showTimePicker: Bool = false
     @State private var showDatePicker: Bool = false
+    @State private var showToast: Bool = false
+    @State private var toastMessage: String = ""
     
     let editingAlarm: Alarm?
     
@@ -28,6 +30,23 @@ struct AlarmFormView: View {
         self.viewModel = viewModel
         self.editingAlarm = editingAlarm
         
+        // 모든 State 변수를 기본값으로 먼저 초기화
+        let today = Date()
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today
+        _alarmName = State(initialValue: "")
+        _selectedHour = State(initialValue: 7)
+        _selectedMinute = State(initialValue: 0)
+        _selectedCountry = State(initialValue: nil)
+        _selectedDate = State(initialValue: nil)
+        _selectedWeekdays = State(initialValue: [])
+        _datePickerValue = State(initialValue: tomorrow)
+        _tempTime = State(initialValue: Date())
+        _showTimePicker = State(initialValue: false)
+        _showDatePicker = State(initialValue: false)
+        _showToast = State(initialValue: false)
+        _toastMessage = State(initialValue: "")
+        
+        // editingAlarm이 있으면 해당 값으로 덮어쓰기
         if let alarm = editingAlarm {
             _alarmName = State(initialValue: alarm.name)
             _selectedHour = State(initialValue: alarm.hour)
@@ -44,10 +63,8 @@ struct AlarmFormView: View {
                 _selectedCountry = State(initialValue: country)
             }
         } else {
-            // 새 알람 생성 시 날짜 초기값을 오늘 날짜로 설정
-            let today = Date()
-            _selectedDate = State(initialValue: today)
-            _datePickerValue = State(initialValue: today)
+            // 새 알람 생성 시 날짜 초기값을 내일 날짜로 설정
+            _selectedDate = State(initialValue: tomorrow)
         }
     }
     
@@ -109,7 +126,33 @@ struct AlarmFormView: View {
                             }
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 Button("Done") {
-                                    let components = Calendar.current.dateComponents([.hour, .minute], from: tempTime)
+                                    // 선택한 날짜와 시간을 조합하여 알람 시간 생성
+                                    let calendar = Calendar.current
+                                    let selectedDateForValidation = selectedDate ?? Date() // 날짜가 없으면 오늘
+                                    
+                                    // 선택한 날짜의 시간을 선택한 시간으로 설정
+                                    var dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDateForValidation)
+                                    let timeComponents = calendar.dateComponents([.hour, .minute], from: tempTime)
+                                    dateComponents.hour = timeComponents.hour
+                                    dateComponents.minute = timeComponents.minute
+                                    
+                                    guard let alarmDateTime = calendar.date(from: dateComponents) else {
+                                        showTimePicker = false
+                                        return
+                                    }
+                                    
+                                    // 현재 시간보다 이전인지 확인
+                                    if alarmDateTime <= Date() {
+                                        // 토스트 메시지 표시 (사용자 기기 언어로)
+                                        toastMessage = NSLocalizedString("past_time_selection_error", comment: "Past time selection error message")
+                                        showToast = true
+                                        // 선택 취소
+                                        showTimePicker = false
+                                        return
+                                    }
+                                    
+                                    // 유효한 시간이면 저장
+                                    let components = calendar.dateComponents([.hour, .minute], from: tempTime)
                                     selectedHour = components.hour ?? 7
                                     selectedMinute = components.minute ?? 0
                                     showTimePicker = false
@@ -230,6 +273,30 @@ struct AlarmFormView: View {
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button("Done") {
+                                // 선택한 날짜와 시간을 조합하여 알람 시간 생성
+                                let calendar = Calendar.current
+                                
+                                // 선택한 날짜의 시간을 현재 선택된 시간으로 설정
+                                var dateComponents = calendar.dateComponents([.year, .month, .day], from: datePickerValue)
+                                dateComponents.hour = selectedHour
+                                dateComponents.minute = selectedMinute
+                                
+                                guard let alarmDateTime = calendar.date(from: dateComponents) else {
+                                    showDatePicker = false
+                                    return
+                                }
+                                
+                                // 현재 시간보다 이전인지 확인
+                                if alarmDateTime <= Date() {
+                                    // 토스트 메시지 표시 (사용자 기기 언어로)
+                                    toastMessage = NSLocalizedString("past_time_selection_error", comment: "Past time selection error message")
+                                    showToast = true
+                                    // 선택 취소
+                                    showDatePicker = false
+                                    return
+                                }
+                                
+                                // 유효한 날짜이면 저장
                                 selectedDate = datePickerValue
                                 selectedWeekdays = []
                                 showDatePicker = false
@@ -239,6 +306,11 @@ struct AlarmFormView: View {
                 }
                 .presentationDetents([.medium])
             }
+            .overlay(
+                // 토스트 메시지
+                ToastView(message: toastMessage, isShowing: $showToast)
+                    .animation(.easeInOut, value: showToast)
+            )
         }
     }
     
@@ -409,6 +481,38 @@ struct CountrySelectionView: View {
         .searchable(text: $searchText, prompt: "Search countries")
         .navigationTitle("Select Country")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// 토스트 메시지 뷰
+struct ToastView: View {
+    let message: String
+    @Binding var isShowing: Bool
+    
+    var body: some View {
+        VStack {
+            Spacer()
+            
+            if isShowing && !message.isEmpty {
+                Text(message)
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(Color.black.opacity(0.8))
+                    .cornerRadius(10)
+                    .padding(.bottom, 50)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .onAppear {
+                        // 2초 후 자동으로 사라짐
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            withAnimation {
+                                isShowing = false
+                            }
+                        }
+                    }
+            }
+        }
     }
 }
 

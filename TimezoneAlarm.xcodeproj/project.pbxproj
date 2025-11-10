@@ -19,6 +19,11 @@
 		9BCFF78819A255F7ECC7C92C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB581C9CBC9D09BF2208EFC /* ContentView.swift */; };
 		4d7f560ed097476cae0cd291 /* alarm.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5012fb61d559485e91c01c68 /* alarm.wav */; };
 		F8E9D0A1B2C3D4E5F6A7B8C9 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */; };
+		6f490f3fa9a74e0f857a314c6053f2c7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = c926d1891e7e466b9a173335a435283e /* Localizable.strings */; };
+		7a248f46d52048c497f8450686a54e1e /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8fded048a8c64ccb9bc49a2ad8ac407a /* Localizable.strings */; };
+		e487a86a7e78475ea73ee53738752ed0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 69189974529b46abb4ddc4567e78fd49 /* Localizable.strings */; };
+		f09dd84d11e9481c8d0f0cd11265d115 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6257a08d2a254cb4a78efde9368ba791 /* Localizable.strings */; };
+		b1c2d3e4f5a6b7c8d9e0f1a2b3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = c1d2e3f4a5b6c7d8e9f0a1b2c3d4 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +52,11 @@
 		c0d93f8293644af99db05acb /* AlarmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmViewModel.swift; sourceTree = "<group>"; };
 		5012fb61d559485e91c01c68 /* alarm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = alarm.wav; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		c926d1891e7e466b9a173335a435283e /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "TimezoneAlarm/Resources/en.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		8fded048a8c64ccb9bc49a2ad8ac407a /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "TimezoneAlarm/Resources/ko.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		69189974529b46abb4ddc4567e78fd49 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "TimezoneAlarm/Resources/id.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		6257a08d2a254cb4a78efde9368ba791 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "TimezoneAlarm/Resources/ja.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		c1d2e3f4a5b6c7d8e9f0a1b2c3d4 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "TimezoneAlarm/Resources/pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -198,6 +208,10 @@
 			knownRegions = (
 				Base,
 				en,
+				ko,
+				id,
+				ja,
+				"pt-BR",
 			);
 			mainGroup = 4D4F748C6E198882F1BB0967;
 			minimizedProjectReferenceProxies = 1;
@@ -245,6 +259,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				4d7f560ed097476cae0cd291 /* alarm.wav in Resources */,
+				6f490f3fa9a74e0f857a314c6053f2c7 /* Localizable.strings in Resources */,
+				7a248f46d52048c497f8450686a54e1e /* Localizable.strings in Resources */,
+				e487a86a7e78475ea73ee53738752ed0 /* Localizable.strings in Resources */,
+				f09dd84d11e9481c8d0f0cd11265d115 /* Localizable.strings in Resources */,
+				b1c2d3e4f5a6b7c8d9e0f1a2b3 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
