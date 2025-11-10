@@ -6,10 +6,11 @@
 //
 
 import Foundation
-import FirebaseAnalytics
+// TODO: Firebase SDK 추가 후 주석 해제
+// import FirebaseAnalytics
 
 class AnalyticsService {
-    static let shared = AnalyticsService()
+    nonisolated(unsafe) static let shared = AnalyticsService()
     
     private init() {}
     
@@ -28,11 +29,12 @@ class AnalyticsService {
             "is_enabled": alarm.isEnabled,
             "has_weekdays": !alarm.selectedWeekdays.isEmpty,
             "has_date": alarm.selectedDate != nil,
-            "device_language": Locale.current.languageCode ?? "unknown",
+            "device_language": Locale.current.language.languageCode?.identifier ?? "unknown",
             "device_timezone": TimeZone.current.identifier
         ]
         
-        Analytics.logEvent("alarm_created", parameters: parameters)
+        // TODO: Firebase SDK 추가 후 주석 해제
+        // Analytics.logEvent("alarm_created", parameters: parameters)
         debugLog("📊 Analytics: alarm_created - \(alarm.name)")
     }
     
@@ -49,11 +51,12 @@ class AnalyticsService {
             "is_enabled": alarm.isEnabled,
             "has_weekdays": !alarm.selectedWeekdays.isEmpty,
             "has_date": alarm.selectedDate != nil,
-            "device_language": Locale.current.languageCode ?? "unknown",
+            "device_language": Locale.current.language.languageCode?.identifier ?? "unknown",
             "device_timezone": TimeZone.current.identifier
         ]
         
-        Analytics.logEvent("alarm_updated", parameters: parameters)
+        // TODO: Firebase SDK 추가 후 주석 해제
+        // Analytics.logEvent("alarm_updated", parameters: parameters)
         debugLog("📊 Analytics: alarm_updated - \(alarm.name)")
     }
     
@@ -67,11 +70,12 @@ class AnalyticsService {
             "timezone_identifier": alarm.timezoneIdentifier,
             "country_name": alarm.countryName,
             "country_flag": alarm.countryFlag,
-            "device_language": Locale.current.languageCode ?? "unknown",
+            "device_language": Locale.current.language.languageCode?.identifier ?? "unknown",
             "device_timezone": TimeZone.current.identifier
         ]
         
-        Analytics.logEvent("alarm_deleted", parameters: parameters)
+        // TODO: Firebase SDK 추가 후 주석 해제
+        // Analytics.logEvent("alarm_deleted", parameters: parameters)
         debugLog("📊 Analytics: alarm_deleted - \(alarm.name)")
     }
     
@@ -81,12 +85,13 @@ class AnalyticsService {
             "alarm_id": alarm.id.uuidString,
             "alarm_name": alarm.name,
             "is_enabled": isEnabled,
-            "device_language": Locale.current.languageCode ?? "unknown",
+            "device_language": Locale.current.language.languageCode?.identifier ?? "unknown",
             "device_timezone": TimeZone.current.identifier
         ]
         
         let eventName = isEnabled ? "alarm_enabled" : "alarm_disabled"
-        Analytics.logEvent(eventName, parameters: parameters)
+        // TODO: Firebase SDK 추가 후 주석 해제
+        // Analytics.logEvent(eventName, parameters: parameters)
         debugLog("📊 Analytics: \(eventName) - \(alarm.name)")
     }
     
@@ -100,11 +105,12 @@ class AnalyticsService {
             "timezone_identifier": alarm.timezoneIdentifier,
             "country_name": alarm.countryName,
             "country_flag": alarm.countryFlag,
-            "device_language": Locale.current.languageCode ?? "unknown",
+            "device_language": Locale.current.language.languageCode?.identifier ?? "unknown",
             "device_timezone": TimeZone.current.identifier
         ]
         
-        Analytics.logEvent("alarm_dismissed", parameters: parameters)
+        // TODO: Firebase SDK 추가 후 주석 해제
+        // Analytics.logEvent("alarm_dismissed", parameters: parameters)
         debugLog("📊 Analytics: alarm_dismissed - \(alarm.name)")
     }
 }

@@ -149,6 +149,9 @@ class AlarmViewModel {
         if newAlarm.isEnabled {
             AlarmScheduler.shared.scheduleAlarm(newAlarm)
         }
+        
+        // Analytics 로깅
+        AnalyticsService.shared.logAlarmCreated(alarm: newAlarm)
     }
     
     func updateAlarm(_ alarm: Alarm) {
