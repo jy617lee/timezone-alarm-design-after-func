@@ -88,12 +88,9 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         debugLog("   - 사용자 정보: \(notification.request.content.userInfo)")
         debugLog("   - 트리거 타입: \(type(of: notification.request.trigger))")
         
-        // 포그라운드에서도 알림 표시 (사운드 없음 - 백그라운드 오디오만 사용)
-        if #available(iOS 14.0, *) {
-            completionHandler([.banner, .badge, .list])
-        } else {
-            completionHandler([.alert, .badge])
-        }
+        // 포그라운드에서 커스텀 알림 뷰를 사용하므로 시스템 배너는 숨김
+        // 사운드 없음 - 백그라운드 오디오만 사용
+        completionHandler([])
         
         // 알람 정보 추출
         if let alarmId = notification.request.content.userInfo["alarmId"] as? String,
