@@ -8,11 +8,18 @@
 import SwiftUI
 import UserNotifications
 import AVFoundation
+// TODO: Firebase SDK 추가 후 주석 해제
+// import FirebaseCore
 
 @main
 struct TimezoneAlarmApp: App {
     init() {
         debugLog("🚀 TimezoneAlarm 앱 시작!")
+        
+        // TODO: Firebase SDK 추가 후 주석 해제
+        // Firebase 초기화
+        // FirebaseApp.configure()
+        // debugLog("✅ Firebase 초기화 완료")
         
         // 백그라운드 오디오 재생을 위한 오디오 세션 설정
         do {
