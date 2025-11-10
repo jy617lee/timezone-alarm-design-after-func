@@ -22,9 +22,18 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                // 커스텀 헤더
-                HStack {
+            ZStack {
+                // 그라데이션 백그라운드
+                LinearGradient(
+                    colors: [Color.appBackgroundTop, Color.appBackgroundBottom],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
+                
+                VStack(spacing: 0) {
+                    // 커스텀 헤더 (border 없이)
+                    HStack {
                     Spacer()
                     if viewModel.alarms.isEmpty {
                         // Empty State - 버튼만 표시
@@ -34,18 +43,17 @@ struct ContentView: View {
                             }) {
                                 Image(systemName: "plus")
                                     .font(.system(size: 16, weight: .medium))
-                                    .foregroundColor(.appTextPrimary)
+                                    .foregroundColor(.white)
                                     .frame(width: 28, height: 28)
-                                    .background(Circle().fill(Color.appButtonBackground))
+                                    .background(Circle().fill(Color.appPrimary))
                             }
                             Button(action: {
                                 showSettings = true
                             }) {
                                 Image(systemName: "gearshape")
                                     .font(.system(size: 16, weight: .medium))
-                                    .foregroundColor(.appTextPrimary)
+                                    .foregroundColor(.appCookieColor)
                                     .frame(width: 28, height: 28)
-                                    .background(Circle().fill(Color.appButtonBackground))
                             }
                         }
                         .padding(.trailing, 16)
@@ -65,18 +73,17 @@ struct ContentView: View {
                                 }) {
                                     Image(systemName: "plus")
                                         .font(.system(size: 16, weight: .medium))
-                                        .foregroundColor(.appTextPrimary)
+                                        .foregroundColor(.white)
                                         .frame(width: 28, height: 28)
-                                        .background(Circle().fill(Color.appButtonBackground))
+                                        .background(Circle().fill(Color.appPrimary))
                                 }
                                 Button(action: {
                                     showSettings = true
                                 }) {
                                     Image(systemName: "gearshape")
                                         .font(.system(size: 16, weight: .medium))
-                                        .foregroundColor(.appTextPrimary)
+                                        .foregroundColor(.appCookieColor)
                                         .frame(width: 28, height: 28)
-                                        .background(Circle().fill(Color.appButtonBackground))
                                 }
                             }
                             .padding(.trailing, 16)
@@ -84,7 +91,6 @@ struct ContentView: View {
                     }
                 }
                 .frame(height: 44)
-                .background(Color.appBackground)
                 
                 // 컨텐츠
                 if viewModel.alarms.isEmpty {
@@ -102,6 +108,7 @@ struct ContentView: View {
                         Text(NSLocalizedString("content.empty.title", comment: "No alarms yet title"))
                             .font(.title2)
                             .fontWeight(.semibold)
+                            .foregroundColor(.appTextPrimary)
                         
                         // Description
                         Text(NSLocalizedString("content.empty.description", comment: "Tap to add first alarm"))
@@ -129,6 +136,7 @@ struct ContentView: View {
                 } else {
                     // Alarm List
                     AlarmListView(viewModel: viewModel, showAlarmForm: $showAlarmForm, showSettings: $showSettings, editMode: $editMode)
+                }
                 }
             }
             .sheet(isPresented: $showAlarmForm) {
