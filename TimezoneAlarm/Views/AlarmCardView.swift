@@ -38,33 +38,11 @@ struct AlarmCardView: View {
     var body: some View {
         HStack(spacing: 0) {
             // 메인 카드 컨텐츠
-            VStack(alignment: .leading, spacing: 12) {
-                // 상단: 알람명과 삭제 아이콘
+            VStack(alignment: .leading, spacing: 16) {
+                // 상단 행: 알람명과 토글
                 HStack {
                     Text(alarm.name)
                         .font(.geist(size: 17, weight: .semibold))
-                        .foregroundColor(.appTextPrimary)
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        // 햅틱 피드백
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.impactOccurred()
-                        onDelete()
-                    }) {
-                        Image(systemName: "trash")
-                            .font(.geist(size: 17, weight: .regular))
-                            .foregroundColor(.appTextSecondary)
-                    }
-                    .buttonStyle(.plain)
-                    .contentShape(Rectangle())
-                }
-                
-                // 시간과 토글
-                HStack {
-                    Text(alarm.formattedTime)
-                        .font(.geist(size: 32, weight: .light))
                         .foregroundColor(.appTextPrimary)
                     
                     Spacer()
@@ -82,50 +60,64 @@ struct AlarmCardView: View {
                     .tint(cardPalette.accent)
                 }
                 
-                // 국가 정보
-                HStack(spacing: 8) {
-                    Text(alarm.countryFlag)
-                        .font(.geist(size: 20, weight: .regular))
+                // 중간 행: 시간
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text(alarm.formattedTime)
+                        .font(.geist(size: 32, weight: .light))
+                        .foregroundColor(.appTextPrimary)
                     
-                    Text(alarm.countryName)
-                        .font(.geist(size: 15, weight: .regular))
-                        .foregroundColor(.appTextSecondary)
+                    Spacer()
                 }
                 
-                // 날짜 또는 요일 표시
-                if let selectedDate = alarm.selectedDate {
-                    // 날짜가 선택된 경우
+                // 하단 행: 국가 정보와 날짜/요일
+                HStack(spacing: 12) {
+                    // 국가 정보
                     HStack(spacing: 8) {
-                        Image(systemName: "calendar")
-                            .font(.geist(size: 12, weight: .regular))
-                            .foregroundColor(.appTextSecondary)
-                        Text(formatDate(selectedDate))
+                        Text(alarm.countryFlag)
+                            .font(.geist(size: 20, weight: .regular))
+                        
+                        Text(alarm.countryName)
                             .font(.geist(size: 15, weight: .regular))
                             .foregroundColor(.appTextSecondary)
                     }
-                } else if !alarm.selectedWeekdays.isEmpty {
-                    // 요일이 선택된 경우
-                    HStack(spacing: 8) {
-                        ForEach(Array(zip(weekdays, weekdayIndices)), id: \.1) { weekday, index in
-                            Text(weekday)
-                                .font(.geist(size: 12, weight: .semibold))
-                                .foregroundColor(alarm.selectedWeekdays.contains(index) ? .appTextOnPrimary : .appTextSecondary)
-                                .frame(width: 28, height: 28)
-                                .background(
-                                    Circle()
-                                        .fill(alarm.selectedWeekdays.contains(index) ? cardPalette.accent : Color.clear)
-                                )
+                    
+                    Spacer()
+                    
+                    // 날짜 또는 요일 표시
+                    if let selectedDate = alarm.selectedDate {
+                        // 날짜가 선택된 경우
+                        HStack(spacing: 8) {
+                            Image(systemName: "calendar")
+                                .font(.geist(size: 12, weight: .regular))
+                                .foregroundColor(.appTextSecondary)
+                            Text(formatDate(selectedDate))
+                                .font(.geist(size: 15, weight: .regular))
+                                .foregroundColor(.appTextSecondary)
                         }
-                    }
-                } else {
-                    // 날짜도 요일도 선택되지 않은 경우
-                    HStack(spacing: 8) {
-                        Image(systemName: "clock")
-                            .font(.geist(size: 12, weight: .regular))
-                            .foregroundColor(.appTextSecondary)
-                        Text(NSLocalizedString("alarm_card.once", comment: "Once"))
-                            .font(.geist(size: 15, weight: .regular))
-                            .foregroundColor(.appTextSecondary)
+                    } else if !alarm.selectedWeekdays.isEmpty {
+                        // 요일이 선택된 경우
+                        HStack(spacing: 8) {
+                            ForEach(Array(zip(weekdays, weekdayIndices)), id: \.1) { weekday, index in
+                                Text(weekday)
+                                    .font(.geist(size: 12, weight: .semibold))
+                                    .foregroundColor(alarm.selectedWeekdays.contains(index) ? .appTextOnPrimary : .appTextSecondary)
+                                    .frame(width: 28, height: 28)
+                                    .background(
+                                        Circle()
+                                            .fill(alarm.selectedWeekdays.contains(index) ? cardPalette.accent : Color.clear)
+                                    )
+                            }
+                        }
+                    } else {
+                        // 날짜도 요일도 선택되지 않은 경우
+                        HStack(spacing: 8) {
+                            Image(systemName: "clock")
+                                .font(.geist(size: 12, weight: .regular))
+                                .foregroundColor(.appTextSecondary)
+                            Text(NSLocalizedString("alarm_card.once", comment: "Once"))
+                                .font(.geist(size: 15, weight: .regular))
+                                .foregroundColor(.appTextSecondary)
+                        }
                     }
                 }
             }
