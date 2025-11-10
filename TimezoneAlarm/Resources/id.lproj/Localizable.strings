@@ -1,2 +1,46 @@
 /* Past time selection error message */
 "past_time_selection_error" = "Waktu yang sudah lewat tidak dapat dipilih";
+
+/* Common buttons */
+"button.done" = "Selesai";
+"button.cancel" = "Batal";
+"button.save" = "Simpan";
+"button.back" = "Kembali";
+"button.dismiss" = "Tutup";
+
+/* ContentView */
+"content.empty.title" = "Belum Ada Alarm";
+"content.empty.description" = "Ketuk + untuk menambahkan alarm pertama Anda";
+"content.empty.add_button" = "Tambah Alarm Baru";
+
+/* AlarmFormView */
+"alarm_form.title.new" = "Alarm Baru";
+"alarm_form.title.edit" = "Edit Alarm";
+"alarm_form.alarm_name" = "Nama Alarm";
+"alarm_form.time" = "Waktu";
+"alarm_form.select_time" = "Pilih Waktu";
+"alarm_form.country" = "Negara";
+"alarm_form.select_country" = "Pilih Negara";
+"alarm_form.date" = "Tanggal";
+"alarm_form.date_not_selected" = "Tidak dipilih";
+"alarm_form.select_date" = "Pilih Tanggal";
+"alarm_form.repeat" = "Ulangi";
+"alarm_form.search_countries" = "Cari negara";
+
+/* Weekdays */
+"weekday.sun" = "Min";
+"weekday.mon" = "Sen";
+"weekday.tue" = "Sel";
+"weekday.wed" = "Rab";
+"weekday.thu" = "Kam";
+"weekday.fri" = "Jum";
+"weekday.sat" = "Sab";
+
+/* AlarmCardView */
+"alarm_card.once" = "Sekali";
+
+/* SettingsView */
+"settings.title" = "Pengaturan";
+"settings.default_country" = "Negara Default";
+"settings.select_country" = "Pilih Negara";
+"settings.default_country_footer" = "Negara ini akan digunakan sebagai default saat membuat alarm baru.";

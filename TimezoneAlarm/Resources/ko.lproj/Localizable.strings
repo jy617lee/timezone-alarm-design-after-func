@@ -1,2 +1,46 @@
 /* Past time selection error message */
 "past_time_selection_error" = "이미 지난 시간은 선택될 수 없어요";
+
+/* Common buttons */
+"button.done" = "완료";
+"button.cancel" = "취소";
+"button.save" = "저장";
+"button.back" = "뒤로";
+"button.dismiss" = "해제";
+
+/* ContentView */
+"content.empty.title" = "알람이 없습니다";
+"content.empty.description" = "+ 버튼을 눌러 첫 알람을 추가하세요";
+"content.empty.add_button" = "새 알람 추가";
+
+/* AlarmFormView */
+"alarm_form.title.new" = "새 알람";
+"alarm_form.title.edit" = "알람 수정";
+"alarm_form.alarm_name" = "알람 이름";
+"alarm_form.time" = "시간";
+"alarm_form.select_time" = "시간 선택";
+"alarm_form.country" = "국가";
+"alarm_form.select_country" = "국가 선택";
+"alarm_form.date" = "날짜";
+"alarm_form.date_not_selected" = "선택 안 함";
+"alarm_form.select_date" = "날짜 선택";
+"alarm_form.repeat" = "반복";
+"alarm_form.search_countries" = "국가 검색";
+
+/* Weekdays */
+"weekday.sun" = "일";
+"weekday.mon" = "월";
+"weekday.tue" = "화";
+"weekday.wed" = "수";
+"weekday.thu" = "목";
+"weekday.fri" = "금";
+"weekday.sat" = "토";
+
+/* AlarmCardView */
+"alarm_card.once" = "한 번";
+
+/* SettingsView */
+"settings.title" = "설정";
+"settings.default_country" = "기본 국가";
+"settings.select_country" = "국가 선택";
+"settings.default_country_footer" = "새 알람을 만들 때 기본으로 사용됩니다";

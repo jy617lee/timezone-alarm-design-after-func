@@ -107,7 +107,7 @@ struct AlarmCardView: View {
                         Image(systemName: "clock")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        Text("Once")
+                        Text(NSLocalizedString("alarm_card.once", comment: "Once"))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }

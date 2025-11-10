@@ -23,7 +23,7 @@ struct SettingsView: View {
                         CountrySelectionView(selectedCountry: $selectedCountry)
                     } label: {
                         HStack {
-                            Text("Default Country")
+                            Text(NSLocalizedString("settings.default_country", comment: "Default country"))
                             Spacer()
                             if let country = selectedCountry {
                                 HStack(spacing: 8) {
@@ -32,27 +32,27 @@ struct SettingsView: View {
                                         .foregroundColor(.secondary)
                                 }
                             } else {
-                                Text("Select Country")
+                                Text(NSLocalizedString("settings.select_country", comment: "Select country"))
                                     .foregroundColor(.secondary)
                             }
                         }
                     }
                 } header: {
-                    Text("Default Country")
+                    Text(NSLocalizedString("settings.default_country", comment: "Default country header"))
                 } footer: {
-                    Text("This country will be used as the default when creating new alarms.")
+                    Text(NSLocalizedString("settings.default_country_footer", comment: "Default country footer"))
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle(NSLocalizedString("settings.title", comment: "Settings"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Back") {
+                    Button(NSLocalizedString("button.back", comment: "Back button")) {
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
+                    Button(NSLocalizedString("button.save", comment: "Save button")) {
                         saveDefaultCountry()
                     }
                     .disabled(!isFormValid)

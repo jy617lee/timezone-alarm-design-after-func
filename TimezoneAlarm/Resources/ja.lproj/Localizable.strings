@@ -1,2 +1,46 @@
 /* Past time selection error message */
 "past_time_selection_error" = "過去の時間は選択できません";
+
+/* Common buttons */
+"button.done" = "完了";
+"button.cancel" = "キャンセル";
+"button.save" = "保存";
+"button.back" = "戻る";
+"button.dismiss" = "解除";
+
+/* ContentView */
+"content.empty.title" = "アラームがありません";
+"content.empty.description" = "+ ボタンをタップして最初のアラームを追加";
+"content.empty.add_button" = "新しいアラームを追加";
+
+/* AlarmFormView */
+"alarm_form.title.new" = "新しいアラーム";
+"alarm_form.title.edit" = "アラームを編集";
+"alarm_form.alarm_name" = "アラーム名";
+"alarm_form.time" = "時間";
+"alarm_form.select_time" = "時間を選択";
+"alarm_form.country" = "国";
+"alarm_form.select_country" = "国を選択";
+"alarm_form.date" = "日付";
+"alarm_form.date_not_selected" = "選択なし";
+"alarm_form.select_date" = "日付を選択";
+"alarm_form.repeat" = "繰り返し";
+"alarm_form.search_countries" = "国を検索";
+
+/* Weekdays */
+"weekday.sun" = "日";
+"weekday.mon" = "月";
+"weekday.tue" = "火";
+"weekday.wed" = "水";
+"weekday.thu" = "木";
+"weekday.fri" = "金";
+"weekday.sat" = "土";
+
+/* AlarmCardView */
+"alarm_card.once" = "一度";
+
+/* SettingsView */
+"settings.title" = "設定";
+"settings.default_country" = "デフォルトの国";
+"settings.select_country" = "国を選択";
+"settings.default_country_footer" = "新しいアラームを作成する際にデフォルトで使用される国です。";

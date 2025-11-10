@@ -1,2 +1,46 @@
 /* Past time selection error message */
 "past_time_selection_error" = "Horário passado não pode ser selecionado";
+
+/* Common buttons */
+"button.done" = "Concluído";
+"button.cancel" = "Cancelar";
+"button.save" = "Salvar";
+"button.back" = "Voltar";
+"button.dismiss" = "Descartar";
+
+/* ContentView */
+"content.empty.title" = "Nenhum Alarme Ainda";
+"content.empty.description" = "Toque em + para adicionar seu primeiro alarme";
+"content.empty.add_button" = "Adicionar Novo Alarme";
+
+/* AlarmFormView */
+"alarm_form.title.new" = "Novo Alarme";
+"alarm_form.title.edit" = "Editar Alarme";
+"alarm_form.alarm_name" = "Nome do Alarme";
+"alarm_form.time" = "Hora";
+"alarm_form.select_time" = "Selecionar Hora";
+"alarm_form.country" = "País";
+"alarm_form.select_country" = "Selecionar País";
+"alarm_form.date" = "Data";
+"alarm_form.date_not_selected" = "Não selecionado";
+"alarm_form.select_date" = "Selecionar Data";
+"alarm_form.repeat" = "Repetir";
+"alarm_form.search_countries" = "Buscar países";
+
+/* Weekdays */
+"weekday.sun" = "Dom";
+"weekday.mon" = "Seg";
+"weekday.tue" = "Ter";
+"weekday.wed" = "Qua";
+"weekday.thu" = "Qui";
+"weekday.fri" = "Sex";
+"weekday.sat" = "Sáb";
+
+/* AlarmCardView */
+"alarm_card.once" = "Uma vez";
+
+/* SettingsView */
+"settings.title" = "Configurações";
+"settings.default_country" = "País Padrão";
+"settings.select_country" = "Selecionar País";
+"settings.default_country_footer" = "Este país será usado como padrão ao criar novos alarmes.";
