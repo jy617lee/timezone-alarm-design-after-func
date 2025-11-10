@@ -64,7 +64,7 @@ struct AlarmAlertView: View {
                     NotificationDelegate.shared.dismissAlarm(alarm)
                     onDismiss()
                 }) {
-                    Text("Dismiss")
+                    Text(NSLocalizedString("button.dismiss", comment: "Dismiss button"))
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)

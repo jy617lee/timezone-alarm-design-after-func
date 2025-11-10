@@ -52,7 +52,7 @@ struct ContentView: View {
                     } else {
                         // Alarm List
                         if editMode == .active {
-                            Button("Done") {
+                            Button(NSLocalizedString("button.done", comment: "Done button")) {
                                 withAnimation {
                                     editMode = .inactive
                                 }
@@ -98,12 +98,12 @@ struct ContentView: View {
                             .foregroundStyle(.secondary)
                         
                         // Title
-                        Text("No Alarms Yet")
+                        Text(NSLocalizedString("content.empty.title", comment: "No alarms yet title"))
                             .font(.title2)
                             .fontWeight(.semibold)
                         
                         // Description
-                        Text("Tap + to add your first alarm")
+                        Text(NSLocalizedString("content.empty.description", comment: "Tap to add first alarm"))
                             .font(.body)
                             .foregroundStyle(.secondary)
                         
@@ -111,7 +111,7 @@ struct ContentView: View {
                         Button(action: {
                             showAlarmForm = true
                         }) {
-                            Text("Add New Alarm")
+                            Text(NSLocalizedString("content.empty.add_button", comment: "Add new alarm button"))
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)

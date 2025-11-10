@@ -84,9 +84,9 @@ struct AlarmFormView: View {
             Form {
                 // 알람명
                 Section {
-                    TextField("Alarm Name", text: $alarmName)
+                    TextField(NSLocalizedString("alarm_form.alarm_name", comment: "Alarm name placeholder"), text: $alarmName)
                 } header: {
-                    Text("Alarm Name")
+                    Text(NSLocalizedString("alarm_form.alarm_name", comment: "Alarm name header"))
                 }
                 
                 // 시간 선택 (필수)
@@ -100,7 +100,7 @@ struct AlarmFormView: View {
                         showTimePicker = true
                     }) {
                         HStack {
-                            Text("Time")
+                            Text(NSLocalizedString("alarm_form.time", comment: "Time"))
                             Spacer()
                             Text(String(format: "%d:%02d %@", 
                                       selectedHour > 12 ? selectedHour - 12 : (selectedHour == 0 ? 12 : selectedHour),
@@ -110,27 +110,27 @@ struct AlarmFormView: View {
                         }
                     }
                 } header: {
-                    Text("Time")
+                    Text(NSLocalizedString("alarm_form.time", comment: "Time header"))
                 }
                 .sheet(isPresented: $showTimePicker) {
                     NavigationView {
                         VStack {
-                            DatePicker("Time", selection: $tempTime, displayedComponents: .hourAndMinute)
+                            DatePicker(NSLocalizedString("alarm_form.time", comment: "Time"), selection: $tempTime, displayedComponents: .hourAndMinute)
                                 .datePickerStyle(.wheel)
                                 .labelsHidden()
                             
                             Spacer()
                         }
-                        .navigationTitle("Select Time")
+                        .navigationTitle(NSLocalizedString("alarm_form.select_time", comment: "Select time"))
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
-                                Button("Cancel") {
+                                Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
                                     showTimePicker = false
                                 }
                             }
                             ToolbarItem(placement: .navigationBarTrailing) {
-                                Button("Done") {
+                                Button(NSLocalizedString("button.done", comment: "Done button")) {
                                     // 선택한 날짜와 시간을 조합하여 알람 시간 생성
                                     let calendar = Calendar.current
                                     let selectedDateForValidation = selectedDate ?? Date() // 날짜가 없으면 오늘
@@ -173,7 +173,7 @@ struct AlarmFormView: View {
                         CountrySelectionView(selectedCountry: $selectedCountry)
                     } label: {
                         HStack {
-                            Text("Country")
+                            Text(NSLocalizedString("alarm_form.country", comment: "Country"))
                             Spacer()
                             if let country = selectedCountry {
                                 HStack(spacing: 8) {
@@ -182,13 +182,13 @@ struct AlarmFormView: View {
                                         .foregroundColor(.secondary)
                                 }
                             } else {
-                                Text("Select Country")
+                                Text(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
                                     .foregroundColor(.secondary)
                             }
                         }
                     }
                 } header: {
-                    Text("Country")
+                    Text(NSLocalizedString("alarm_form.country", comment: "Country header"))
                 }
                 
                 // 날짜 선택
@@ -199,7 +199,7 @@ struct AlarmFormView: View {
                                 showDatePicker = true
                             }) {
                                 HStack {
-                                    Text("Date")
+                                    Text(NSLocalizedString("alarm_form.date", comment: "Date"))
                                     Spacer()
                                     if let date = selectedDate {
                                         Text(formatDate(date))
@@ -222,16 +222,16 @@ struct AlarmFormView: View {
                             showDatePicker = true
                         }) {
                             HStack {
-                                Text("Date")
+                                Text(NSLocalizedString("alarm_form.date", comment: "Date"))
                                 Spacer()
-                                Text("Not selected")
+                                Text(NSLocalizedString("alarm_form.date_not_selected", comment: "Not selected"))
                                     .foregroundColor(.secondary)
                             }
                         }
                         .buttonStyle(.plain)
                     }
                 } header: {
-                    Text("Date")
+                    Text(NSLocalizedString("alarm_form.date", comment: "Date header"))
                 }
                 
                 // 반복 선택
@@ -241,19 +241,19 @@ struct AlarmFormView: View {
                         selectedDate: $selectedDate
                     )
                 } header: {
-                    Text("Repeat")
+                    Text(NSLocalizedString("alarm_form.repeat", comment: "Repeat"))
                 }
             }
-            .navigationTitle(editingAlarm == nil ? "New Alarm" : "Edit Alarm")
+            .navigationTitle(editingAlarm == nil ? NSLocalizedString("alarm_form.title.new", comment: "New alarm") : NSLocalizedString("alarm_form.title.edit", comment: "Edit alarm"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
+                    Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
+                    Button(NSLocalizedString("button.save", comment: "Save button")) {
                         saveAlarm()
                     }
                     .disabled(!isFormValid)
@@ -262,22 +262,22 @@ struct AlarmFormView: View {
             .sheet(isPresented: $showDatePicker) {
                 NavigationStack {
                     VStack {
-                        DatePicker("Date", selection: $datePickerValue, displayedComponents: .date)
+                        DatePicker(NSLocalizedString("alarm_form.date", comment: "Date"), selection: $datePickerValue, displayedComponents: .date)
                             .datePickerStyle(.wheel)
                             .labelsHidden()
                         
                         Spacer()
                     }
-                    .navigationTitle("Select Date")
+                    .navigationTitle(NSLocalizedString("alarm_form.select_date", comment: "Select date"))
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {
-                            Button("Cancel") {
+                            Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
                                 showDatePicker = false
                             }
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button("Done") {
+                            Button(NSLocalizedString("button.done", comment: "Done button")) {
                                 // 선택한 날짜와 시간을 조합하여 알람 시간 생성
                                 let calendar = Calendar.current
                                 
@@ -371,13 +371,13 @@ struct WeekdaySelectionView: View {
     }
     
     private let weekdays = [
-        Weekday(id: 1, name: "Sun"),
-        Weekday(id: 2, name: "Mon"),
-        Weekday(id: 3, name: "Tue"),
-        Weekday(id: 4, name: "Wed"),
-        Weekday(id: 5, name: "Thu"),
-        Weekday(id: 6, name: "Fri"),
-        Weekday(id: 7, name: "Sat")
+        Weekday(id: 1, name: NSLocalizedString("weekday.sun", comment: "Sunday")),
+        Weekday(id: 2, name: NSLocalizedString("weekday.mon", comment: "Monday")),
+        Weekday(id: 3, name: NSLocalizedString("weekday.tue", comment: "Tuesday")),
+        Weekday(id: 4, name: NSLocalizedString("weekday.wed", comment: "Wednesday")),
+        Weekday(id: 5, name: NSLocalizedString("weekday.thu", comment: "Thursday")),
+        Weekday(id: 6, name: NSLocalizedString("weekday.fri", comment: "Friday")),
+        Weekday(id: 7, name: NSLocalizedString("weekday.sat", comment: "Saturday"))
     ]
     
     var body: some View {
@@ -483,8 +483,8 @@ struct CountrySelectionView: View {
                 }
             }
         }
-        .searchable(text: $searchText, prompt: "Search countries")
-        .navigationTitle("Select Country")
+        .searchable(text: $searchText, prompt: NSLocalizedString("alarm_form.search_countries", comment: "Search countries"))
+        .navigationTitle(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
         .navigationBarTitleDisplayMode(.inline)
     }
 }

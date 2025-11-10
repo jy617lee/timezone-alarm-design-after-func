@@ -29,5 +29,13 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ko</string>
+		<string>ja</string>
+		<string>pt-BR</string>
+		<string>id</string>
+	</array>
 </dict>
 </plist>
