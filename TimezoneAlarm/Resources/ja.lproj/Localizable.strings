@@ -43,4 +43,3 @@
 "settings.title" = "設定";
 "settings.default_country" = "デフォルトの国";
 "settings.select_country" = "国を選択";
-"settings.default_country_footer" = "新しいアラームを作成する際にデフォルトで使用される国です。";

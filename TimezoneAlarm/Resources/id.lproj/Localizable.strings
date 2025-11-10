@@ -43,4 +43,3 @@
 "settings.title" = "Pengaturan";
 "settings.default_country" = "Negara Default";
 "settings.select_country" = "Pilih Negara";
-"settings.default_country_footer" = "Negara ini akan digunakan sebagai default saat membuat alarm baru.";

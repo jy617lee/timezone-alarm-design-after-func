@@ -80,201 +80,264 @@ struct AlarmFormView: View {
     }
     
     var body: some View {
-        NavigationView {
-            Form {
-                // 알람명
-                Section {
-                    TextField(NSLocalizedString("alarm_form.alarm_name", comment: "Alarm name placeholder"), text: $alarmName)
-                } header: {
-                    Text(NSLocalizedString("alarm_form.alarm_name", comment: "Alarm name header"))
-                }
+        NavigationStack {
+            ZStack {
+                // 그라데이션 백그라운드
+                LinearGradient(
+                    colors: [Color.appBackgroundTop, Color.appBackgroundBottom],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
                 
-                // 시간 선택 (필수)
-                Section {
-                    Button(action: {
-                        // 현재 선택된 시간으로 tempTime 초기화
-                        var components = DateComponents()
-                        components.hour = selectedHour
-                        components.minute = selectedMinute
-                        tempTime = Calendar.current.date(from: components) ?? Date()
-                        showTimePicker = true
-                    }) {
-                        HStack {
-                            Text(NSLocalizedString("alarm_form.time", comment: "Time"))
-                            Spacer()
-                            Text(String(format: "%d:%02d %@", 
-                                      selectedHour > 12 ? selectedHour - 12 : (selectedHour == 0 ? 12 : selectedHour),
-                                      selectedMinute,
-                                      selectedHour >= 12 ? "PM" : "AM"))
-                                .foregroundColor(.appTextSecondary)
+                ScrollView {
+                    LazyVStack(spacing: 28) {
+                        // 알람명 (필수)
+                        FormSection(
+                            title: NSLocalizedString("alarm_form.alarm_name", comment: "Alarm name header"),
+                            isRequired: true
+                        ) {
+                            TextField(NSLocalizedString("alarm_form.alarm_name", comment: "Alarm name placeholder"), text: $alarmName)
+                                .font(.geist(size: 16, weight: .light))
+                                .foregroundColor(.appTextPrimary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+            
+                        // 시간 선택 (필수)
+                        FormSection(
+                            title: NSLocalizedString("alarm_form.time", comment: "Time header"),
+                            isRequired: true
+                        ) {
+                            Button(action: {
+                                // 현재 선택된 시간으로 tempTime 초기화
+                                var components = DateComponents()
+                                components.hour = selectedHour
+                                components.minute = selectedMinute
+                                tempTime = Calendar.current.date(from: components) ?? Date()
+                                showTimePicker = true
+                            }) {
+                                Text(String(format: "%d:%02d %@", 
+                                              selectedHour > 12 ? selectedHour - 12 : (selectedHour == 0 ? 12 : selectedHour),
+                                              selectedMinute,
+                                              selectedHour >= 12 ? "PM" : "AM"))
+                                    .font(.geist(size: 16, weight: .light))
+                                    .foregroundColor(.appTextPrimary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        // 국가 선택 (필수)
+                        FormSection(
+                            title: NSLocalizedString("alarm_form.country", comment: "Country header"),
+                            isRequired: true
+                        ) {
+                            NavigationLink {
+                                CountrySelectionView(selectedCountry: $selectedCountry)
+                            } label: {
+                                HStack {
+                                    if let country = selectedCountry {
+                                        Text(country.flag)
+                                            .font(.geist(size: 24, weight: .regular))
+                                        Text(country.name)
+                                            .font(.geist(size: 16, weight: .light))
+                                            .foregroundColor(.appTextPrimary)
+                                    } else {
+                                        Text(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
+                                            .font(.geist(size: 16, weight: .light))
+                                            .foregroundColor(.appTextSecondary)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.geist(size: 14, weight: .medium))
+                                        .foregroundColor(.appTextSecondary)
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                
+                        // 날짜 선택
+                        FormSection(
+                            title: NSLocalizedString("alarm_form.date", comment: "Date header")
+                        ) {
+                            HStack {
+                                if let date = selectedDate {
+                                    Button(action: {
+                                        showDatePicker = true
+                                    }) {
+                                        Text(formatDate(date))
+                                            .font(.geist(size: 16, weight: .light))
+                                            .foregroundColor(.appTextPrimary)
+                                    }
+                                    .buttonStyle(.plain)
+                                } else {
+                                    Button(action: {
+                                        showDatePicker = true
+                                    }) {
+                                        Text(NSLocalizedString("alarm_form.date_not_selected", comment: "Not selected"))
+                                            .font(.geist(size: 16, weight: .light))
+                                            .foregroundColor(.appTextSecondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.geist(size: 14, weight: .medium))
+                                    .foregroundColor(.appTextSecondary)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        // 반복 선택
+                        FormSection(
+                            title: NSLocalizedString("alarm_form.repeat", comment: "Repeat"),
+                            hideBackground: true
+                        ) {
+                            WeekdaySelectionView(
+                                selectedWeekdays: $selectedWeekdays,
+                                selectedDate: $selectedDate
+                            )
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 28)
+                    .padding(.top, 20)
+                    .padding(.bottom, 100)
+                    .frame(maxWidth: .infinity)
+                }
+                .scrollContentBackground(.hidden)
+            }
+            .navigationTitle(editingAlarm == nil ? NSLocalizedString("alarm_form.title.new", comment: "New alarm") : NSLocalizedString("alarm_form.title.edit", comment: "Edit alarm"))
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbarBackground(Color.appHeaderBackground, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .onAppear {
+                // NavigationBar 버튼 배경 완전히 제거
+                let appearance = UINavigationBarAppearance()
+                appearance.configureWithTransparentBackground()
+                appearance.backgroundColor = UIColor.clear
+                appearance.shadowColor = .clear
+                
+                // 버튼 배경 완전히 제거
+                let buttonAppearance = UIBarButtonItemAppearance()
+                buttonAppearance.normal.backgroundImage = UIImage()
+                buttonAppearance.highlighted.backgroundImage = UIImage()
+                buttonAppearance.disabled.backgroundImage = UIImage()
+                buttonAppearance.normal.titleTextAttributes = [:]
+                buttonAppearance.highlighted.titleTextAttributes = [:]
+                appearance.buttonAppearance = buttonAppearance
+                appearance.doneButtonAppearance = buttonAppearance
+                appearance.backButtonAppearance = buttonAppearance
+                
+                UINavigationBar.appearance().standardAppearance = appearance
+                UINavigationBar.appearance().compactAppearance = appearance
+                UINavigationBar.appearance().scrollEdgeAppearance = appearance
+                
+                // 버튼 배경 완전 제거를 위한 추가 설정
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 100_000_000) // 0.1초
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                       let window = windowScene.windows.first {
+                        @MainActor
+                        func removeButtonBackgrounds(from view: UIView) {
+                            if let button = view as? UIButton {
+                                button.backgroundColor = .clear
+                                button.layer.backgroundColor = UIColor.clear.cgColor
+                                button.setBackgroundImage(nil, for: .normal)
+                                button.setBackgroundImage(nil, for: .highlighted)
+                                button.setBackgroundImage(nil, for: .disabled)
+                                button.setBackgroundImage(nil, for: .selected)
+                                button.tintColor = .brown
+                                if #available(iOS 15.0, *) {
+                                    var config = button.configuration ?? UIButton.Configuration.plain()
+                                    config.background.backgroundColor = .clear
+                                    config.background.cornerRadius = 0
+                                    config.baseForegroundColor = .brown
+                                    button.configuration = config
+                                }
+                            }
+                            for subview in view.subviews {
+                                removeButtonBackgrounds(from: subview)
+                            }
+                        }
+                        for subview in window.subviews {
+                            removeButtonBackgrounds(from: subview)
                         }
                     }
-                } header: {
-                    Text(NSLocalizedString("alarm_form.time", comment: "Time header"))
                 }
-                .sheet(isPresented: $showTimePicker) {
-                    NavigationView {
+            }
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(editingAlarm == nil ? NSLocalizedString("alarm_form.title.new", comment: "New alarm") : NSLocalizedString("alarm_form.title.edit", comment: "Edit alarm"))
+                        .font(.geist(size: 20, weight: .bold))
+                        .foregroundColor(.appTextPrimary)
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .renderingMode(.template)
+                            .foregroundColor(.brown)
+                    }
+                    .buttonStyle(.plain)
+                    .tint(.brown)
+                    .accentColor(.brown)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        saveAlarm()
+                    }) {
+                        Text(NSLocalizedString("button.save", comment: "Save button"))
+                            .font(.geist(size: 16, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(isFormValid ? Color.appPrimary : Color.appPrimary.opacity(0.5))
+                            .cornerRadius(20)
+                    }
+                    .disabled(!isFormValid)
+                    .buttonStyle(.plain)
+                    .background(Color.clear)
+                }
+            }
+            .sheet(isPresented: $showDatePicker) {
+                NavigationStack {
+                    ZStack {
+                        // 그라데이션 백그라운드
+                        LinearGradient(
+                            colors: [Color.appBackgroundTop, Color.appBackgroundBottom],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .ignoresSafeArea()
+                        
                         VStack {
-                            DatePicker(NSLocalizedString("alarm_form.time", comment: "Time"), selection: $tempTime, displayedComponents: .hourAndMinute)
+                            DatePicker(NSLocalizedString("alarm_form.date", comment: "Date"), selection: $datePickerValue, displayedComponents: .date)
                                 .datePickerStyle(.wheel)
                                 .labelsHidden()
                             
                             Spacer()
                         }
-                        .navigationTitle(NSLocalizedString("alarm_form.select_time", comment: "Select time"))
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarLeading) {
-                                Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
-                                    showTimePicker = false
-                                }
-                            }
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button(NSLocalizedString("button.done", comment: "Done button")) {
-                                    // 선택한 날짜와 시간을 조합하여 알람 시간 생성
-                                    let calendar = Calendar.current
-                                    let selectedDateForValidation = selectedDate ?? Date() // 날짜가 없으면 오늘
-                                    
-                                    // 선택한 날짜의 시간을 선택한 시간으로 설정
-                                    var dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDateForValidation)
-                                    let timeComponents = calendar.dateComponents([.hour, .minute], from: tempTime)
-                                    dateComponents.hour = timeComponents.hour
-                                    dateComponents.minute = timeComponents.minute
-                                    
-                                    guard let alarmDateTime = calendar.date(from: dateComponents) else {
-                                        showTimePicker = false
-                                        return
-                                    }
-                                    
-                                    // 현재 시간보다 이전인지 확인
-                                    if alarmDateTime <= Date() {
-                                        // 토스트 메시지 표시 (사용자 기기 언어로)
-                                        toastMessage = NSLocalizedString("past_time_selection_error", comment: "Past time selection error message")
-                                        showToast = true
-                                        // 선택 취소
-                                        showTimePicker = false
-                                        return
-                                    }
-                                    
-                                    // 유효한 시간이면 저장
-                                    let components = calendar.dateComponents([.hour, .minute], from: tempTime)
-                                    selectedHour = components.hour ?? 7
-                                    selectedMinute = components.minute ?? 0
-                                    showTimePicker = false
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                // 국가 선택 (필수)
-                Section {
-                    NavigationLink {
-                        CountrySelectionView(selectedCountry: $selectedCountry)
-                    } label: {
-                        HStack {
-                            Text(NSLocalizedString("alarm_form.country", comment: "Country"))
-                            Spacer()
-                            if let country = selectedCountry {
-                                HStack(spacing: 8) {
-                                    Text(country.flag)
-                                    Text(country.name)
-                                        .foregroundColor(.appTextSecondary)
-                                }
-                            } else {
-                                Text(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
-                                    .foregroundColor(.appTextSecondary)
-                            }
-                        }
-                    }
-                } header: {
-                    Text(NSLocalizedString("alarm_form.country", comment: "Country header"))
-                }
-                
-                // 날짜 선택
-                Section {
-                    if selectedDate != nil {
-                        HStack {
-                            Button(action: {
-                                showDatePicker = true
-                            }) {
-                                HStack {
-                                    Text(NSLocalizedString("alarm_form.date", comment: "Date"))
-                                    Spacer()
-                                    if let date = selectedDate {
-                                        Text(formatDate(date))
-                                            .foregroundColor(.appTextSecondary)
-                                    }
-                                }
-                            }
-                            .buttonStyle(.plain)
-                            
-                            Button(action: {
-                                selectedDate = nil
-                            }) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.appTextSecondary)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    } else {
-                        Button(action: {
-                            showDatePicker = true
-                        }) {
-                            HStack {
-                                Text(NSLocalizedString("alarm_form.date", comment: "Date"))
-                                Spacer()
-                                Text(NSLocalizedString("alarm_form.date_not_selected", comment: "Not selected"))
-                                    .foregroundColor(.appTextSecondary)
-                            }
-                        }
-                        .buttonStyle(.plain)
-                    }
-                } header: {
-                    Text(NSLocalizedString("alarm_form.date", comment: "Date header"))
-                }
-                
-                // 반복 선택
-                Section {
-                    WeekdaySelectionView(
-                        selectedWeekdays: $selectedWeekdays,
-                        selectedDate: $selectedDate
-                    )
-                } header: {
-                    Text(NSLocalizedString("alarm_form.repeat", comment: "Repeat"))
-                }
-            }
-            .navigationTitle(editingAlarm == nil ? NSLocalizedString("alarm_form.title.new", comment: "New alarm") : NSLocalizedString("alarm_form.title.edit", comment: "Edit alarm"))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(NSLocalizedString("button.save", comment: "Save button")) {
-                        saveAlarm()
-                    }
-                    .disabled(!isFormValid)
-                }
-            }
-            .sheet(isPresented: $showDatePicker) {
-                NavigationStack {
-                    VStack {
-                        DatePicker(NSLocalizedString("alarm_form.date", comment: "Date"), selection: $datePickerValue, displayedComponents: .date)
-                            .datePickerStyle(.wheel)
-                            .labelsHidden()
-                        
-                        Spacer()
                     }
                     .navigationTitle(NSLocalizedString("alarm_form.select_date", comment: "Select date"))
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            Text(NSLocalizedString("alarm_form.select_date", comment: "Select date"))
+                                .font(.geist(size: 18, weight: .semibold))
+                                .foregroundColor(.appTextPrimary)
+                        }
                         ToolbarItem(placement: .navigationBarLeading) {
                             Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
                                 showDatePicker = false
                             }
+                            .font(.geist(size: 16, weight: .regular))
+                            .foregroundColor(.appTextPrimary)
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button(NSLocalizedString("button.done", comment: "Done button")) {
@@ -306,6 +369,12 @@ struct AlarmFormView: View {
                                 selectedWeekdays = []
                                 showDatePicker = false
                             }
+                            .font(.geist(size: 16, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.appPrimary)
+                            .cornerRadius(20)
                         }
                     }
                 }
@@ -316,6 +385,83 @@ struct AlarmFormView: View {
                 ToastView(message: toastMessage, isShowing: $showToast)
                     .animation(.easeInOut, value: showToast)
             )
+            .sheet(isPresented: $showTimePicker) {
+                NavigationView {
+                    ZStack {
+                        // 그라데이션 백그라운드
+                        LinearGradient(
+                            colors: [Color.appBackgroundTop, Color.appBackgroundBottom],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .ignoresSafeArea()
+                        
+                        VStack {
+                            DatePicker(NSLocalizedString("alarm_form.time", comment: "Time"), selection: $tempTime, displayedComponents: .hourAndMinute)
+                                .datePickerStyle(.wheel)
+                                .labelsHidden()
+                            
+                            Spacer()
+                        }
+                    }
+                    .navigationTitle(NSLocalizedString("alarm_form.select_time", comment: "Select time"))
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            Text(NSLocalizedString("alarm_form.select_time", comment: "Select time"))
+                                .font(.geist(size: 18, weight: .semibold))
+                                .foregroundColor(.appTextPrimary)
+                        }
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
+                                showTimePicker = false
+                            }
+                            .font(.geist(size: 16, weight: .regular))
+                            .foregroundColor(.appTextPrimary)
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(NSLocalizedString("button.done", comment: "Done button")) {
+                                // 선택한 날짜와 시간을 조합하여 알람 시간 생성
+                                let calendar = Calendar.current
+                                let selectedDateForValidation = selectedDate ?? Date() // 날짜가 없으면 오늘
+                                
+                                // 선택한 날짜의 시간을 선택한 시간으로 설정
+                                var dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDateForValidation)
+                                let timeComponents = calendar.dateComponents([.hour, .minute], from: tempTime)
+                                dateComponents.hour = timeComponents.hour
+                                dateComponents.minute = timeComponents.minute
+                                
+                                guard let alarmDateTime = calendar.date(from: dateComponents) else {
+                                    showTimePicker = false
+                                    return
+                                }
+                                
+                                // 현재 시간보다 이전인지 확인
+                                if alarmDateTime <= Date() {
+                                    // 토스트 메시지 표시 (사용자 기기 언어로)
+                                    toastMessage = NSLocalizedString("past_time_selection_error", comment: "Past time selection error message")
+                                    showToast = true
+                                    // 선택 취소
+                                    showTimePicker = false
+                                    return
+                                }
+                                
+                                // 유효한 시간이면 저장
+                                let components = calendar.dateComponents([.hour, .minute], from: tempTime)
+                                selectedHour = components.hour ?? 7
+                                selectedMinute = components.minute ?? 0
+                                showTimePicker = false
+                            }
+                            .font(.geist(size: 16, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.appPrimary)
+                            .cornerRadius(20)
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -381,7 +527,7 @@ struct WeekdaySelectionView: View {
     ]
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 6) {
             ForEach(weekdays, id: \.id) { weekday in
                 WeekdayButton(
                     weekday: weekday,
@@ -429,13 +575,22 @@ struct WeekdaySelectionView: View {
                 // 4. 버튼이 눌릴 때마다 눌린 버튼의 id를 인자로 하는 함수 호출
                 toggleWeekday()
             }) {
-                Text(weekday.name)
+                Text(String(weekday.name.prefix(1)))
                     .font(.geist(size: 15, weight: .semibold))
-                    .foregroundColor(isSelected ? .appTextOnPrimary : .appTextPrimary)
+                    .foregroundColor(isSelected ? .appTextPrimary : .appTextSecondary)
                     .frame(width: 44, height: 44)
                     .background(
                         Circle()
-                            .fill(isSelected ? Color.appSelected : Color.appDisabled)
+                            .fill(isSelected ? Color.cardHotPinkAccent : Color.clear)
+                    )
+                    .overlay(
+                        // 선택되지 않은 요일: 투명도가 있는 하얀색 동그라미 배경이 글자 위를 덮음
+                        Group {
+                            if !isSelected {
+                                Circle()
+                                    .fill(Color.white.opacity(0.6))
+                            }
+                        }
                     )
             }
             // 2. 버튼마다 id 넣기 (고정된 id 사용)
@@ -463,28 +618,110 @@ struct CountrySelectionView: View {
     }
     
     var body: some View {
-        List {
-            ForEach(filteredCountries) { country in
-                Button(action: {
-                    selectedCountry = country
-                    dismiss()
-                }) {
-                    HStack {
-                        Text(country.flag)
-                            .font(.geist(size: 22, weight: .regular))
-                        Text(country.name)
-                        Spacer()
-                        if selectedCountry?.id == country.id {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(.appPrimary)
+        ZStack {
+            // 그라데이션 백그라운드
+            LinearGradient(
+                colors: [Color.appBackgroundTop, Color.appBackgroundBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 12) {
+                    ForEach(filteredCountries) { country in
+                        Button(action: {
+                            selectedCountry = country
+                            dismiss()
+                        }) {
+                            HStack {
+                                Text(country.flag)
+                                    .font(.geist(size: 22, weight: .regular))
+                                Text(country.name)
+                                    .font(.geist(size: 16, weight: .regular))
+                                    .foregroundColor(.appTextPrimary)
+                                Spacer()
+                                if selectedCountry?.id == country.id {
+                                    Image(systemName: "checkmark")
+                                        .font(.geist(size: 16, weight: .semibold))
+                                        .foregroundColor(.appPrimary)
+                                }
+                            }
+                            .padding(16)
+                            .background(Color.appCardBackground)
+                            .cornerRadius(16)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(Color.appCardBorder, lineWidth: 1)
+                            )
+                            .shadow(color: Color.appShadow.opacity(0.2), radius: 8, x: 0, y: 2)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
+                .padding(.bottom, 20)
             }
         }
         .searchable(text: $searchText, prompt: NSLocalizedString("alarm_form.search_countries", comment: "Search countries"))
         .navigationTitle(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
+                    .font(.geist(size: 18, weight: .semibold))
+                    .foregroundColor(.appTextPrimary)
+            }
+        }
+    }
+}
+
+// Form Section 컴포넌트
+struct FormSection<Content: View>: View {
+    let title: String
+    let isRequired: Bool
+    let hideBackground: Bool
+    let content: Content
+    
+    init(title: String, isRequired: Bool = false, hideBackground: Bool = false, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.isRequired = isRequired
+        self.hideBackground = hideBackground
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                Text(title)
+                    .font(.geist(size: 16, weight: .semibold))
+                    .foregroundColor(.appTextPrimary)
+                
+                if isRequired {
+                    Text("*")
+                        .font(.geist(size: 16, weight: .semibold))
+                        .foregroundColor(.appPrimary)
+                        .baselineOffset(0)
+                }
+            }
+            
+            VStack(spacing: 0) {
+                content
+            }
+            .padding(hideBackground ? 0 : 16)
+            .background(hideBackground ? Color.clear : Color.appCardBackground)
+            .cornerRadius(hideBackground ? 0 : 16)
+            .overlay(
+                Group {
+                    if !hideBackground {
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color.appCardBorder, lineWidth: 1)
+                    }
+                }
+            )
+            .shadow(color: hideBackground ? .clear : Color.appShadow.opacity(0.2), radius: hideBackground ? 0 : 8, x: 0, y: hideBackground ? 0 : 2)
+        }
     }
 }
 
