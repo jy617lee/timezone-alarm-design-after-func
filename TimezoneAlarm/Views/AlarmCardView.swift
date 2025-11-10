@@ -75,7 +75,7 @@ struct AlarmCardView: View {
                     .tint(cardPalette.accent)
                 }
                 
-                // 중간 행: 시간과 AM/PM
+                // 중간 행: 시간, AM/PM, 국가 정보, 날짜/요일 (한 줄에)
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     Text(alarm.timeOnly)
                         .font(.geist(size: 36, weight: .bold))
@@ -86,11 +86,6 @@ struct AlarmCardView: View {
                         .foregroundColor(.appTextSecondary)
                         .padding(.leading, 4)
                     
-                    Spacer()
-                }
-                
-                // 하단 행: 국가 정보와 날짜/요일 (한 열에)
-                HStack(spacing: 12) {
                     // 국가 정보
                     HStack(spacing: 8) {
                         Text(alarm.countryFlag)
@@ -100,6 +95,7 @@ struct AlarmCardView: View {
                             .font(.geist(size: 14, weight: .regular))
                             .foregroundColor(.appTextSecondary)
                     }
+                    .padding(.leading, 8)
                     
                     // 날짜 또는 요일 표시
                     if let selectedDate = alarm.selectedDate {
@@ -112,6 +108,7 @@ struct AlarmCardView: View {
                                 .font(.geist(size: 14, weight: .regular))
                                 .foregroundColor(.appTextSecondary)
                         }
+                        .padding(.leading, 4)
                     } else if !alarm.selectedWeekdays.isEmpty {
                         // 요일이 선택된 경우
                         HStack(spacing: 6) {
@@ -127,6 +124,7 @@ struct AlarmCardView: View {
                                     )
                             }
                         }
+                        .padding(.leading, 4)
                     }
                     
                     Spacer()
