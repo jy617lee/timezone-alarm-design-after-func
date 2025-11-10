@@ -55,9 +55,41 @@ struct AlarmCardView: View {
                         generator.impactOccurred()
                         onDelete()
                     }) {
-                        Image(systemName: "trash")
-                            .font(.geist(size: 17, weight: .regular))
-                            .foregroundColor(.appTextSecondary)
+                        // 커스텀 휴지통 아이콘 (세로줄 2개, 두꺼운 선)
+                        ZStack {
+                            // 휴지통 몸체
+                            Path { path in
+                                // 왼쪽 벽
+                                path.move(to: CGPoint(x: 4, y: 6))
+                                path.addLine(to: CGPoint(x: 4, y: 18))
+                                // 바닥
+                                path.addLine(to: CGPoint(x: 12, y: 18))
+                                // 오른쪽 벽
+                                path.addLine(to: CGPoint(x: 12, y: 6))
+                                // 뚜껑 왼쪽
+                                path.move(to: CGPoint(x: 2, y: 6))
+                                path.addLine(to: CGPoint(x: 4, y: 6))
+                                // 뚜껑 오른쪽
+                                path.move(to: CGPoint(x: 12, y: 6))
+                                path.addLine(to: CGPoint(x: 14, y: 6))
+                                // 뚜껑 손잡이
+                                path.move(to: CGPoint(x: 6, y: 4))
+                                path.addLine(to: CGPoint(x: 10, y: 4))
+                            }
+                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
+                            
+                            // 세로줄 2개
+                            Path { path in
+                                // 왼쪽 세로줄
+                                path.move(to: CGPoint(x: 6.5, y: 8))
+                                path.addLine(to: CGPoint(x: 6.5, y: 16))
+                                // 오른쪽 세로줄
+                                path.move(to: CGPoint(x: 9.5, y: 8))
+                                path.addLine(to: CGPoint(x: 9.5, y: 16))
+                            }
+                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+                        }
+                        .frame(width: 16, height: 20)
                     }
                     .buttonStyle(.plain)
                     .padding(.trailing, 8)
