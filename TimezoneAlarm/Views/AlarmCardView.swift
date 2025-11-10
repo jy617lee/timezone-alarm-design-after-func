@@ -42,7 +42,7 @@ struct AlarmCardView: View {
             }) {
                 // 메인 카드 컨텐츠
                 VStack(alignment: .leading, spacing: 12) {
-                    // 상단 행: 알람명
+                    // 상단 행: 알람명 (삭제/토글은 overlay로 위에 올려서 정렬)
                     HStack(alignment: .center) {
                         // 알람명
                         Text(alarm.name)
@@ -50,6 +50,36 @@ struct AlarmCardView: View {
                             .foregroundColor(.appTextPrimary)
                         
                         Spacer()
+                        
+                        // 삭제 버튼과 토글을 위한 공간 (overlay로 실제 버튼이 올라감)
+                        HStack(spacing: 4) {
+                            // 삭제 버튼
+                            Button(action: {
+                                // 햅틱 피드백
+                                let generator = UIImpactFeedbackGenerator(style: .medium)
+                                generator.impactOccurred()
+                                onDelete()
+                            }) {
+                                TrashIconView(size: 16, color: .appTextSecondary)
+                                    .frame(width: 44, height: 44) // 최소 터치 영역 44x44pt (iOS 가이드라인)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            
+                            // 커스텀 토글
+                            CustomToggle(
+                                isOn: Binding(
+                                    get: { alarm.isEnabled },
+                                    set: { _ in
+                                        onToggle()
+                                    }
+                                ),
+                                accentColor: cardPalette.accent
+                            )
+                            .frame(width: 56, height: 44) // 최소 터치 영역 44x44pt (iOS 가이드라인)
+                            .contentShape(Rectangle())
+                        }
+                        .opacity(0) // 투명하게 만들어서 공간만 차지
                     }
                     
                     // 중간 행: 시간, AM/PM, 국가 정보, 날짜 (한 줄에)
@@ -145,6 +175,7 @@ struct AlarmCardView: View {
             }
             .buttonStyle(.plain)
             // 삭제 버튼과 토글을 overlay로 위에 올려서 탭 우선순위를 높임
+            // 타이틀 HStack과 정확히 같은 위치에 배치
             .overlay(alignment: .topTrailing) {
                 HStack(spacing: 4) {
                     // 삭제 버튼
