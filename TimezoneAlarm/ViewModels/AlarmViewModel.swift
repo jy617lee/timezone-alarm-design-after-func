@@ -164,6 +164,9 @@ class AlarmViewModel {
             if alarm.isEnabled {
                 AlarmScheduler.shared.scheduleAlarm(alarm)
             }
+            
+            // Analytics 로깅
+            AnalyticsService.shared.logAlarmUpdated(alarm: alarm)
         }
     }
 }
