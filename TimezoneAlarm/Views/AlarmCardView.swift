@@ -20,15 +20,16 @@ struct AlarmCardView: View {
     private let weekdayIndices = [1, 2, 3, 4, 5, 6, 7] // Sunday=1, Monday=2, ..., Saturday=7
     
     // 카드 색상 팔레트 선택 (알람 ID 기반)
+    // 순서: 핫핑크 > 피스타치오 > 오렌지 > 베리 > 레몬 > 쿠키 > 딸기 > 연한갈색
     private var cardPalette: (background: Color, accent: Color) {
         let palettes: [(background: Color, accent: Color)] = [
-            (.cardStrawberryBackground, .cardStrawberryAccent),
-            (.cardPistachioBackground, .cardPistachioAccent),
-            (.cardLemonBackground, .cardLemonAccent),
-            (.cardBerryBackground, .cardBerryAccent),
-            (.cardCookieBackground, .cardCookieAccent),
-            (.cardOrangeBackground, .cardOrangeAccent),
             (.cardHotPinkBackground, .cardHotPinkAccent),
+            (.cardPistachioBackground, .cardPistachioAccent),
+            (.cardOrangeBackground, .cardOrangeAccent),
+            (.cardBerryBackground, .cardBerryAccent),
+            (.cardLemonBackground, .cardLemonAccent),
+            (.cardCookieBackground, .cardCookieAccent),
+            (.cardStrawberryBackground, .cardStrawberryAccent),
             (.cardLightBrownBackground, .cardLightBrownAccent)
         ]
         let index = abs(alarm.id.hashValue) % palettes.count
@@ -39,13 +40,27 @@ struct AlarmCardView: View {
         HStack(spacing: 0) {
             // 메인 카드 컨텐츠
             VStack(alignment: .leading, spacing: 16) {
-                // 상단 행: 알람명과 토글
+                // 상단 행: 알람명, 삭제 버튼, 토글
                 HStack {
                     Text(alarm.name)
                         .font(.geist(size: 18, weight: .semibold))
                         .foregroundColor(.appTextPrimary)
                     
                     Spacer()
+                    
+                    // 삭제 버튼
+                    Button(action: {
+                        // 햅틱 피드백
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
+                        onDelete()
+                    }) {
+                        Image(systemName: "trash")
+                            .font(.geist(size: 17, weight: .regular))
+                            .foregroundColor(.appTextSecondary)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.trailing, 8)
                     
                     Toggle("", isOn: Binding(
                         get: { alarm.isEnabled },
@@ -63,7 +78,7 @@ struct AlarmCardView: View {
                 // 중간 행: 시간과 AM/PM
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     Text(alarm.timeOnly)
-                        .font(.geist(size: 36, weight: .light))
+                        .font(.geist(size: 36, weight: .bold))
                         .foregroundColor(.appTextPrimary)
                     
                     Text(alarm.amPm)
@@ -74,7 +89,7 @@ struct AlarmCardView: View {
                     Spacer()
                 }
                 
-                // 하단 행: 국가 정보와 날짜/요일
+                // 하단 행: 국가 정보와 날짜/요일 (한 열에)
                 HStack(spacing: 12) {
                     // 국가 정보
                     HStack(spacing: 8) {
@@ -86,17 +101,15 @@ struct AlarmCardView: View {
                             .foregroundColor(.appTextSecondary)
                     }
                     
-                    Spacer()
-                    
                     // 날짜 또는 요일 표시
                     if let selectedDate = alarm.selectedDate {
                         // 날짜가 선택된 경우
                         HStack(spacing: 8) {
-                            Image(systemName: "calendar")
-                                .font(.geist(size: 12, weight: .regular))
+                            Text("•")
+                                .font(.geist(size: 14, weight: .regular))
                                 .foregroundColor(.appTextSecondary)
                             Text(formatDate(selectedDate))
-                                .font(.geist(size: 15, weight: .regular))
+                                .font(.geist(size: 14, weight: .regular))
                                 .foregroundColor(.appTextSecondary)
                         }
                     } else if !alarm.selectedWeekdays.isEmpty {
@@ -114,17 +127,9 @@ struct AlarmCardView: View {
                                     )
                             }
                         }
-                    } else {
-                        // 날짜도 요일도 선택되지 않은 경우
-                        HStack(spacing: 8) {
-                            Image(systemName: "clock")
-                                .font(.geist(size: 12, weight: .regular))
-                                .foregroundColor(.appTextSecondary)
-                            Text(NSLocalizedString("alarm_card.once", comment: "Once"))
-                                .font(.geist(size: 15, weight: .regular))
-                                .foregroundColor(.appTextSecondary)
-                        }
                     }
+                    
+                    Spacer()
                 }
             }
             .padding()
