@@ -99,6 +99,8 @@ extension Color {
     static let appMutedBackground = Color(red: 241/255.0, green: 232/255.0, blue: 232/255.0)
     /// Popover background color: #ffffff
     static let appPopoverBackground = Color(red: 255/255.0, green: 255/255.0, blue: 255/255.0)
+    /// Header background color: #FFF0F3 60% opacity
+    static let appHeaderBackground = Color(red: 255/255.0, green: 240/255.0, blue: 243/255.0).opacity(0.6)
     
     // MARK: - Text Colors
     /// Primary text color: #6B4423 (진한 쿠키 브라운)
@@ -139,6 +141,8 @@ extension Color {
     // MARK: - Border & Ring Colors
     /// Border color: #e8dcdc
     static let appBorder = Color(red: 232/255.0, green: 220/255.0, blue: 220/255.0)
+    /// Card border color: #000000 10% opacity
+    static let appCardBorder = Color(red: 0/255.0, green: 0/255.0, blue: 0/255.0).opacity(0.1)
     /// Ring color: #b87b8f
     static let appRing = Color(red: 184/255.0, green: 123/255.0, blue: 143/255.0)
     
@@ -168,6 +172,18 @@ extension Color {
     /// Card palette 5: Cookie Dough - background #FBF2E3, accent #F0D6A7
     static let cardCookieBackground = Color(red: 251/255.0, green: 242/255.0, blue: 227/255.0)
     static let cardCookieAccent = Color(red: 240/255.0, green: 214/255.0, blue: 167/255.0)
+    
+    /// Card palette 6: Orange - background #FFE8D6, accent #FFB88C
+    static let cardOrangeBackground = Color(red: 255/255.0, green: 232/255.0, blue: 214/255.0)
+    static let cardOrangeAccent = Color(red: 255/255.0, green: 184/255.0, blue: 140/255.0)
+    
+    /// Card palette 7: Hot Pink - background #FFD6E8, accent #FF8FB8
+    static let cardHotPinkBackground = Color(red: 255/255.0, green: 214/255.0, blue: 232/255.0)
+    static let cardHotPinkAccent = Color(red: 255/255.0, green: 143/255.0, blue: 184/255.0)
+    
+    /// Card palette 8: Light Brown - background #F5E6D3, accent #D4B896
+    static let cardLightBrownBackground = Color(red: 245/255.0, green: 230/255.0, blue: 211/255.0)
+    static let cardLightBrownAccent = Color(red: 212/255.0, green: 184/255.0, blue: 150/255.0)
     
     /// Cookie color for settings icon: #8B6F47 (밝은 쿠키 브라운)
     static let appCookieColor = Color(red: 139/255.0, green: 111/255.0, blue: 71/255.0)

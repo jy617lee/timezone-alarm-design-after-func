@@ -32,41 +32,11 @@ struct ContentView: View {
                 .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // 커스텀 헤더 (border 없이)
+                    // 커스텀 헤더 (배경색, 블러, 그림자 적용)
                     HStack {
-                    Spacer()
-                    if viewModel.alarms.isEmpty {
-                        // Empty State - 버튼만 표시
-                        HStack(spacing: 12) {
-                            Button(action: {
-                                showAlarmForm = true
-                            }) {
-                                Image(systemName: "plus")
-                                    .font(.geist(size: 18, weight: .medium))
-                                    .foregroundColor(.white)
-                                    .frame(width: 40, height: 40)
-                                    .background(Circle().fill(Color.appPrimary))
-                            }
-                            Button(action: {
-                                showSettings = true
-                            }) {
-                                Image(systemName: "gearshape")
-                                    .font(.geist(size: 18, weight: .medium))
-                                    .foregroundColor(.appCookieColor)
-                                    .frame(width: 32, height: 32)
-                            }
-                        }
-                        .padding(.trailing, 16)
-                    } else {
-                        // Alarm List
-                        if editMode == .active {
-                            Button(NSLocalizedString("button.done", comment: "Done button")) {
-                                withAnimation {
-                                    editMode = .inactive
-                                }
-                            }
-                            .padding(.trailing, 16)
-                        } else {
+                        Spacer()
+                        if viewModel.alarms.isEmpty {
+                            // Empty State - 버튼만 표시
                             HStack(spacing: 12) {
                                 Button(action: {
                                     showAlarmForm = true
@@ -74,7 +44,7 @@ struct ContentView: View {
                                     Image(systemName: "plus")
                                         .font(.geist(size: 18, weight: .medium))
                                         .foregroundColor(.white)
-                                        .frame(width: 32, height: 32)
+                                        .frame(width: 40, height: 40)
                                         .background(Circle().fill(Color.appPrimary))
                                 }
                                 Button(action: {
@@ -82,15 +52,50 @@ struct ContentView: View {
                                 }) {
                                     Image(systemName: "gearshape")
                                         .font(.geist(size: 18, weight: .medium))
-                                        .foregroundColor(.appCookieColor)
-                                        .frame(width: 32, height: 32)
+                                        .foregroundColor(.appTextPrimary)
+                                        .frame(width: 36, height: 36)
                                 }
                             }
-                            .padding(.trailing, 16)
+                            .padding(.trailing, 20)
+                        } else {
+                            // Alarm List
+                            if editMode == .active {
+                                Button(NSLocalizedString("button.done", comment: "Done button")) {
+                                    withAnimation {
+                                        editMode = .inactive
+                                    }
+                                }
+                                .padding(.trailing, 20)
+                            } else {
+                                HStack(spacing: 12) {
+                                    Button(action: {
+                                        showAlarmForm = true
+                                    }) {
+                                        Image(systemName: "plus")
+                                            .font(.geist(size: 18, weight: .medium))
+                                            .foregroundColor(.white)
+                                            .frame(width: 40, height: 40)
+                                            .background(Circle().fill(Color.appPrimary))
+                                    }
+                                    Button(action: {
+                                        showSettings = true
+                                    }) {
+                                        Image(systemName: "gearshape")
+                                            .font(.geist(size: 18, weight: .medium))
+                                            .foregroundColor(.appTextPrimary)
+                                            .frame(width: 36, height: 36)
+                                    }
+                                }
+                                .padding(.trailing, 20)
+                            }
                         }
                     }
-                }
-                .frame(height: 44)
+                    .frame(height: 44)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 6)
+                    .background(Color.appHeaderBackground)
+                    .background(.ultraThinMaterial)
+                    .shadow(color: Color.appShadow.opacity(0.3), radius: 16, x: 0, y: 4)
                 
                 // 컨텐츠
                 if viewModel.alarms.isEmpty {
@@ -140,6 +145,7 @@ struct ContentView: View {
                 } else {
                     // Alarm List
                     AlarmListView(viewModel: viewModel, showAlarmForm: $showAlarmForm, showSettings: $showSettings, editMode: $editMode)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 }
             }

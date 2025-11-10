@@ -65,6 +65,17 @@ struct Alarm: Identifiable, Codable, Equatable {
         return "\(hour):\(String(format: "%02d", minute))"
     }
     
+    // 시간만 (AM/PM 제외)
+    var timeOnly: String {
+        let displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour)
+        return String(format: "%d:%02d", displayHour, minute)
+    }
+    
+    // AM/PM만
+    var amPm: String {
+        return hour >= 12 ? "PM" : "AM"
+    }
+    
     // Equatable 구현
     static func == (lhs: Alarm, rhs: Alarm) -> Bool {
         lhs.id == rhs.id
