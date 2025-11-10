@@ -10,12 +10,15 @@ import SwiftUI
 struct AlarmListView: View {
     @Bindable var viewModel: AlarmViewModel
     @Binding var showAlarmForm: Bool
-    @State private var editMode: EditMode = .inactive
+    @Binding var showSettings: Bool
+    @Binding var editMode: EditMode
     @State private var editingAlarm: Alarm?
     
-    init(viewModel: AlarmViewModel, showAlarmForm: Binding<Bool> = .constant(false)) {
+    init(viewModel: AlarmViewModel, showAlarmForm: Binding<Bool> = .constant(false), showSettings: Binding<Bool> = .constant(false), editMode: Binding<EditMode> = .constant(.inactive)) {
         self.viewModel = viewModel
         self._showAlarmForm = showAlarmForm
+        self._showSettings = showSettings
+        self._editMode = editMode
     }
     
     var body: some View {
@@ -52,17 +55,6 @@ struct AlarmListView: View {
         }
         .listStyle(.plain)
         .environment(\.editMode, $editMode)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if editMode == .active {
-                    Button("Done") {
-                        withAnimation {
-                            editMode = .inactive
-                        }
-                    }
-                }
-            }
-        }
         .sheet(item: $editingAlarm) { alarm in
             AlarmFormView(viewModel: viewModel, editingAlarm: alarm)
         }

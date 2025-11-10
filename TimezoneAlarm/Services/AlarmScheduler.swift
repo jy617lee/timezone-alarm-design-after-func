@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import UserNotifications
+@preconcurrency import UserNotifications
 
 final class AlarmScheduler: @unchecked Sendable {
     static nonisolated let shared = AlarmScheduler()
@@ -86,7 +86,7 @@ final class AlarmScheduler: @unchecked Sendable {
         for weekday in alarm.selectedWeekdays {
             // 알람 시간대에서 다음 해당 요일 찾기
             var targetDate = now
-            if let localComponents = convertAlarmTimeToLocalComponents(alarm: alarm, alarmTimezone: alarmTimezone, date: now, weekday: weekday) {
+            if convertAlarmTimeToLocalComponents(alarm: alarm, alarmTimezone: alarmTimezone, date: now, weekday: weekday) != nil {
                 // 오늘 해당 요일인지 확인
                 let todayComponents = calendar.dateComponents(in: alarmTimezone, from: now)
                 if todayComponents.weekday == weekday {
@@ -149,7 +149,7 @@ final class AlarmScheduler: @unchecked Sendable {
     
     // 단일 알람 스케줄링
     private func scheduleSingleAlarm(alarm: Alarm, alarmTimezone: TimeZone, content: UNMutableNotificationContent, calendar: Calendar, now: Date) {
-        guard let localComponents = convertAlarmTimeToLocalComponents(alarm: alarm, alarmTimezone: alarmTimezone, date: now) else {
+        guard convertAlarmTimeToLocalComponents(alarm: alarm, alarmTimezone: alarmTimezone, date: now) != nil else {
             
             debugLog("⚠️ 알람 시간 생성 실패")
             
@@ -198,7 +198,9 @@ final class AlarmScheduler: @unchecked Sendable {
             
             // 첫 번째 알림 스케줄링
             let trigger = UNCalendarNotificationTrigger(dateMatching: finalComponents, repeats: false)
-            let request = UNNotificationRequest(identifier: alarm.id.uuidString, content: content, trigger: trigger)
+            // content를 클로저 밖에서 사용하기 위해 복사
+            let requestContent = content.copy() as! UNMutableNotificationContent
+            let request = UNNotificationRequest(identifier: alarm.id.uuidString, content: requestContent, trigger: trigger)
             
             
             if let nextTriggerDate = trigger.nextTriggerDate() {

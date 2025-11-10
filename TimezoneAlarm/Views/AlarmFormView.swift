@@ -63,6 +63,11 @@ struct AlarmFormView: View {
                 _selectedCountry = State(initialValue: country)
             }
         } else {
+            // 새 알람 생성 시 기본 국가 로드
+            if let countryId = UserDefaults.standard.string(forKey: "defaultCountryId"),
+               let country = Country.popularCountries.first(where: { $0.id == countryId }) {
+                _selectedCountry = State(initialValue: country)
+            }
             // 새 알람 생성 시 날짜 초기값을 내일 날짜로 설정
             _selectedDate = State(initialValue: tomorrow)
         }
