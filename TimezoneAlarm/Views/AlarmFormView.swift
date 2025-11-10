@@ -106,7 +106,7 @@ struct AlarmFormView: View {
                                       selectedHour > 12 ? selectedHour - 12 : (selectedHour == 0 ? 12 : selectedHour),
                                       selectedMinute,
                                       selectedHour >= 12 ? "PM" : "AM"))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.appTextSecondary)
                         }
                     }
                 } header: {
@@ -179,11 +179,11 @@ struct AlarmFormView: View {
                                 HStack(spacing: 8) {
                                     Text(country.flag)
                                     Text(country.name)
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(.appTextSecondary)
                                 }
                             } else {
                                 Text(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(.appTextSecondary)
                             }
                         }
                     }
@@ -203,7 +203,7 @@ struct AlarmFormView: View {
                                     Spacer()
                                     if let date = selectedDate {
                                         Text(formatDate(date))
-                                            .foregroundColor(.secondary)
+                                            .foregroundColor(.appTextSecondary)
                                     }
                                 }
                             }
@@ -213,7 +213,7 @@ struct AlarmFormView: View {
                                 selectedDate = nil
                             }) {
                                 Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(.appTextSecondary)
                             }
                             .buttonStyle(.plain)
                         }
@@ -225,7 +225,7 @@ struct AlarmFormView: View {
                                 Text(NSLocalizedString("alarm_form.date", comment: "Date"))
                                 Spacer()
                                 Text(NSLocalizedString("alarm_form.date_not_selected", comment: "Not selected"))
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(.appTextSecondary)
                             }
                         }
                         .buttonStyle(.plain)
@@ -432,11 +432,11 @@ struct WeekdaySelectionView: View {
                 Text(weekday.name)
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundColor(isSelected ? .white : .primary)
+                    .foregroundColor(isSelected ? .appTextOnPrimary : .appTextPrimary)
                     .frame(width: 44, height: 44)
                     .background(
                         Circle()
-                            .fill(isSelected ? Color.accentColor : Color(.systemGray5))
+                            .fill(isSelected ? Color.appSelected : Color.appDisabled)
                     )
             }
             // 2. 버튼마다 id 넣기 (고정된 id 사용)
@@ -477,7 +477,7 @@ struct CountrySelectionView: View {
                         Spacer()
                         if selectedCountry?.id == country.id {
                             Image(systemName: "checkmark")
-                                .foregroundColor(.accentColor)
+                                .foregroundColor(.appPrimary)
                         }
                     }
                 }
@@ -501,10 +501,10 @@ struct ToastView: View {
             if isShowing && !message.isEmpty {
                 Text(message)
                     .font(.subheadline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.appTextOnPrimary)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 12)
-                    .background(Color.black.opacity(0.8))
+                    .background(Color.appAlertBackground.opacity(0.8))
                     .cornerRadius(10)
                     .padding(.bottom, 50)
                     .transition(.move(edge: .bottom).combined(with: .opacity))

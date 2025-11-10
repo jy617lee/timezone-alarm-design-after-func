@@ -19,7 +19,7 @@ struct AlarmAlertView: View {
     var body: some View {
         ZStack {
             // 배경색
-            Color.black.ignoresSafeArea()
+            Color.appAlertBackground.ignoresSafeArea()
             
             VStack(spacing: 30) {
                 Spacer()
@@ -27,18 +27,18 @@ struct AlarmAlertView: View {
                 // 알람 아이콘
                 Image(systemName: "bell.fill")
                     .font(.system(size: 100))
-                    .foregroundColor(.red)
+                    .foregroundColor(.appError)
                 
                 // 알람명
                 Text(alarm.name)
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .foregroundColor(.white)
+                    .foregroundColor(.appAlertText)
                 
                 // 시간
                 Text(alarm.formattedTime)
                     .font(.system(size: 60, weight: .light))
-                    .foregroundColor(.white)
+                    .foregroundColor(.appAlertText)
                 
                 // 국가
                 HStack(spacing: 10) {
@@ -46,7 +46,7 @@ struct AlarmAlertView: View {
                         .font(.largeTitle)
                     Text(alarm.countryName)
                         .font(.title2)
-                        .foregroundColor(.white)
+                        .foregroundColor(.appAlertText)
                 }
                 
                 Spacer()
@@ -66,10 +66,10 @@ struct AlarmAlertView: View {
                 }) {
                     Text(NSLocalizedString("button.dismiss", comment: "Dismiss button"))
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.appTextOnPrimary)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.red)
+                        .background(Color.appAlertDismiss)
                         .cornerRadius(15)
                 }
                 .padding(.horizontal, 40)
