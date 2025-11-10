@@ -46,11 +46,18 @@ struct AlarmCardView: View {
                     
                     Spacer()
                     
-                    Button(action: onDelete) {
+                    Button(action: {
+                        // 햅틱 피드백
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
+                        onDelete()
+                    }) {
                         Image(systemName: "trash")
                             .font(.body)
                             .foregroundColor(.secondary)
                     }
+                    .buttonStyle(.plain)
+                    .contentShape(Rectangle())
                 }
                 
                 // 시간과 토글
@@ -127,7 +134,7 @@ struct AlarmCardView: View {
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
             .offset(x: dragOffset)
-            .gesture(
+            .simultaneousGesture(
                 DragGesture(minimumDistance: 10)
                     .onChanged { value in
                         // 왼쪽으로만 스와이프 가능
