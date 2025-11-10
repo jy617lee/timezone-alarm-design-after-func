@@ -430,8 +430,7 @@ struct WeekdaySelectionView: View {
                 toggleWeekday()
             }) {
                 Text(weekday.name)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                    .font(.geist(size: 15, weight: .semibold))
                     .foregroundColor(isSelected ? .appTextOnPrimary : .appTextPrimary)
                     .frame(width: 44, height: 44)
                     .background(
@@ -472,7 +471,7 @@ struct CountrySelectionView: View {
                 }) {
                     HStack {
                         Text(country.flag)
-                            .font(.title2)
+                            .font(.geist(size: 22, weight: .regular))
                         Text(country.name)
                         Spacer()
                         if selectedCountry?.id == country.id {
@@ -500,7 +499,7 @@ struct ToastView: View {
             
             if isShowing && !message.isEmpty {
                 Text(message)
-                    .font(.subheadline)
+                    .font(.geist(size: 15, weight: .regular))
                     .foregroundColor(.appTextOnPrimary)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 12)
