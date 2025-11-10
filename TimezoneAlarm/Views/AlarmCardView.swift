@@ -101,15 +101,16 @@ struct AlarmCardView: View {
                         }
                     } else if !alarm.selectedWeekdays.isEmpty {
                         // 요일이 선택된 경우
-                        HStack(spacing: 8) {
+                        HStack(spacing: 6) {
                             ForEach(Array(zip(weekdays, weekdayIndices)), id: \.1) { weekday, index in
+                                let isSelected = alarm.selectedWeekdays.contains(index)
                                 Text(weekday)
-                                    .font(.geist(size: 12, weight: .semibold))
-                                    .foregroundColor(alarm.selectedWeekdays.contains(index) ? .appTextOnPrimary : .appTextSecondary)
-                                    .frame(width: 28, height: 28)
+                                    .font(.geist(size: 13, weight: .semibold))
+                                    .foregroundColor(isSelected ? .appTextOnPrimary : .appTextSecondary)
+                                    .frame(width: 32, height: 32)
                                     .background(
                                         Circle()
-                                            .fill(alarm.selectedWeekdays.contains(index) ? cardPalette.accent : Color.clear)
+                                            .fill(isSelected ? cardPalette.accent : Color.appMutedBackground.opacity(0.5))
                                     )
                             }
                         }
