@@ -42,7 +42,7 @@ struct ContentView: View {
                                 showAlarmForm = true
                             }) {
                                 Image(systemName: "plus")
-                                    .font(.system(size: 18, weight: .medium))
+                                    .font(.geist(size: 18, weight: .medium))
                                     .foregroundColor(.white)
                                     .frame(width: 40, height: 40)
                                     .background(Circle().fill(Color.appPrimary))
@@ -51,7 +51,7 @@ struct ContentView: View {
                                 showSettings = true
                             }) {
                                 Image(systemName: "gearshape")
-                                    .font(.system(size: 18, weight: .medium))
+                                    .font(.geist(size: 18, weight: .medium))
                                     .foregroundColor(.appCookieColor)
                                     .frame(width: 32, height: 32)
                             }
@@ -72,7 +72,7 @@ struct ContentView: View {
                                     showAlarmForm = true
                                 }) {
                                     Image(systemName: "plus")
-                                        .font(.system(size: 18, weight: .medium))
+                                        .font(.geist(size: 18, weight: .medium))
                                         .foregroundColor(.white)
                                         .frame(width: 32, height: 32)
                                         .background(Circle().fill(Color.appPrimary))
@@ -81,7 +81,7 @@ struct ContentView: View {
                                     showSettings = true
                                 }) {
                                     Image(systemName: "gearshape")
-                                        .font(.system(size: 18, weight: .medium))
+                                        .font(.geist(size: 18, weight: .medium))
                                         .foregroundColor(.appCookieColor)
                                         .frame(width: 32, height: 32)
                                 }
@@ -98,7 +98,7 @@ struct ContentView: View {
                     GeometryReader { geometry in
                         VStack(spacing: 0) {
                             Spacer()
-                                .frame(height: geometry.size.height * 0.2) // top에서 전체 height의 10%
+                                .frame(height: geometry.size.height * 0.16) // top에서 전체 height의 16%
                             
                         // 알람 아이콘
                         Image("alarm-icon")
@@ -108,14 +108,13 @@ struct ContentView: View {
                             
                             // Title
                             Text(NSLocalizedString("content.empty.title", comment: "No alarms yet title"))
-                                .font(.title)
-                                .fontWeight(.semibold)
+                                .font(.geist(size: 28, weight: .bold))
                                 .foregroundColor(.appTextPrimary)
                                 .padding(.top, 24)
                             
                             // Description
                             Text(NSLocalizedString("content.empty.description", comment: "Tap to add first alarm"))
-                                .font(.title3)
+                                .font(.geist(size: 20, weight: .regular))
                                 .foregroundStyle(Color.appTextSecondary)
                                 .padding(.top, 8)
                             
@@ -124,7 +123,7 @@ struct ContentView: View {
                                 showAlarmForm = true
                             }) {
                                 Text(NSLocalizedString("content.empty.add_button", comment: "Add new alarm button"))
-                                    .font(.headline)
+                                    .font(.geist(size: 17, weight: .semibold))
                                     .foregroundColor(.appTextOnPrimary)
                                     .frame(maxWidth: .infinity)
                                     .padding()

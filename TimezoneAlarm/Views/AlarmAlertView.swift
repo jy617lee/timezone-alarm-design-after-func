@@ -26,26 +26,25 @@ struct AlarmAlertView: View {
                 
                 // 알람 아이콘
                 Image(systemName: "bell.fill")
-                    .font(.system(size: 100))
+                    .font(.geist(size: 100, weight: .regular))
                     .foregroundColor(.appError)
                 
                 // 알람명
                 Text(alarm.name)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(.geist(size: 34, weight: .bold))
                     .foregroundColor(.appAlertText)
                 
                 // 시간
                 Text(alarm.formattedTime)
-                    .font(.system(size: 60, weight: .light))
+                    .font(.geist(size: 60, weight: .light))
                     .foregroundColor(.appAlertText)
                 
                 // 국가
                 HStack(spacing: 10) {
                     Text(alarm.countryFlag)
-                        .font(.largeTitle)
+                        .font(.geist(size: 34, weight: .regular))
                     Text(alarm.countryName)
-                        .font(.title2)
+                        .font(.geist(size: 22, weight: .regular))
                         .foregroundColor(.appAlertText)
                 }
                 
@@ -65,7 +64,7 @@ struct AlarmAlertView: View {
                     onDismiss()
                 }) {
                     Text(NSLocalizedString("button.dismiss", comment: "Dismiss button"))
-                        .font(.headline)
+                        .font(.geist(size: 17, weight: .semibold))
                         .foregroundColor(.appTextOnPrimary)
                         .frame(maxWidth: .infinity)
                         .padding()

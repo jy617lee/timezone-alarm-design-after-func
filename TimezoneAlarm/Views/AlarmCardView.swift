@@ -40,7 +40,7 @@ struct AlarmCardView: View {
                 // 상단: 알람명과 삭제 아이콘
                 HStack {
                     Text(alarm.name)
-                        .font(.headline)
+                        .font(.geist(size: 17, weight: .semibold))
                         .foregroundColor(.appTextPrimary)
                     
                     Spacer()
@@ -52,7 +52,7 @@ struct AlarmCardView: View {
                         onDelete()
                     }) {
                         Image(systemName: "trash")
-                            .font(.body)
+                            .font(.geist(size: 17, weight: .regular))
                             .foregroundColor(.appTextSecondary)
                     }
                     .buttonStyle(.plain)
@@ -62,7 +62,7 @@ struct AlarmCardView: View {
                 // 시간과 토글
                 HStack {
                     Text(alarm.formattedTime)
-                        .font(.system(size: 32, weight: .light))
+                        .font(.geist(size: 32, weight: .light))
                         .foregroundColor(.appTextPrimary)
                     
                     Spacer()
@@ -83,10 +83,10 @@ struct AlarmCardView: View {
                 // 국가 정보
                 HStack(spacing: 8) {
                     Text(alarm.countryFlag)
-                        .font(.title3)
+                        .font(.geist(size: 20, weight: .regular))
                     
                     Text(alarm.countryName)
-                        .font(.subheadline)
+                        .font(.geist(size: 15, weight: .regular))
                         .foregroundColor(.appTextSecondary)
                 }
                 
@@ -95,10 +95,10 @@ struct AlarmCardView: View {
                     // 날짜가 선택된 경우
                     HStack(spacing: 8) {
                         Image(systemName: "calendar")
-                            .font(.caption)
+                            .font(.geist(size: 12, weight: .regular))
                             .foregroundColor(.appTextSecondary)
                         Text(formatDate(selectedDate))
-                            .font(.subheadline)
+                            .font(.geist(size: 15, weight: .regular))
                             .foregroundColor(.appTextSecondary)
                     }
                 } else if !alarm.selectedWeekdays.isEmpty {
@@ -106,8 +106,7 @@ struct AlarmCardView: View {
                     HStack(spacing: 8) {
                         ForEach(Array(zip(weekdays, weekdayIndices)), id: \.1) { weekday, index in
                             Text(weekday)
-                                .font(.caption)
-                                .fontWeight(.semibold)
+                                .font(.geist(size: 12, weight: .semibold))
                                 .foregroundColor(alarm.selectedWeekdays.contains(index) ? .appTextOnPrimary : .appTextSecondary)
                                 .frame(width: 28, height: 28)
                                 .background(
@@ -120,10 +119,10 @@ struct AlarmCardView: View {
                     // 날짜도 요일도 선택되지 않은 경우
                     HStack(spacing: 8) {
                         Image(systemName: "clock")
-                            .font(.caption)
+                            .font(.geist(size: 12, weight: .regular))
                             .foregroundColor(.appTextSecondary)
                         Text(NSLocalizedString("alarm_card.once", comment: "Once"))
-                            .font(.subheadline)
+                            .font(.geist(size: 15, weight: .regular))
                             .foregroundColor(.appTextSecondary)
                     }
                 }
@@ -190,7 +189,7 @@ struct AlarmCardView: View {
                             HStack {
                                 Spacer()
                                 Image(systemName: "trash")
-                                    .font(.title2)
+                                    .font(.geist(size: 22, weight: .regular))
                                     .foregroundColor(.appTextOnPrimary)
                                 Spacer()
                             }
