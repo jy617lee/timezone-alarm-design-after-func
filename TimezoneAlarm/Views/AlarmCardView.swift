@@ -135,6 +135,21 @@ struct AlarmCardView: View {
                 RoundedRectangle(cornerRadius: 24)
                     .stroke(Color.appCardBorder, lineWidth: 1)
             )
+            .overlay(
+                // Vignette 효과 (방사형 그라데이션)
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(
+                        RadialGradient(
+                            gradient: Gradient(colors: [
+                                Color.clear,
+                                Color.black.opacity(0.05)
+                            ]),
+                            center: .center,
+                            startRadius: 50,
+                            endRadius: 200
+                        )
+                    )
+            )
             .shadow(color: Color.appShadow.opacity(0.3), radius: 8, x: 0, y: 4)
             .offset(x: dragOffset)
             .simultaneousGesture(
