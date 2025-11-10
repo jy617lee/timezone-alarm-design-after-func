@@ -115,13 +115,18 @@ class AlarmViewModel {
             let wasEnabled = alarms[index].isEnabled
             alarms[index].isEnabled.toggle()
             
+            let newState = alarms[index].isEnabled
+            
             // 알람이 비활성화되면 스케줄링 취소
-            if wasEnabled && !alarms[index].isEnabled {
+            if wasEnabled && !newState {
                 AlarmScheduler.shared.cancelAlarm(alarms[index])
-            } else if !wasEnabled && alarms[index].isEnabled {
+            } else if !wasEnabled && newState {
                 // 알람이 활성화되면 스케줄링
                 AlarmScheduler.shared.scheduleAlarm(alarms[index])
             }
+            
+            // Analytics 로깅
+            AnalyticsService.shared.logAlarmToggled(alarm: alarms[index], isEnabled: newState)
         }
     }
     
