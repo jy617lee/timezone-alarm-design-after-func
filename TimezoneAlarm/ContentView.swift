@@ -100,11 +100,11 @@ struct ContentView: View {
                             Spacer()
                                 .frame(height: geometry.size.height * 0.2) // top에서 전체 height의 10%
                             
-                            // 알람 아이콘
-                            Image("alarm-icon")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 160, height: 160)
+                        // 알람 아이콘
+                        Image("alarm-icon")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 200, height: 200)
                             
                             // Title
                             Text(NSLocalizedString("content.empty.title", comment: "No alarms yet title"))
