@@ -42,18 +42,18 @@ struct ContentView: View {
                                 showAlarmForm = true
                             }) {
                                 Image(systemName: "plus")
-                                    .font(.system(size: 16, weight: .medium))
+                                    .font(.system(size: 18, weight: .medium))
                                     .foregroundColor(.white)
-                                    .frame(width: 28, height: 28)
+                                    .frame(width: 40, height: 40)
                                     .background(Circle().fill(Color.appPrimary))
                             }
                             Button(action: {
                                 showSettings = true
                             }) {
                                 Image(systemName: "gearshape")
-                                    .font(.system(size: 16, weight: .medium))
+                                    .font(.system(size: 18, weight: .medium))
                                     .foregroundColor(.appCookieColor)
-                                    .frame(width: 28, height: 28)
+                                    .frame(width: 32, height: 32)
                             }
                         }
                         .padding(.trailing, 16)
@@ -72,18 +72,18 @@ struct ContentView: View {
                                     showAlarmForm = true
                                 }) {
                                     Image(systemName: "plus")
-                                        .font(.system(size: 16, weight: .medium))
+                                        .font(.system(size: 18, weight: .medium))
                                         .foregroundColor(.white)
-                                        .frame(width: 28, height: 28)
+                                        .frame(width: 32, height: 32)
                                         .background(Circle().fill(Color.appPrimary))
                                 }
                                 Button(action: {
                                     showSettings = true
                                 }) {
                                     Image(systemName: "gearshape")
-                                        .font(.system(size: 16, weight: .medium))
+                                        .font(.system(size: 18, weight: .medium))
                                         .foregroundColor(.appCookieColor)
-                                        .frame(width: 28, height: 28)
+                                        .frame(width: 32, height: 32)
                                 }
                             }
                             .padding(.trailing, 16)
@@ -95,44 +95,49 @@ struct ContentView: View {
                 // 컨텐츠
                 if viewModel.alarms.isEmpty {
                     // Empty State
-                    VStack(spacing: 20) {
-                        Spacer()
-                        
-                        // 알람 아이콘
-                        Image("alarm-icon")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 120, height: 120)
-                        
-                        // Title
-                        Text(NSLocalizedString("content.empty.title", comment: "No alarms yet title"))
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.appTextPrimary)
-                        
-                        // Description
-                        Text(NSLocalizedString("content.empty.description", comment: "Tap to add first alarm"))
-                            .font(.body)
-                            .foregroundStyle(Color.appTextSecondary)
-                        
-                        // Add New Alarm 버튼
-                        Button(action: {
-                            showAlarmForm = true
-                        }) {
-                            Text(NSLocalizedString("content.empty.add_button", comment: "Add new alarm button"))
-                                .font(.headline)
-                                .foregroundColor(.appTextOnPrimary)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.appPrimary)
-                                .cornerRadius(12)
+                    GeometryReader { geometry in
+                        VStack(spacing: 0) {
+                            Spacer()
+                                .frame(height: geometry.size.height * 0.2) // top에서 전체 height의 10%
+                            
+                            // 알람 아이콘
+                            Image("alarm-icon")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 160, height: 160)
+                            
+                            // Title
+                            Text(NSLocalizedString("content.empty.title", comment: "No alarms yet title"))
+                                .font(.title)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.appTextPrimary)
+                                .padding(.top, 24)
+                            
+                            // Description
+                            Text(NSLocalizedString("content.empty.description", comment: "Tap to add first alarm"))
+                                .font(.title3)
+                                .foregroundStyle(Color.appTextSecondary)
+                                .padding(.top, 8)
+                            
+                            // Add New Alarm 버튼
+                            Button(action: {
+                                showAlarmForm = true
+                            }) {
+                                Text(NSLocalizedString("content.empty.add_button", comment: "Add new alarm button"))
+                                    .font(.headline)
+                                    .foregroundColor(.appTextOnPrimary)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.appPrimary)
+                                    .cornerRadius(12)
+                            }
+                            .padding(.horizontal, 40)
+                            .padding(.top, 32) // 간격 더 띄움
+                            
+                            Spacer()
                         }
-                        .padding(.horizontal, 40)
-                        .padding(.top, 8)
-                        
-                        Spacer()
+                        .padding()
                     }
-                    .padding()
                 } else {
                     // Alarm List
                     AlarmListView(viewModel: viewModel, showAlarmForm: $showAlarmForm, showSettings: $showSettings, editMode: $editMode)

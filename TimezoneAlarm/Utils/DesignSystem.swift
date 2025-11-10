@@ -6,6 +6,74 @@
 //
 
 import SwiftUI
+import UIKit
+
+// MARK: - Font Extension
+extension Font {
+    /// Geist 폰트 (font-feature-settings: "rlig" 1, "calt" 1 적용)
+    static func geist(size: CGFloat, weight: Font.Weight = .regular) -> Font {
+        let uiFont = UIFont.geist(size: size, weight: weight)
+        return Font(uiFont)
+    }
+}
+
+extension UIFont {
+    /// Geist 폰트 생성 (font-feature-settings 적용)
+    static func geist(size: CGFloat, weight: Font.Weight = .regular) -> UIFont {
+        // Geist 폰트 이름 (폰트 파일에 따라 다를 수 있음)
+        let fontName = "Geist"
+        let fallbackFontName = "Geist Fallback"
+        
+        // UIFont.Weight 변환
+        let uiWeight: UIFont.Weight
+        switch weight {
+        case .ultraLight: uiWeight = .ultraLight
+        case .thin: uiWeight = .thin
+        case .light: uiWeight = .light
+        case .regular: uiWeight = .regular
+        case .medium: uiWeight = .medium
+        case .semibold: uiWeight = .semibold
+        case .bold: uiWeight = .bold
+        case .heavy: uiWeight = .heavy
+        case .black: uiWeight = .black
+        default: uiWeight = .regular
+        }
+        
+        // 폰트 생성 시도
+        var font: UIFont?
+        
+        // Geist 시도
+        if let geistFont = UIFont(name: fontName, size: size) {
+            font = geistFont
+        } else if let fallbackFont = UIFont(name: fallbackFontName, size: size) {
+            font = fallbackFont
+        } else {
+            // 폰트가 없으면 시스템 폰트 사용
+            font = UIFont.systemFont(ofSize: size, weight: uiWeight)
+        }
+        
+        guard let baseFont = font else {
+            return UIFont.systemFont(ofSize: size, weight: uiWeight)
+        }
+        
+        // font-feature-settings 적용 (rlig, calt)
+        // iOS 15.0 이상에서는 기본적으로 ligatures가 활성화되어 있으므로
+        // iOS 14 이하에서만 명시적으로 적용
+        let descriptor = baseFont.fontDescriptor
+        if #available(iOS 15.0, *) {
+            // iOS 15.0 이상: 기본 폰트 사용 (ligatures는 기본적으로 활성화)
+            return baseFont
+        } else {
+            // iOS 14 이하: 기존 방식 사용
+            let featureSettings: [[UIFontDescriptor.FeatureKey: Any]] = [
+                [.featureIdentifier: kLigaturesType, .typeIdentifier: kContextualLigaturesOnSelector],
+                [.featureIdentifier: kLigaturesType, .typeIdentifier: kRequiredLigaturesOnSelector]
+            ]
+            let newDescriptor = descriptor.addingAttributes([.featureSettings: featureSettings])
+            return UIFont(descriptor: newDescriptor, size: size)
+        }
+    }
+}
 
 extension Color {
     // MARK: - Primary Colors
