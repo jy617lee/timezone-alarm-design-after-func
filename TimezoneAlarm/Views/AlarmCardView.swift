@@ -107,7 +107,7 @@ struct AlarmCardView: View {
                     .tint(cardPalette.accent)
                 }
                 
-                // 중간 행: 시간, AM/PM, 국가 정보, 날짜/요일 (한 줄에)
+                // 중간 행: 시간, AM/PM, 국가 정보, 날짜 (한 줄에)
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     Text(alarm.timeOnly)
                         .font(.geist(size: 36, weight: .bold))
@@ -129,9 +129,8 @@ struct AlarmCardView: View {
                     }
                     .padding(.leading, 8)
                     
-                    // 날짜 또는 요일 표시
+                    // 날짜 표시 (날짜가 선택된 경우만)
                     if let selectedDate = alarm.selectedDate {
-                        // 날짜가 선택된 경우
                         HStack(spacing: 8) {
                             Text("•")
                                 .font(.geist(size: 14, weight: .regular))
@@ -141,25 +140,27 @@ struct AlarmCardView: View {
                                 .foregroundColor(.appTextSecondary)
                         }
                         .padding(.leading, 4)
-                    } else if !alarm.selectedWeekdays.isEmpty {
-                        // 요일이 선택된 경우
-                        HStack(spacing: 6) {
-                            ForEach(Array(zip(weekdays, weekdayIndices)), id: \.1) { weekday, index in
-                                let isSelected = alarm.selectedWeekdays.contains(index)
-                                Text(weekday)
-                                    .font(.geist(size: 13, weight: .semibold))
-                                    .foregroundColor(isSelected ? .appTextOnPrimary : .appTextSecondary)
-                                    .frame(width: 32, height: 32)
-                                    .background(
-                                        Circle()
-                                            .fill(isSelected ? cardPalette.accent : Color.appMutedBackground.opacity(0.5))
-                                    )
-                            }
-                        }
-                        .padding(.leading, 4)
                     }
                     
                     Spacer()
+                }
+                
+                // 하단 행: 요일 버튼 (요일이 선택된 경우)
+                if !alarm.selectedWeekdays.isEmpty && alarm.selectedDate == nil {
+                    HStack(spacing: 6) {
+                        ForEach(Array(zip(weekdays, weekdayIndices)), id: \.1) { weekday, index in
+                            let isSelected = alarm.selectedWeekdays.contains(index)
+                            Text(weekday)
+                                .font(.geist(size: 13, weight: .semibold))
+                                .foregroundColor(isSelected ? .appTextOnPrimary : .appTextSecondary)
+                                .frame(width: 32, height: 32)
+                                .background(
+                                    Circle()
+                                        .fill(isSelected ? cardPalette.accent : Color.appMutedBackground.opacity(0.5))
+                                )
+                        }
+                        Spacer()
+                    }
                 }
             }
             .padding()
