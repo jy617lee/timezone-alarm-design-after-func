@@ -23,7 +23,7 @@ struct AppRootView: View {
             }
         }
         .animation(.easeInOut(duration: 0.6), value: showSplash)
-        .onChange(of: showSplash) { newValue in
+        .onChange(of: showSplash) { oldValue, newValue in
             // 스플래시가 끝나면 권한 요청
             if !newValue && !hasRequestedPermission {
                 hasRequestedPermission = true
