@@ -13,7 +13,11 @@ extension Color {
     static let appPrimary = Color(red: 243/255.0, green: 169/255.0, blue: 192/255.0)
     
     // MARK: - Background Colors
-    /// Primary background color: #fce8ee
+    /// Primary background color (top): #FFF6F6
+    static let appBackgroundTop = Color(red: 255/255.0, green: 246/255.0, blue: 246/255.0)
+    /// Primary background color (bottom): #F7C8D9
+    static let appBackgroundBottom = Color(red: 247/255.0, green: 200/255.0, blue: 217/255.0)
+    /// Primary background color: #fce8ee (legacy)
     static let appBackground = Color(red: 252/255.0, green: 232/255.0, blue: 238/255.0)
     /// Secondary background color: #fff6f6
     static let appSecondaryBackground = Color(red: 255/255.0, green: 246/255.0, blue: 246/255.0)
@@ -29,10 +33,10 @@ extension Color {
     static let appPopoverBackground = Color(red: 255/255.0, green: 255/255.0, blue: 255/255.0)
     
     // MARK: - Text Colors
-    /// Primary text color: #1a1412
-    static let appTextPrimary = Color(red: 26/255.0, green: 20/255.0, blue: 18/255.0)
-    /// Secondary text color: #2a1f1c
-    static let appTextSecondary = Color(red: 42/255.0, green: 31/255.0, blue: 28/255.0)
+    /// Primary text color: #6B4423 (진한 쿠키 브라운)
+    static let appTextPrimary = Color(red: 107/255.0, green: 68/255.0, blue: 35/255.0)
+    /// Secondary text color: #8B6F47 (밝은 쿠키 브라운)
+    static let appTextSecondary = Color(red: 139/255.0, green: 111/255.0, blue: 71/255.0)
     /// Text color on primary background: #ffffff
     static let appTextOnPrimary = Color(red: 255/255.0, green: 255/255.0, blue: 255/255.0)
     /// Muted text color: #6d5e5c
@@ -71,10 +75,34 @@ extension Color {
     static let appRing = Color(red: 184/255.0, green: 123/255.0, blue: 143/255.0)
     
     // MARK: - Shadow Colors
-    /// Card shadow color
-    static let appShadow = Color.black.opacity(0.1)
+    /// Card shadow color: warm beige #E8D4C8
+    static let appShadow = Color(red: 232/255.0, green: 212/255.0, blue: 200/255.0)
     /// Delete action background color: #d86a57 with 0.3 opacity
     static let appDeleteBackground = Color(red: 216/255.0, green: 106/255.0, blue: 87/255.0).opacity(0.3)
+    
+    // MARK: - Card Color Palettes
+    /// Card palette 1: Strawberry Cream - background #FBE1EA, accent #F3A9C0
+    static let cardStrawberryBackground = Color(red: 251/255.0, green: 225/255.0, blue: 234/255.0)
+    static let cardStrawberryAccent = Color(red: 243/255.0, green: 169/255.0, blue: 192/255.0)
+    
+    /// Card palette 2: Pistachio Mint - background #E7F1E7, accent #B8D8B8
+    static let cardPistachioBackground = Color(red: 231/255.0, green: 241/255.0, blue: 231/255.0)
+    static let cardPistachioAccent = Color(red: 184/255.0, green: 216/255.0, blue: 184/255.0)
+    
+    /// Card palette 3: Lemon Shortbread - background #FFF2CF, accent #FFD6A5
+    static let cardLemonBackground = Color(red: 255/255.0, green: 242/255.0, blue: 207/255.0)
+    static let cardLemonAccent = Color(red: 255/255.0, green: 214/255.0, blue: 165/255.0)
+    
+    /// Card palette 4: Berry Frost - background #EFE7F5, accent #C9A5CF
+    static let cardBerryBackground = Color(red: 239/255.0, green: 231/255.0, blue: 245/255.0)
+    static let cardBerryAccent = Color(red: 201/255.0, green: 165/255.0, blue: 207/255.0)
+    
+    /// Card palette 5: Cookie Dough - background #FBF2E3, accent #F0D6A7
+    static let cardCookieBackground = Color(red: 251/255.0, green: 242/255.0, blue: 227/255.0)
+    static let cardCookieAccent = Color(red: 240/255.0, green: 214/255.0, blue: 167/255.0)
+    
+    /// Cookie color for settings icon: #8B6F47 (밝은 쿠키 브라운)
+    static let appCookieColor = Color(red: 139/255.0, green: 111/255.0, blue: 71/255.0)
     
     // MARK: - Alert Colors
     /// Alert background color: #1a1412 (using foreground color)
