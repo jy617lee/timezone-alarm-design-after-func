@@ -21,6 +21,10 @@
 		4d7f560ed097476cae0cd291 /* alarm.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5012fb61d559485e91c01c68 /* alarm.wav */; };
 		A9B8C7D6E5F4A3B2C1D0E9F8 /* alarm-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B0C1D2E3F4A5B6C7D8E9F0A1 /* alarm-icon.png */; };
 		C1D2E3F4A5B6C7D8E9F0A1B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2E3F4A5B6C7D8E9F0A1B2C3D4 /* Assets.xcassets */; };
+		F1A2B3C4D5E6F7A8B9C0D1E2 /* Geist-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2B3C4D5E6F7A8B9C0D1E2F3 /* Geist-Regular.ttf */; };
+		B3C4D5E6F7A8B9C0D1E2F3A4 /* Geist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4D5E6F7A8B9C0D1E2F3A4B5 /* Geist-Medium.ttf */; };
+		D5E6F7A8B9C0D1E2F3A4B5C6 /* Geist-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E6F7A8B9C0D1E2F3A4B5C6D7 /* Geist-SemiBold.ttf */; };
+		E7F8A9B0C1D2E3F4A5B6C7D8 /* Geist-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F8A9B0C1D2E3F4A5B6C7D8E9 /* Geist-Bold.ttf */; };
 		F8E9D0A1B2C3D4E5F6A7B8C9 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */; };
 		D1E2F3A4B5C6D7E8F9A0B1C2 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3F4A5B6C7D8E9F0A1B2C3 /* DesignSystem.swift */; };
 		6f490f3fa9a74e0f857a314c6053f2c7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = c926d1891e7e466b9a173335a435283e /* Localizable.strings */; };
@@ -58,6 +62,10 @@
 		5012fb61d559485e91c01c68 /* alarm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = alarm.wav; sourceTree = "<group>"; };
 		B0C1D2E3F4A5B6C7D8E9F0A1 /* alarm-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "alarm-icon.png"; sourceTree = "<group>"; };
 		D2E3F4A5B6C7D8E9F0A1B2C3D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A2B3C4D5E6F7A8B9C0D1E2F3 /* Geist-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Regular.ttf"; sourceTree = "<group>"; };
+		C4D5E6F7A8B9C0D1E2F3A4B5 /* Geist-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Medium.ttf"; sourceTree = "<group>"; };
+		E6F7A8B9C0D1E2F3A4B5C6D7 /* Geist-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-SemiBold.ttf"; sourceTree = "<group>"; };
+		F8A9B0C1D2E3F4A5B6C7D8E9 /* Geist-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Bold.ttf"; sourceTree = "<group>"; };
 		A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		D2E3F4A5B6C7D8E9F0A1B2C3 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		c926d1891e7e466b9a173335a435283e /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "TimezoneAlarm/Resources/en.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -144,6 +152,10 @@
 			children = (
 				5012fb61d559485e91c01c68 /* alarm.wav */,
 				B0C1D2E3F4A5B6C7D8E9F0A1 /* alarm-icon.png */,
+				A2B3C4D5E6F7A8B9C0D1E2F3 /* Geist-Regular.ttf */,
+				C4D5E6F7A8B9C0D1E2F3A4B5 /* Geist-Medium.ttf */,
+				E6F7A8B9C0D1E2F3A4B5C6D7 /* Geist-SemiBold.ttf */,
+				F8A9B0C1D2E3F4A5B6C7D8E9 /* Geist-Bold.ttf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -275,6 +287,10 @@
 				4d7f560ed097476cae0cd291 /* alarm.wav in Resources */,
 				A9B8C7D6E5F4A3B2C1D0E9F8 /* alarm-icon.png in Resources */,
 				C1D2E3F4A5B6C7D8E9F0A1B2 /* Assets.xcassets in Resources */,
+				F1A2B3C4D5E6F7A8B9C0D1E2 /* Geist-Regular.ttf in Resources */,
+				B3C4D5E6F7A8B9C0D1E2F3A4 /* Geist-Medium.ttf in Resources */,
+				D5E6F7A8B9C0D1E2F3A4B5C6 /* Geist-SemiBold.ttf in Resources */,
+				E7F8A9B0C1D2E3F4A5B6C7D8 /* Geist-Bold.ttf in Resources */,
 				6f490f3fa9a74e0f857a314c6053f2c7 /* Localizable.strings in Resources */,
 				7a248f46d52048c497f8450686a54e1e /* Localizable.strings in Resources */,
 				e487a86a7e78475ea73ee53738752ed0 /* Localizable.strings in Resources */,
