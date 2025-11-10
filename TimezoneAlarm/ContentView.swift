@@ -12,68 +12,129 @@ struct ContentView: View {
     @State private var viewModel = AlarmViewModel()
     @State private var showAlarmForm = false
     @State private var showAlarmAlert = false
+    @State private var showSettings = false
+    @State private var editMode: EditMode = .inactive
     @EnvironmentObject var notificationDelegate: NotificationDelegate
+    
+    private var hasDefaultCountry: Bool {
+        UserDefaults.standard.string(forKey: "defaultCountryId") != nil
+    }
     
     var body: some View {
         NavigationView {
-            if viewModel.alarms.isEmpty {
-                // Empty State
-                VStack(spacing: 20) {
+            VStack(spacing: 0) {
+                // 커스텀 헤더
+                HStack {
                     Spacer()
-                    
-                    // 알람 아이콘
-                    Image(systemName: "alarm")
-                        .font(.system(size: 80))
-                        .foregroundStyle(.secondary)
-                    
-                    // Title
-                    Text("No Alarms Yet")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    
-                    // Description
-                    Text("Tap + to add your first alarm")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                    
-                    // Add New Alarm 버튼
-                    Button(action: {
-                        showAlarmForm = true
-                    }) {
-                        Text("Add New Alarm")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.accentColor)
-                            .cornerRadius(12)
-                    }
-                    .padding(.horizontal, 40)
-                    .padding(.top, 8)
-                    
-                    Spacer()
-                }
-                .padding()
-                .navigationTitle("Alarms")
-                .sheet(isPresented: $showAlarmForm) {
-                    AlarmFormView(viewModel: viewModel)
-                }
-            } else {
-                // Alarm List
-                AlarmListView(viewModel: viewModel, showAlarmForm: $showAlarmForm)
-                    .navigationTitle("Alarms")
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
+                    if viewModel.alarms.isEmpty {
+                        // Empty State - 버튼만 표시
+                        HStack(spacing: 12) {
                             Button(action: {
                                 showAlarmForm = true
                             }) {
                                 Image(systemName: "plus")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(.primary)
+                                    .frame(width: 28, height: 28)
+                                    .background(Circle().fill(Color(.systemGray6)))
+                            }
+                            Button(action: {
+                                showSettings = true
+                            }) {
+                                Image(systemName: "gearshape")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(.primary)
+                                    .frame(width: 28, height: 28)
+                                    .background(Circle().fill(Color(.systemGray6)))
                             }
                         }
+                        .padding(.trailing, 16)
+                    } else {
+                        // Alarm List
+                        if editMode == .active {
+                            Button("Done") {
+                                withAnimation {
+                                    editMode = .inactive
+                                }
+                            }
+                            .padding(.trailing, 16)
+                        } else {
+                            HStack(spacing: 12) {
+                                Button(action: {
+                                    showAlarmForm = true
+                                }) {
+                                    Image(systemName: "plus")
+                                        .font(.system(size: 16, weight: .medium))
+                                        .foregroundColor(.primary)
+                                        .frame(width: 28, height: 28)
+                                        .background(Circle().fill(Color(.systemGray6)))
+                                }
+                                Button(action: {
+                                    showSettings = true
+                                }) {
+                                    Image(systemName: "gearshape")
+                                        .font(.system(size: 16, weight: .medium))
+                                        .foregroundColor(.primary)
+                                        .frame(width: 28, height: 28)
+                                        .background(Circle().fill(Color(.systemGray6)))
+                                }
+                            }
+                            .padding(.trailing, 16)
+                        }
                     }
-                    .sheet(isPresented: $showAlarmForm) {
-                        AlarmFormView(viewModel: viewModel)
+                }
+                .frame(height: 44)
+                .background(Color(.systemBackground))
+                
+                // 컨텐츠
+                if viewModel.alarms.isEmpty {
+                    // Empty State
+                    VStack(spacing: 20) {
+                        Spacer()
+                        
+                        // 알람 아이콘
+                        Image(systemName: "alarm")
+                            .font(.system(size: 80))
+                            .foregroundStyle(.secondary)
+                        
+                        // Title
+                        Text("No Alarms Yet")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        
+                        // Description
+                        Text("Tap + to add your first alarm")
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                        
+                        // Add New Alarm 버튼
+                        Button(action: {
+                            showAlarmForm = true
+                        }) {
+                            Text("Add New Alarm")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.accentColor)
+                                .cornerRadius(12)
+                        }
+                        .padding(.horizontal, 40)
+                        .padding(.top, 8)
+                        
+                        Spacer()
                     }
+                    .padding()
+                } else {
+                    // Alarm List
+                    AlarmListView(viewModel: viewModel, showAlarmForm: $showAlarmForm, showSettings: $showSettings, editMode: $editMode)
+                }
+            }
+            .sheet(isPresented: $showAlarmForm) {
+                AlarmFormView(viewModel: viewModel)
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
             }
         }
         .onAppear {

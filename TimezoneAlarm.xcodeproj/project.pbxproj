@@ -13,6 +13,7 @@
 		0926bbd73f084171927045e9 /* AlarmCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7cf857b200ed4242858a4214 /* AlarmCardView.swift */; };
 		f3fa27104f814f279aea8cf6 /* AlarmListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2055e47b01704302b9a69f9c /* AlarmListView.swift */; };
 		0d531177a8524c6eaff0cb63 /* AlarmFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = f1c854c0da854c6da495d9c1 /* AlarmFormView.swift */; };
+		b2c3d4e5f6a7b8c9d0e1f2a3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = c3d4e5f6a7b8c9d0e1f2a3b4 /* SettingsView.swift */; };
 		a1b2c3d4e5f6a7b8c9d0e1f3 /* AlarmAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = a1b2c3d4e5f6a7b8c9d0e1f4 /* AlarmAlertView.swift */; };
 		694c41ecac5043e7aa3f3d070dd315aa /* AlarmScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = a1b2c3d4e5f6a7b8c9d0e1f2 /* AlarmScheduler.swift */; };
 		51C503CA6D2F46F88D80A5DF /* TimezoneAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB57D6CC548EA702320A886 /* TimezoneAlarmApp.swift */; };
@@ -41,6 +42,7 @@
 		23c1b019e3ca48f99a2512ba /* Alarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
 		a53bffc5b8d7435f85512728 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
 		f1c854c0da854c6da495d9c1 /* AlarmFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmFormView.swift; sourceTree = "<group>"; };
+		c3d4e5f6a7b8c9d0e1f2a3b4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		a1b2c3d4e5f6a7b8c9d0e1f4 /* AlarmAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmAlertView.swift; sourceTree = "<group>"; };
 		a1b2c3d4e5f6a7b8c9d0e1f2 /* AlarmScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmScheduler.swift; sourceTree = "<group>"; };
 		5D25D70292A40C0AA7B7CE59 /* TimezoneAlarm.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TimezoneAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +111,7 @@
 				2055e47b01704302b9a69f9c /* AlarmListView.swift */,
 				f1c854c0da854c6da495d9c1 /* AlarmFormView.swift */,
 				a1b2c3d4e5f6a7b8c9d0e1f4 /* AlarmAlertView.swift */,
+				c3d4e5f6a7b8c9d0e1f2a3b4 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 				f3fa27104f814f279aea8cf6 /* AlarmListView.swift in Sources */,
 				0d531177a8524c6eaff0cb63 /* AlarmFormView.swift in Sources */,
 				a1b2c3d4e5f6a7b8c9d0e1f3 /* AlarmAlertView.swift in Sources */,
+				b2c3d4e5f6a7b8c9d0e1f2a3 /* SettingsView.swift in Sources */,
 				694c41ecac5043e7aa3f3d070dd315aa /* AlarmScheduler.swift in Sources */,
 				9BCFF78819A255F7ECC7C92C /* ContentView.swift in Sources */,
 				51C503CA6D2F46F88D80A5DF /* TimezoneAlarmApp.swift in Sources */,
