@@ -60,6 +60,8 @@ struct AlarmAlertView: View {
                     AlarmScheduler.shared.cancelAlarm(alarm)
                     // 표시된 푸시 알림도 제거
                     AlarmScheduler.shared.removeDeliveredNotification(for: alarm)
+                    // dismiss 처리 (추가 체인 알림 예약 방지)
+                    NotificationDelegate.shared.dismissAlarm(alarm)
                     onDismiss()
                 }) {
                     Text("Dismiss")

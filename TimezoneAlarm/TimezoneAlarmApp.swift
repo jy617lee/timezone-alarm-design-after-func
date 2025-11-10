@@ -64,9 +64,19 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
     
     @Published var activeAlarm: Alarm?
     
+    // dismiss된 알람 ID를 추적 (해당 알람의 체인 알림 예약 방지)
+    private var dismissedAlarmIds: Set<UUID> = []
+    
     private override init() {
         super.init()
         print("📱 NotificationDelegate 싱글톤 인스턴스 생성")
+    }
+    
+    // 알람 dismiss 처리 (체인 알림 예약 중단)
+    func dismissAlarm(_ alarm: Alarm) {
+        dismissedAlarmIds.insert(alarm.id)
+        activeAlarm = nil
+        print("🚫 알람 dismiss 처리: \(alarm.name) (ID: \(alarm.id.uuidString))")
     }
     
     // 알림이 앱이 포그라운드에 있을 때 표시
@@ -110,6 +120,12 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             let notificationId = notification.request.identifier
             
             Task { @MainActor in
+                // dismiss된 알람인지 확인
+                if self.dismissedAlarmIds.contains(alarm.id) {
+                    print("🚫 이미 dismiss된 알람입니다. 체인 알림 예약하지 않음: \(alarm.name)")
+                    return
+                }
+                
                 print("📱 activeAlarm 설정 중: \(alarm.name)")
                 self.activeAlarm = alarm
                 print("✅ activeAlarm 설정 완료")
@@ -177,6 +193,14 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             let notificationId = response.notification.request.identifier
             
             Task { @MainActor in
+                // dismiss된 알람인지 확인
+                if self.dismissedAlarmIds.contains(alarm.id) {
+                    print("🚫 이미 dismiss된 알람입니다. 체인 알림 예약하지 않음: \(alarm.name)")
+                    // 표시된 알림 제거
+                    AlarmScheduler.shared.removeDeliveredNotification(for: alarm)
+                    return
+                }
+                
                 print("📱 activeAlarm 설정 중 (didReceive): \(alarm.name)")
                 self.activeAlarm = alarm
                 // 표시된 알림 제거

@@ -361,37 +361,38 @@ final class AlarmScheduler: @unchecked Sendable {
     
     // 알람 취소 (대기 중인 알림 제거 - 체인 알림 포함)
     func cancelAlarm(_ alarm: Alarm) {
-        // 알람 ID로 시작하는 모든 알림 ID 패턴 생성
-        var identifiers: [String] = []
-        
-        // 단일 알람 ID
-        identifiers.append(alarm.id.uuidString)
-        
-        // 반복 알람의 경우 모든 요일별 알림 ID 추가
-        for weekday in alarm.selectedWeekdays {
-            identifiers.append("\(alarm.id.uuidString)-weekday-\(weekday)")
-        }
-        
-        // 체인 알림 ID 패턴 추가 (모든 체인 인덱스)
-        // 최대 100개까지 체인 알림이 있을 수 있다고 가정
-        for i in 0..<100 {
-            identifiers.append("\(alarm.id.uuidString)-chain-\(i)")
-        }
-        
-        // 동기적으로 즉시 제거
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
-        print("🚫 알람 취소: \(alarm.name) (ID: \(alarm.id.uuidString))")
-        print("   취소할 알림 ID 개수: \(identifiers.count)")
-        
-        // 취소 확인 (비동기, 로깅용)
+        // 실제로 대기 중인 모든 알림을 가져와서 해당 알람의 모든 알림을 찾아서 취소
+        // 이렇게 하면 체인 알림이 몇 개든 상관없이 모두 취소됨
         UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
-            let remaining = requests.filter { req in
-                req.identifier.hasPrefix(alarm.id.uuidString)
+            var identifiers: [String] = []
+            
+            // 알람 ID로 시작하는 모든 알림 찾기
+            for request in requests {
+                if request.identifier.hasPrefix(alarm.id.uuidString) {
+                    identifiers.append(request.identifier)
+                }
             }
-            if !remaining.isEmpty {
-                print("⚠️ 알람 취소 후에도 남은 알림이 있습니다: \(remaining.map { $0.identifier })")
+            
+            // 찾은 알림들을 모두 취소
+            if !identifiers.isEmpty {
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
+                print("🚫 알람 취소: \(alarm.name) (ID: \(alarm.id.uuidString))")
+                print("   취소할 알림 ID 개수: \(identifiers.count)")
+                print("   취소된 알림 ID: \(identifiers.prefix(10).map { $0 })\(identifiers.count > 10 ? " ... 외 \(identifiers.count - 10)개" : "")")
             } else {
-                print("✅ 알람 취소 완료")
+                print("🚫 알람 취소: \(alarm.name) (ID: \(alarm.id.uuidString)) - 취소할 알림 없음")
+            }
+            
+            // 취소 확인 (비동기, 로깅용)
+            UNUserNotificationCenter.current().getPendingNotificationRequests { remainingRequests in
+                let remaining = remainingRequests.filter { req in
+                    req.identifier.hasPrefix(alarm.id.uuidString)
+                }
+                if !remaining.isEmpty {
+                    print("⚠️ 알람 취소 후에도 남은 알림이 있습니다: \(remaining.map { $0.identifier })")
+                } else {
+                    print("✅ 알람 취소 완료 - 모든 알림이 제거되었습니다")
+                }
             }
         }
     }
