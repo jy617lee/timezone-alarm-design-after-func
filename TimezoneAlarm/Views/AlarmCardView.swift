@@ -27,7 +27,9 @@ struct AlarmCardView: View {
             (.cardLemonBackground, .cardLemonAccent),
             (.cardBerryBackground, .cardBerryAccent),
             (.cardCookieBackground, .cardCookieAccent),
-            (.cardStrawberryBackground, .cardStrawberryAccent) // 6번째는 첫 번째 재사용
+            (.cardOrangeBackground, .cardOrangeAccent),
+            (.cardHotPinkBackground, .cardHotPinkAccent),
+            (.cardLightBrownBackground, .cardLightBrownAccent)
         ]
         let index = abs(alarm.id.hashValue) % palettes.count
         return palettes[index]

@@ -169,6 +169,18 @@ extension Color {
     static let cardCookieBackground = Color(red: 251/255.0, green: 242/255.0, blue: 227/255.0)
     static let cardCookieAccent = Color(red: 240/255.0, green: 214/255.0, blue: 167/255.0)
     
+    /// Card palette 6: Orange - background #FFE8D6, accent #FFB88C
+    static let cardOrangeBackground = Color(red: 255/255.0, green: 232/255.0, blue: 214/255.0)
+    static let cardOrangeAccent = Color(red: 255/255.0, green: 184/255.0, blue: 140/255.0)
+    
+    /// Card palette 7: Hot Pink - background #FFD6E8, accent #FF8FB8
+    static let cardHotPinkBackground = Color(red: 255/255.0, green: 214/255.0, blue: 232/255.0)
+    static let cardHotPinkAccent = Color(red: 255/255.0, green: 143/255.0, blue: 184/255.0)
+    
+    /// Card palette 8: Light Brown - background #F5E6D3, accent #D4B896
+    static let cardLightBrownBackground = Color(red: 245/255.0, green: 230/255.0, blue: 211/255.0)
+    static let cardLightBrownAccent = Color(red: 212/255.0, green: 184/255.0, blue: 150/255.0)
+    
     /// Cookie color for settings icon: #8B6F47 (밝은 쿠키 브라운)
     static let appCookieColor = Color(red: 139/255.0, green: 111/255.0, blue: 71/255.0)
     
