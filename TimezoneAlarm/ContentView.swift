@@ -77,6 +77,25 @@ struct ContentView: View {
                                 .padding(.trailing, 20)
                             } else {
                                 HStack(spacing: 12) {
+                                    #if DEBUG
+                                    // 테스트용 알람 실행 화면 버튼 (개발용만)
+                                    Button(action: {
+                                        let testAlarm = Alarm(
+                                            name: "Test Alarm",
+                                            hour: 7,
+                                            minute: 30,
+                                            timezoneIdentifier: "Asia/Seoul",
+                                            countryName: "South Korea",
+                                            countryFlag: "🇰🇷"
+                                        )
+                                        viewModel.activeAlarm = testAlarm
+                                    }) {
+                                        Image(systemName: "bell.fill")
+                                            .font(.geist(size: 16, weight: .medium))
+                                            .foregroundColor(.appTextPrimary)
+                                            .frame(width: 36, height: 36)
+                                    }
+                                    #endif
                                     Button(action: {
                                         showAlarmForm = true
                                     }) {

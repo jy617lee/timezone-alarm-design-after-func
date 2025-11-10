@@ -15,67 +15,104 @@ struct AlarmAlertView: View {
     let onDismiss: () -> Void
     @State private var audioPlayer: AVAudioPlayer?
     @State private var soundTimer: Timer?
+    @State private var iconScale: CGFloat = 1.0
+    @State private var cardOpacity: Double = 0.0
+    @State private var cardScale: CGFloat = 0.8
     
     var body: some View {
         ZStack {
-            // 배경색
-            Color.appAlertBackground.ignoresSafeArea()
+            // 그라데이션 백그라운드 (메인/설정 화면과 동일)
+            LinearGradient(
+                colors: [Color.appBackgroundTop, Color.appBackgroundBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
             
-            VStack(spacing: 30) {
+            VStack(spacing: 0) {
                 Spacer()
                 
-                // 알람 아이콘
-                Image(systemName: "bell.fill")
-                    .font(.geist(size: 100, weight: .regular))
-                    .foregroundColor(.appError)
-                
-                // 알람명
-                Text(alarm.name)
-                    .font(.geist(size: 34, weight: .bold))
-                    .foregroundColor(.appAlertText)
-                
-                // 시간
-                Text(alarm.formattedTime)
-                    .font(.geist(size: 60, weight: .light))
-                    .foregroundColor(.appAlertText)
-                
-                // 국가
-                HStack(spacing: 10) {
-                    Text(alarm.countryFlag)
-                        .font(.geist(size: 34, weight: .regular))
-                    Text(alarm.countryName)
-                        .font(.geist(size: 22, weight: .regular))
-                        .foregroundColor(.appAlertText)
+                // 카드 스타일 컨텐츠
+                VStack(spacing: 24) {
+                    // 알람 아이콘 (펄스 애니메이션)
+                    Image("alarm-icon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 120, height: 120)
+                        .scaleEffect(iconScale)
+                        .padding(.top, 40)
+                    
+                    // 알람명
+                    Text(alarm.name)
+                        .font(.geist(size: 28, weight: .bold))
+                        .foregroundColor(.appTextPrimary)
+                    
+                    // 시간
+                    Text(alarm.formattedTime)
+                        .font(.geist(size: 56, weight: .light))
+                        .foregroundColor(.appTextPrimary)
+                    
+                    // 국가
+                    HStack(spacing: 10) {
+                        Text(alarm.countryFlag)
+                            .font(.geist(size: 28, weight: .regular))
+                        Text(alarm.countryName)
+                            .font(.geist(size: 18, weight: .regular))
+                            .foregroundColor(.appTextSecondary)
+                    }
+                    .padding(.bottom, 20)
+                    
+                    // 해제 버튼
+                    Button(action: {
+                        stopAlarm()
+                        // 백그라운드 오디오 재생도 정지
+                        NotificationDelegate.shared.stopBackgroundAudioPlayback()
+                        // 해당 알람의 모든 체인 알림 취소
+                        AlarmScheduler.shared.cancelAlarm(alarm)
+                        // 표시된 푸시 알림도 제거
+                        AlarmScheduler.shared.removeDeliveredNotification(for: alarm)
+                        // dismiss 처리 (추가 체인 알림 예약 방지)
+                        NotificationDelegate.shared.dismissAlarm(alarm)
+                        onDismiss()
+                    }) {
+                        Text(NSLocalizedString("button.dismiss", comment: "Dismiss button"))
+                            .font(.geist(size: 17, weight: .semibold))
+                            .foregroundColor(.appTextOnPrimary)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(Color.appPrimary)
+                            .cornerRadius(12)
+                    }
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 40)
                 }
+                .frame(maxWidth: 448)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 32)
+                .background(Color.appCardBackground)
+                .cornerRadius(24)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .stroke(Color.appCardBorder, lineWidth: 1)
+                )
+                .shadow(color: Color.appShadow.opacity(0.3), radius: 16, x: 0, y: 8)
+                .padding(.horizontal, 16)
+                .opacity(cardOpacity)
+                .scaleEffect(cardScale)
                 
                 Spacer()
-                
-                // 해제 버튼
-                Button(action: {
-                    stopAlarm()
-                    // 백그라운드 오디오 재생도 정지
-                    NotificationDelegate.shared.stopBackgroundAudioPlayback()
-                    // 해당 알람의 모든 체인 알림 취소
-                    AlarmScheduler.shared.cancelAlarm(alarm)
-                    // 표시된 푸시 알림도 제거
-                    AlarmScheduler.shared.removeDeliveredNotification(for: alarm)
-                    // dismiss 처리 (추가 체인 알림 예약 방지)
-                    NotificationDelegate.shared.dismissAlarm(alarm)
-                    onDismiss()
-                }) {
-                    Text(NSLocalizedString("button.dismiss", comment: "Dismiss button"))
-                        .font(.geist(size: 17, weight: .semibold))
-                        .foregroundColor(.appTextOnPrimary)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.appAlertDismiss)
-                        .cornerRadius(15)
-                }
-                .padding(.horizontal, 40)
-                .padding(.bottom, 50)
             }
         }
         .onAppear {
+            // 카드 등장 애니메이션
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                cardOpacity = 1.0
+                cardScale = 1.0
+            }
+            
+            // 아이콘 펄스 애니메이션 시작
+            startPulseAnimation()
+            
             playAlarmSound()
         }
         .onDisappear {
@@ -133,5 +170,16 @@ struct AlarmAlertView: View {
         
         debugLog("🔇 알람 사운드 정지")
     }
+    
+    private func startPulseAnimation() {
+        // 펄스 애니메이션: 1.0 -> 1.15 -> 1.0 반복
+        withAnimation(
+            .easeInOut(duration: 1.0)
+            .repeatForever(autoreverses: true)
+        ) {
+            iconScale = 1.15
+        }
+    }
 }
+
 
