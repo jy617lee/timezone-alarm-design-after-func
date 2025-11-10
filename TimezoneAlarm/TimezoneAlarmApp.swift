@@ -84,6 +84,9 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         dismissedAlarmIds.insert(alarm.id)
         activeAlarm = nil
         debugLog("🚫 알람 dismiss 처리: \(alarm.name) (ID: \(alarm.id.uuidString))")
+        
+        // Analytics 로깅
+        AnalyticsService.shared.logAlarmDismissed(alarm: alarm)
     }
     
     // 알림이 앱이 포그라운드에 있을 때 표시
