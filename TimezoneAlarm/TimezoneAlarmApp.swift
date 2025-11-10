@@ -8,11 +8,16 @@
 import SwiftUI
 import UserNotifications
 import AVFoundation
+import FirebaseCore
 
 @main
 struct TimezoneAlarmApp: App {
     init() {
         debugLog("🚀 TimezoneAlarm 앱 시작!")
+        
+        // Firebase 초기화
+        FirebaseApp.configure()
+        debugLog("✅ Firebase 초기화 완료")
         
         // 백그라운드 오디오 재생을 위한 오디오 세션 설정
         do {
@@ -77,6 +82,9 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         dismissedAlarmIds.insert(alarm.id)
         activeAlarm = nil
         debugLog("🚫 알람 dismiss 처리: \(alarm.name) (ID: \(alarm.id.uuidString))")
+        
+        // Analytics 로깅
+        AnalyticsService.shared.logAlarmDismissed(alarm: alarm)
     }
     
     // 알림이 앱이 포그라운드에 있을 때 표시

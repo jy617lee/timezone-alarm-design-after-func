@@ -115,17 +115,25 @@ class AlarmViewModel {
             let wasEnabled = alarms[index].isEnabled
             alarms[index].isEnabled.toggle()
             
+            let newState = alarms[index].isEnabled
+            
             // 알람이 비활성화되면 스케줄링 취소
-            if wasEnabled && !alarms[index].isEnabled {
+            if wasEnabled && !newState {
                 AlarmScheduler.shared.cancelAlarm(alarms[index])
-            } else if !wasEnabled && alarms[index].isEnabled {
+            } else if !wasEnabled && newState {
                 // 알람이 활성화되면 스케줄링
                 AlarmScheduler.shared.scheduleAlarm(alarms[index])
             }
+            
+            // Analytics 로깅
+            AnalyticsService.shared.logAlarmToggled(alarm: alarms[index], isEnabled: newState)
         }
     }
     
     func deleteAlarm(_ alarm: Alarm) {
+        // Analytics 로깅 (삭제 전에 로깅)
+        AnalyticsService.shared.logAlarmDeleted(alarm: alarm)
+        
         // 알림 스케줄링 취소
         AlarmScheduler.shared.cancelAlarm(alarm)
         // 알람 삭제
@@ -149,6 +157,9 @@ class AlarmViewModel {
         if newAlarm.isEnabled {
             AlarmScheduler.shared.scheduleAlarm(newAlarm)
         }
+        
+        // Analytics 로깅
+        AnalyticsService.shared.logAlarmCreated(alarm: newAlarm)
     }
     
     func updateAlarm(_ alarm: Alarm) {
@@ -161,6 +172,9 @@ class AlarmViewModel {
             if alarm.isEnabled {
                 AlarmScheduler.shared.scheduleAlarm(alarm)
             }
+            
+            // Analytics 로깅
+            AnalyticsService.shared.logAlarmUpdated(alarm: alarm)
         }
     }
 }
