@@ -55,39 +55,55 @@ struct AlarmCardView: View {
                         generator.impactOccurred()
                         onDelete()
                     }) {
-                        // 커스텀 휴지통 아이콘 (세로줄 2개, 두꺼운 선)
+                        // 커스텀 휴지통 아이콘 (filled shape, 세로줄 2개)
                         ZStack {
-                            // 휴지통 몸체
+                            // 휴지통 몸체 (filled)
                             Path { path in
-                                // 왼쪽 벽
-                                path.move(to: CGPoint(x: 4, y: 6))
-                                path.addLine(to: CGPoint(x: 4, y: 18))
-                                // 바닥
+                                // 몸체 (라운드된 하단 모서리)
+                                path.move(to: CGPoint(x: 3, y: 6))
+                                path.addLine(to: CGPoint(x: 3, y: 17))
+                                path.addQuadCurve(to: CGPoint(x: 4, y: 18), control: CGPoint(x: 3, y: 17.5))
                                 path.addLine(to: CGPoint(x: 12, y: 18))
-                                // 오른쪽 벽
-                                path.addLine(to: CGPoint(x: 12, y: 6))
-                                // 뚜껑 왼쪽
+                                path.addQuadCurve(to: CGPoint(x: 13, y: 17), control: CGPoint(x: 13, y: 17.5))
+                                path.addLine(to: CGPoint(x: 13, y: 6))
+                                path.addLine(to: CGPoint(x: 3, y: 6))
+                                path.closeSubpath()
+                                
+                                // 뚜껑
                                 path.move(to: CGPoint(x: 2, y: 6))
-                                path.addLine(to: CGPoint(x: 4, y: 6))
-                                // 뚜껑 오른쪽
-                                path.move(to: CGPoint(x: 12, y: 6))
+                                path.addLine(to: CGPoint(x: 2, y: 5))
+                                path.addLine(to: CGPoint(x: 14, y: 5))
                                 path.addLine(to: CGPoint(x: 14, y: 6))
-                                // 뚜껑 손잡이
-                                path.move(to: CGPoint(x: 6, y: 4))
-                                path.addLine(to: CGPoint(x: 10, y: 4))
+                                path.addLine(to: CGPoint(x: 2, y: 6))
+                                path.closeSubpath()
+                                
+                                // 손잡이
+                                path.move(to: CGPoint(x: 5, y: 4))
+                                path.addLine(to: CGPoint(x: 5, y: 3))
+                                path.addLine(to: CGPoint(x: 11, y: 3))
+                                path.addLine(to: CGPoint(x: 11, y: 4))
+                                path.addLine(to: CGPoint(x: 5, y: 4))
+                                path.closeSubpath()
                             }
-                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
+                            .fill(Color.appTextSecondary)
                             
-                            // 세로줄 2개
+                            // 세로줄 2개 (filled)
                             Path { path in
                                 // 왼쪽 세로줄
-                                path.move(to: CGPoint(x: 6.5, y: 8))
-                                path.addLine(to: CGPoint(x: 6.5, y: 16))
+                                path.move(to: CGPoint(x: 6, y: 8))
+                                path.addLine(to: CGPoint(x: 7, y: 8))
+                                path.addLine(to: CGPoint(x: 7, y: 16))
+                                path.addLine(to: CGPoint(x: 6, y: 16))
+                                path.closeSubpath()
+                                
                                 // 오른쪽 세로줄
-                                path.move(to: CGPoint(x: 9.5, y: 8))
-                                path.addLine(to: CGPoint(x: 9.5, y: 16))
+                                path.move(to: CGPoint(x: 9, y: 8))
+                                path.addLine(to: CGPoint(x: 10, y: 8))
+                                path.addLine(to: CGPoint(x: 10, y: 16))
+                                path.addLine(to: CGPoint(x: 9, y: 16))
+                                path.closeSubpath()
                             }
-                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+                            .fill(Color.appTextSecondary)
                         }
                         .frame(width: 16, height: 20)
                     }
