@@ -239,18 +239,18 @@ struct ContentView: View {
             debugLog("🔄 notificationDelegate.activeAlarm 변경: \(oldValue?.name ?? "nil") -> \(newValue?.name ?? "nil")")
             if newValue != nil {
                 debugLog("🔔 알림에서 알람 실행: \(newValue?.name ?? "Unknown")")
-                // 커스텀 알림 뷰 표시
+                // 커스텀 알림 뷰 표시 (체인 알림이 계속 도착하면서 계속 표시됨)
                 notificationAlarm = newValue
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                     showCustomNotification = true
                 }
-                // 3초 후 자동으로 사라짐
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                        showCustomNotification = false
-                    }
-                }
                 showAlarmAlert = true
+            } else {
+                // activeAlarm이 nil이 되면 커스텀 알림 뷰 숨김
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    showCustomNotification = false
+                }
+                notificationAlarm = nil
             }
         }
         .overlay(alignment: .top) {
