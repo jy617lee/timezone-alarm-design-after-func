@@ -55,57 +55,53 @@ struct AlarmCardView: View {
                         generator.impactOccurred()
                         onDelete()
                     }) {
-                        // 커스텀 휴지통 아이콘 (filled shape, 세로줄 2개)
+                        // 커스텀 휴지통 아이콘 (SVG 기반)
                         ZStack {
-                            // 휴지통 몸체 (filled)
+                            // 상단 가로선: M3 6h18
                             Path { path in
-                                // 몸체 (라운드된 하단 모서리)
                                 path.move(to: CGPoint(x: 3, y: 6))
-                                path.addLine(to: CGPoint(x: 3, y: 17))
-                                path.addQuadCurve(to: CGPoint(x: 4, y: 18), control: CGPoint(x: 3, y: 17.5))
-                                path.addLine(to: CGPoint(x: 12, y: 18))
-                                path.addQuadCurve(to: CGPoint(x: 13, y: 17), control: CGPoint(x: 13, y: 17.5))
-                                path.addLine(to: CGPoint(x: 13, y: 6))
-                                path.addLine(to: CGPoint(x: 3, y: 6))
-                                path.closeSubpath()
-                                
-                                // 뚜껑
-                                path.move(to: CGPoint(x: 2, y: 6))
-                                path.addLine(to: CGPoint(x: 2, y: 5))
-                                path.addLine(to: CGPoint(x: 14, y: 5))
-                                path.addLine(to: CGPoint(x: 14, y: 6))
-                                path.addLine(to: CGPoint(x: 2, y: 6))
-                                path.closeSubpath()
-                                
-                                // 손잡이
-                                path.move(to: CGPoint(x: 5, y: 4))
-                                path.addLine(to: CGPoint(x: 5, y: 3))
-                                path.addLine(to: CGPoint(x: 11, y: 3))
-                                path.addLine(to: CGPoint(x: 11, y: 4))
-                                path.addLine(to: CGPoint(x: 5, y: 4))
-                                path.closeSubpath()
+                                path.addLine(to: CGPoint(x: 21, y: 6))
                             }
-                            .fill(Color.appTextSecondary)
+                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2, lineCap: .round))
                             
-                            // 세로줄 2개 (filled)
+                            // 몸체: M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6
                             Path { path in
-                                // 왼쪽 세로줄
-                                path.move(to: CGPoint(x: 6, y: 8))
-                                path.addLine(to: CGPoint(x: 7, y: 8))
-                                path.addLine(to: CGPoint(x: 7, y: 16))
-                                path.addLine(to: CGPoint(x: 6, y: 16))
-                                path.closeSubpath()
-                                
-                                // 오른쪽 세로줄
-                                path.move(to: CGPoint(x: 9, y: 8))
-                                path.addLine(to: CGPoint(x: 10, y: 8))
-                                path.addLine(to: CGPoint(x: 10, y: 16))
-                                path.addLine(to: CGPoint(x: 9, y: 16))
-                                path.closeSubpath()
+                                path.move(to: CGPoint(x: 19, y: 6))
+                                path.addLine(to: CGPoint(x: 19, y: 20))
+                                path.addCurve(to: CGPoint(x: 17, y: 22), control1: CGPoint(x: 19, y: 21), control2: CGPoint(x: 18, y: 22))
+                                path.addLine(to: CGPoint(x: 7, y: 22))
+                                path.addCurve(to: CGPoint(x: 5, y: 20), control1: CGPoint(x: 6, y: 22), control2: CGPoint(x: 5, y: 21))
+                                path.addLine(to: CGPoint(x: 5, y: 6))
+                                path.addLine(to: CGPoint(x: 19, y: 6))
                             }
-                            .fill(Color.appTextSecondary)
+                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                            
+                            // 상단 손잡이: M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2
+                            Path { path in
+                                path.move(to: CGPoint(x: 8, y: 6))
+                                path.addLine(to: CGPoint(x: 8, y: 4))
+                                path.addCurve(to: CGPoint(x: 10, y: 2), control1: CGPoint(x: 8, y: 3), control2: CGPoint(x: 9, y: 2))
+                                path.addLine(to: CGPoint(x: 14, y: 2))
+                                path.addCurve(to: CGPoint(x: 16, y: 4), control1: CGPoint(x: 15, y: 2), control2: CGPoint(x: 16, y: 3))
+                                path.addLine(to: CGPoint(x: 16, y: 6))
+                            }
+                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                            
+                            // 왼쪽 세로줄: line x1="10" x2="10" y1="11" y2="17"
+                            Path { path in
+                                path.move(to: CGPoint(x: 10, y: 11))
+                                path.addLine(to: CGPoint(x: 10, y: 17))
+                            }
+                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2, lineCap: .round))
+                            
+                            // 오른쪽 세로줄: line x1="14" x2="14" y1="11" y2="17"
+                            Path { path in
+                                path.move(to: CGPoint(x: 14, y: 11))
+                                path.addLine(to: CGPoint(x: 14, y: 17))
+                            }
+                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2, lineCap: .round))
                         }
-                        .frame(width: 16, height: 20)
+                        .frame(width: 17, height: 17)
                     }
                     .buttonStyle(.plain)
                     .padding(.trailing, 8)
