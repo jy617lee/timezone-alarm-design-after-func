@@ -126,6 +126,9 @@ class AlarmViewModel {
     }
     
     func deleteAlarm(_ alarm: Alarm) {
+        // Analytics 로깅 (삭제 전에 로깅)
+        AnalyticsService.shared.logAlarmDeleted(alarm: alarm)
+        
         // 알림 스케줄링 취소
         AlarmScheduler.shared.cancelAlarm(alarm)
         // 알람 삭제
