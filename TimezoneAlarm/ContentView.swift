@@ -65,6 +65,12 @@ struct ContentView: View {
                                         editMode = .inactive
                                     }
                                 }
+                                .font(.geist(size: 16, weight: .semibold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.appPrimary)
+                                .cornerRadius(20)
                                 .padding(.trailing, 20)
                             } else {
                                 HStack(spacing: 12) {
