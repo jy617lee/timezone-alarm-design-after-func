@@ -34,6 +34,9 @@ struct ContentView: View {
                 VStack(spacing: 0) {
                     // 커스텀 헤더 (배경색, 블러, 그림자 적용)
                     HStack {
+                        Text("Syncly")
+                            .font(.geist(size: 24, weight: .bold))
+                            .foregroundColor(.appTextPrimary)
                         Spacer()
                         if viewModel.alarms.isEmpty {
                             // Empty State - 버튼만 표시
@@ -97,7 +100,7 @@ struct ContentView: View {
                         }
                     }
                     .frame(height: 44)
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 16)
                     .padding(.vertical, 6)
                     .background(Color.appHeaderBackground)
                     .background(.ultraThinMaterial)

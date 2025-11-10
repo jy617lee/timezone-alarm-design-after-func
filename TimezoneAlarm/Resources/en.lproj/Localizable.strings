@@ -43,4 +43,3 @@
 "settings.title" = "Settings";
 "settings.default_country" = "Default Country";
 "settings.select_country" = "Select Country";
-"settings.default_country_footer" = "This country will be used as the default when creating new alarms.";

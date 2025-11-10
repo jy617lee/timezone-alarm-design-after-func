@@ -54,12 +54,6 @@ struct SettingsView: View {
                                 }
                             }
                         }
-                        
-                        // Footer 텍스트
-                        Text(NSLocalizedString("settings.default_country_footer", comment: "Default country footer"))
-                            .font(.geist(size: 14, weight: .regular))
-                            .foregroundColor(.appTextSecondary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 28)
@@ -118,11 +112,12 @@ struct SettingsView: View {
                             .foregroundColor(.white)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
-                            .background(isFormValid ? Color.appPrimary : Color(red: 255/255.0, green: 240/255.0, blue: 245/255.0))
+                            .background(isFormValid ? Color.appPrimary : Color.appPrimary.opacity(0.5))
                             .cornerRadius(20)
                     }
                     .disabled(!isFormValid)
                     .buttonStyle(.plain)
+                    .background(Color.clear)
                 }
             }
         }

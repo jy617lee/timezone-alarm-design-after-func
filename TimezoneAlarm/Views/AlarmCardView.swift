@@ -47,7 +47,7 @@ struct AlarmCardView: View {
                         // 알람명
                         Text(alarm.name)
                             .font(.geist(size: 18, weight: .semibold))
-                            .foregroundColor(.appTextPrimary)
+                            .foregroundColor(alarm.isEnabled ? .appTextPrimary : .appTextPrimary.opacity(0.6))
                         
                         Spacer()
                         
@@ -86,11 +86,11 @@ struct AlarmCardView: View {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(alarm.timeOnly)
                             .font(.geist(size: 36, weight: .bold))
-                            .foregroundColor(.appTextPrimary)
+                            .foregroundColor(alarm.isEnabled ? .appTextPrimary : .appTextPrimary.opacity(0.6))
                         
                         Text(alarm.amPm)
                             .font(.geist(size: 14, weight: .semibold))
-                            .foregroundColor(.appTextSecondary)
+                            .foregroundColor(alarm.isEnabled ? .appTextSecondary : .appTextSecondary.opacity(0.6))
                             .padding(.leading, 1)
                         
                         // 국가 정보
@@ -170,6 +170,15 @@ struct AlarmCardView: View {
                                 endRadius: 200
                             )
                         )
+                )
+                .overlay(
+                    // 비활성화 시 회색 틴트
+                    Group {
+                        if !alarm.isEnabled {
+                            RoundedRectangle(cornerRadius: 24)
+                                .fill(Color.gray.opacity(0.4))
+                        }
+                    }
                 )
                 .shadow(color: Color.appShadow.opacity(0.3), radius: 8, x: 0, y: 4)
             }
@@ -275,4 +284,3 @@ struct CustomToggle: View {
     )
     .padding()
 }
-

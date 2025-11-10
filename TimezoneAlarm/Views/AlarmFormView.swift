@@ -80,7 +80,7 @@ struct AlarmFormView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 // 그라데이션 백그라운드
                 LinearGradient(
@@ -214,6 +214,7 @@ struct AlarmFormView: View {
             .navigationBarBackButtonHidden(true)
             .toolbarBackground(Color.appHeaderBackground, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
             .onAppear {
                 // NavigationBar 버튼 배경 완전히 제거
                 let appearance = UINavigationBarAppearance()
@@ -235,6 +236,39 @@ struct AlarmFormView: View {
                 UINavigationBar.appearance().standardAppearance = appearance
                 UINavigationBar.appearance().compactAppearance = appearance
                 UINavigationBar.appearance().scrollEdgeAppearance = appearance
+                
+                // 버튼 배경 완전 제거를 위한 추가 설정
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 100_000_000) // 0.1초
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                       let window = windowScene.windows.first {
+                        @MainActor
+                        func removeButtonBackgrounds(from view: UIView) {
+                            if let button = view as? UIButton {
+                                button.backgroundColor = .clear
+                                button.layer.backgroundColor = UIColor.clear.cgColor
+                                button.setBackgroundImage(nil, for: .normal)
+                                button.setBackgroundImage(nil, for: .highlighted)
+                                button.setBackgroundImage(nil, for: .disabled)
+                                button.setBackgroundImage(nil, for: .selected)
+                                button.tintColor = .brown
+                                if #available(iOS 15.0, *) {
+                                    var config = button.configuration ?? UIButton.Configuration.plain()
+                                    config.background.backgroundColor = .clear
+                                    config.background.cornerRadius = 0
+                                    config.baseForegroundColor = .brown
+                                    button.configuration = config
+                                }
+                            }
+                            for subview in view.subviews {
+                                removeButtonBackgrounds(from: subview)
+                            }
+                        }
+                        for subview in window.subviews {
+                            removeButtonBackgrounds(from: subview)
+                        }
+                    }
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -243,9 +277,16 @@ struct AlarmFormView: View {
                         .foregroundColor(.appTextPrimary)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
-                    BackButtonView(action: {
+                    Button(action: {
                         dismiss()
-                    })
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .renderingMode(.template)
+                            .foregroundColor(.brown)
+                    }
+                    .buttonStyle(.plain)
+                    .tint(.brown)
+                    .accentColor(.brown)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -256,11 +297,12 @@ struct AlarmFormView: View {
                             .foregroundColor(.white)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
-                            .background(isFormValid ? Color.appPrimary : Color(red: 255/255.0, green: 240/255.0, blue: 245/255.0))
+                            .background(isFormValid ? Color.appPrimary : Color.appPrimary.opacity(0.5))
                             .cornerRadius(20)
                     }
                     .disabled(!isFormValid)
-                    .buttonStyle(PlainButtonStyle())
+                    .buttonStyle(.plain)
+                    .background(Color.clear)
                 }
             }
             .sheet(isPresented: $showDatePicker) {
@@ -711,85 +753,6 @@ struct ToastView: View {
                         }
                     }
             }
-        }
-    }
-}
-
-// 뒤로가기 버튼 (배경 완전 제거)
-struct BackButtonView: UIViewRepresentable {
-    let action: () -> Void
-    
-    func makeUIView(context: Context) -> UIButton {
-        let button = UIButton(type: .custom)
-        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
-        let image = UIImage(systemName: "chevron.left", withConfiguration: config)
-        button.setImage(image, for: .normal)
-        button.tintColor = UIColor(Color.appTextPrimary)
-        
-        // 배경 완전히 제거
-        button.backgroundColor = .clear
-        button.layer.backgroundColor = UIColor.clear.cgColor
-        button.imageView?.backgroundColor = .clear
-        
-        // 모든 상태에서 배경 이미지 제거
-        button.setBackgroundImage(nil, for: .normal)
-        button.setBackgroundImage(nil, for: .highlighted)
-        button.setBackgroundImage(nil, for: .disabled)
-        button.setBackgroundImage(nil, for: .selected)
-        button.setBackgroundImage(nil, for: [.normal, .highlighted])
-        button.setBackgroundImage(nil, for: [.normal, .disabled])
-        button.setBackgroundImage(nil, for: [.highlighted, .selected])
-        
-        // iOS 버전에 따른 설정
-        if #available(iOS 15.0, *) {
-            // iOS 15.0 이상에서는 UIButtonConfiguration 사용
-            var config = UIButton.Configuration.plain()
-            config.background.backgroundColor = .clear
-            config.background.cornerRadius = 0
-            config.contentInsets = .zero
-            config.image = UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .medium))
-            config.baseForegroundColor = UIColor(Color.appTextPrimary)
-            button.configuration = config
-        } else {
-            // iOS 14 이하에서는 기존 방식 사용
-            button.adjustsImageWhenHighlighted = false
-            button.adjustsImageWhenDisabled = false
-            button.showsTouchWhenHighlighted = false
-            button.contentEdgeInsets = .zero
-            button.imageEdgeInsets = .zero
-            button.titleEdgeInsets = .zero
-        }
-        
-        // 레이어 설정
-        button.layer.cornerRadius = 0
-        button.clipsToBounds = false
-        
-        // 프레임 설정
-        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-        
-        button.addTarget(context.coordinator, action: #selector(Coordinator.buttonTapped), for: .touchUpInside)
-        return button
-    }
-    
-    func updateUIView(_ uiView: UIButton, context: Context) {
-        // 배경이 다시 나타나지 않도록 계속 확인
-        uiView.backgroundColor = .clear
-        uiView.layer.backgroundColor = UIColor.clear.cgColor
-    }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(action: action)
-    }
-    
-    class Coordinator: NSObject {
-        let action: () -> Void
-        
-        init(action: @escaping () -> Void) {
-            self.action = action
-        }
-        
-        @objc func buttonTapped() {
-            action()
         }
     }
 }
