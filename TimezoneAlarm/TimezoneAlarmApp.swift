@@ -32,26 +32,7 @@ struct TimezoneAlarmApp: App {
         UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
         debugLog("✅ 알림 델리게이트 설정 완료")
         
-        // 알람 권한 확인 및 요청
-        Task {
-            let center = UNUserNotificationCenter.current()
-            let settings = await center.notificationSettings()
-            
-            debugLog("📱 알림 권한 상태 확인: \(settings.authorizationStatus.rawValue)")
-            
-            switch settings.authorizationStatus {
-            case .notDetermined:
-                debugLog("📱 알림 권한이 없습니다. 권한 요청 중...")
-                let granted = await AlarmScheduler.shared.requestAuthorization()
-                debugLog("📱 권한 요청 결과: \(granted ? "허용됨" : "거부됨")")
-            case .denied:
-                debugLog("⚠️ 알림 권한이 거부되었습니다.")
-            case .authorized, .provisional, .ephemeral:
-                debugLog("✅ 알림 권한이 이미 허용되어 있습니다.")
-            @unknown default:
-                debugLog("⚠️ 알 수 없는 권한 상태")
-            }
-        }
+        // 권한 요청은 스플래시 화면이 끝난 후 AppRootView에서 처리
     }
     
     var body: some Scene {
