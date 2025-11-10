@@ -42,7 +42,7 @@ struct AlarmCardView: View {
                 // 상단 행: 알람명과 토글
                 HStack {
                     Text(alarm.name)
-                        .font(.geist(size: 17, weight: .semibold))
+                        .font(.geist(size: 18, weight: .semibold))
                         .foregroundColor(.appTextPrimary)
                     
                     Spacer()
@@ -60,11 +60,16 @@ struct AlarmCardView: View {
                     .tint(cardPalette.accent)
                 }
                 
-                // 중간 행: 시간
+                // 중간 행: 시간과 AM/PM
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Text(alarm.formattedTime)
-                        .font(.geist(size: 32, weight: .light))
+                    Text(alarm.timeOnly)
+                        .font(.geist(size: 36, weight: .light))
                         .foregroundColor(.appTextPrimary)
+                    
+                    Text(alarm.amPm)
+                        .font(.geist(size: 18, weight: .regular))
+                        .foregroundColor(.appTextSecondary)
+                        .padding(.leading, 4)
                     
                     Spacer()
                 }
@@ -77,7 +82,7 @@ struct AlarmCardView: View {
                             .font(.geist(size: 20, weight: .regular))
                         
                         Text(alarm.countryName)
-                            .font(.geist(size: 15, weight: .regular))
+                            .font(.geist(size: 14, weight: .regular))
                             .foregroundColor(.appTextSecondary)
                     }
                     
