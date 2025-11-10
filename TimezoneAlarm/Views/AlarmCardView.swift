@@ -19,6 +19,20 @@ struct AlarmCardView: View {
     private let weekdays = ["S", "M", "T", "W", "T", "F", "S"]
     private let weekdayIndices = [1, 2, 3, 4, 5, 6, 7] // Sunday=1, Monday=2, ..., Saturday=7
     
+    // 카드 색상 팔레트 선택 (알람 ID 기반)
+    private var cardPalette: (background: Color, accent: Color) {
+        let palettes: [(background: Color, accent: Color)] = [
+            (.cardStrawberryBackground, .cardStrawberryAccent),
+            (.cardPistachioBackground, .cardPistachioAccent),
+            (.cardLemonBackground, .cardLemonAccent),
+            (.cardBerryBackground, .cardBerryAccent),
+            (.cardCookieBackground, .cardCookieAccent),
+            (.cardStrawberryBackground, .cardStrawberryAccent) // 6번째는 첫 번째 재사용
+        ]
+        let index = abs(alarm.id.hashValue) % palettes.count
+        return palettes[index]
+    }
+    
     var body: some View {
         HStack(spacing: 0) {
             // 메인 카드 컨텐츠
@@ -63,6 +77,7 @@ struct AlarmCardView: View {
                         }
                     ))
                     .labelsHidden()
+                    .tint(cardPalette.accent)
                 }
                 
                 // 국가 정보
@@ -97,7 +112,7 @@ struct AlarmCardView: View {
                                 .frame(width: 28, height: 28)
                                 .background(
                                     Circle()
-                                        .fill(alarm.selectedWeekdays.contains(index) ? Color.appSelected : Color.clear)
+                                        .fill(alarm.selectedWeekdays.contains(index) ? cardPalette.accent : Color.clear)
                                 )
                         }
                     }
@@ -115,7 +130,7 @@ struct AlarmCardView: View {
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.appCardBackground)
+            .background(cardPalette.background)
             .cornerRadius(16)
             .shadow(color: Color.appShadow, radius: 5, x: 0, y: 2)
             .offset(x: dragOffset)
