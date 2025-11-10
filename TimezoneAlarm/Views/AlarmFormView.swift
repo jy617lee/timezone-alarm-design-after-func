@@ -43,11 +43,18 @@ struct AlarmFormView: View {
             if let country = Country.popularCountries.first(where: { $0.timezoneIdentifier == alarm.timezoneIdentifier }) {
                 _selectedCountry = State(initialValue: country)
             }
+        } else {
+            // 새 알람 생성 시 날짜 초기값을 오늘 날짜로 설정
+            let today = Date()
+            _selectedDate = State(initialValue: today)
+            _datePickerValue = State(initialValue: today)
         }
     }
     
     private var isFormValid: Bool {
-        !alarmName.isEmpty && selectedCountry != nil
+        !alarmName.isEmpty && 
+        selectedCountry != nil &&
+        (!selectedWeekdays.isEmpty || selectedDate != nil)
     }
     
     var body: some View {
@@ -177,8 +184,6 @@ struct AlarmFormView: View {
                     }
                 } header: {
                     Text("Date")
-                } footer: {
-                    Text("Selecting a date will clear repeat settings")
                 }
                 
                 // 반복 선택
@@ -189,8 +194,6 @@ struct AlarmFormView: View {
                     )
                 } header: {
                     Text("Repeat")
-                } footer: {
-                    Text("Selecting repeat days will clear date selection")
                 }
             }
             .navigationTitle(editingAlarm == nil ? "New Alarm" : "Edit Alarm")
