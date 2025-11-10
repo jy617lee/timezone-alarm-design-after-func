@@ -27,7 +27,7 @@ struct AlarmCardView: View {
                 HStack {
                     Text(alarm.name)
                         .font(.headline)
-                        .foregroundColor(.primary)
+                        .foregroundColor(.appTextPrimary)
                     
                     Spacer()
                     
@@ -39,7 +39,7 @@ struct AlarmCardView: View {
                     }) {
                         Image(systemName: "trash")
                             .font(.body)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.appTextSecondary)
                     }
                     .buttonStyle(.plain)
                     .contentShape(Rectangle())
@@ -49,7 +49,7 @@ struct AlarmCardView: View {
                 HStack {
                     Text(alarm.formattedTime)
                         .font(.system(size: 32, weight: .light))
-                        .foregroundColor(.primary)
+                        .foregroundColor(.appTextPrimary)
                     
                     Spacer()
                     
@@ -72,7 +72,7 @@ struct AlarmCardView: View {
                     
                     Text(alarm.countryName)
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.appTextSecondary)
                 }
                 
                 // 날짜 또는 요일 표시
@@ -81,10 +81,10 @@ struct AlarmCardView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "calendar")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.appTextSecondary)
                         Text(formatDate(selectedDate))
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.appTextSecondary)
                     }
                 } else if !alarm.selectedWeekdays.isEmpty {
                     // 요일이 선택된 경우
@@ -93,11 +93,11 @@ struct AlarmCardView: View {
                             Text(weekday)
                                 .font(.caption)
                                 .fontWeight(.semibold)
-                                .foregroundColor(alarm.selectedWeekdays.contains(index) ? .white : .secondary)
+                                .foregroundColor(alarm.selectedWeekdays.contains(index) ? .appTextOnPrimary : .appTextSecondary)
                                 .frame(width: 28, height: 28)
                                 .background(
                                     Circle()
-                                        .fill(alarm.selectedWeekdays.contains(index) ? Color.accentColor : Color.clear)
+                                        .fill(alarm.selectedWeekdays.contains(index) ? Color.appSelected : Color.clear)
                                 )
                         }
                     }
@@ -106,18 +106,18 @@ struct AlarmCardView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "clock")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.appTextSecondary)
                         Text(NSLocalizedString("alarm_card.once", comment: "Once"))
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.appTextSecondary)
                     }
                 }
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.systemBackground))
+            .background(Color.appCardBackground)
             .cornerRadius(16)
-            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+            .shadow(color: Color.appShadow, radius: 5, x: 0, y: 2)
             .offset(x: dragOffset)
             .simultaneousGesture(
                 DragGesture(minimumDistance: 10)
@@ -176,14 +176,12 @@ struct AlarmCardView: View {
                                 Spacer()
                                 Image(systemName: "trash")
                                     .font(.title2)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.appTextOnPrimary)
                                 Spacer()
                             }
                             .frame(width: abs(dragOffset))
                             .frame(height: cardGeometry.size.height)
-                            .background(
-                                Color.red.opacity(0.3)
-                            )
+                            .background(Color.appDeleteBackground)
                         }
                         .offset(x: cardGeometry.size.width + dragOffset)
                         .transition(.opacity)

@@ -34,18 +34,18 @@ struct ContentView: View {
                             }) {
                                 Image(systemName: "plus")
                                     .font(.system(size: 16, weight: .medium))
-                                    .foregroundColor(.primary)
+                                    .foregroundColor(.appTextPrimary)
                                     .frame(width: 28, height: 28)
-                                    .background(Circle().fill(Color(.systemGray6)))
+                                    .background(Circle().fill(Color.appButtonBackground))
                             }
                             Button(action: {
                                 showSettings = true
                             }) {
                                 Image(systemName: "gearshape")
                                     .font(.system(size: 16, weight: .medium))
-                                    .foregroundColor(.primary)
+                                    .foregroundColor(.appTextPrimary)
                                     .frame(width: 28, height: 28)
-                                    .background(Circle().fill(Color(.systemGray6)))
+                                    .background(Circle().fill(Color.appButtonBackground))
                             }
                         }
                         .padding(.trailing, 16)
@@ -65,18 +65,18 @@ struct ContentView: View {
                                 }) {
                                     Image(systemName: "plus")
                                         .font(.system(size: 16, weight: .medium))
-                                        .foregroundColor(.primary)
+                                        .foregroundColor(.appTextPrimary)
                                         .frame(width: 28, height: 28)
-                                        .background(Circle().fill(Color(.systemGray6)))
+                                        .background(Circle().fill(Color.appButtonBackground))
                                 }
                                 Button(action: {
                                     showSettings = true
                                 }) {
                                     Image(systemName: "gearshape")
                                         .font(.system(size: 16, weight: .medium))
-                                        .foregroundColor(.primary)
+                                        .foregroundColor(.appTextPrimary)
                                         .frame(width: 28, height: 28)
-                                        .background(Circle().fill(Color(.systemGray6)))
+                                        .background(Circle().fill(Color.appButtonBackground))
                                 }
                             }
                             .padding(.trailing, 16)
@@ -84,7 +84,7 @@ struct ContentView: View {
                     }
                 }
                 .frame(height: 44)
-                .background(Color(.systemBackground))
+                .background(Color.appBackground)
                 
                 // 컨텐츠
                 if viewModel.alarms.isEmpty {
@@ -93,9 +93,10 @@ struct ContentView: View {
                         Spacer()
                         
                         // 알람 아이콘
-                        Image(systemName: "alarm")
-                            .font(.system(size: 80))
-                            .foregroundStyle(.secondary)
+                        Image("alarm-icon")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 120, height: 120)
                         
                         // Title
                         Text(NSLocalizedString("content.empty.title", comment: "No alarms yet title"))
@@ -105,7 +106,7 @@ struct ContentView: View {
                         // Description
                         Text(NSLocalizedString("content.empty.description", comment: "Tap to add first alarm"))
                             .font(.body)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color.appTextSecondary)
                         
                         // Add New Alarm 버튼
                         Button(action: {
@@ -113,10 +114,10 @@ struct ContentView: View {
                         }) {
                             Text(NSLocalizedString("content.empty.add_button", comment: "Add new alarm button"))
                                 .font(.headline)
-                                .foregroundColor(.white)
+                                .foregroundColor(.appTextOnPrimary)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.accentColor)
+                                .background(Color.appPrimary)
                                 .cornerRadius(12)
                         }
                         .padding(.horizontal, 40)

@@ -29,11 +29,11 @@ struct SettingsView: View {
                                 HStack(spacing: 8) {
                                     Text(country.flag)
                                     Text(country.name)
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(.appTextSecondary)
                                 }
                             } else {
                                 Text(NSLocalizedString("settings.select_country", comment: "Select country"))
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(.appTextSecondary)
                             }
                         }
                     }
