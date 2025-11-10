@@ -22,41 +22,39 @@ struct AlarmListView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
-                VStack(spacing: 12) {
-                    ForEach(viewModel.sortedAlarms) { alarm in
-                        AlarmCardView(
-                            alarm: alarm,
-                            onToggle: {
-                                viewModel.toggleAlarm(alarm)
-                            },
-                            onDelete: {
-                                withAnimation {
-                                    viewModel.deleteAlarm(alarm)
-                                }
-                            },
-                            onTap: {
-                                editingAlarm = alarm
-                            }
-                        )
-                        .onLongPressGesture {
-                            // 롱프레스로 드래그 모드 활성화
+        ScrollView {
+            VStack(spacing: 12) {
+                ForEach(Array(viewModel.sortedAlarms.enumerated()), id: \.element.id) { index, alarm in
+                    AlarmCardView(
+                        alarm: alarm,
+                        onToggle: {
+                            viewModel.toggleAlarm(alarm)
+                        },
+                        onDelete: {
                             withAnimation {
-                                editMode = .active
+                                viewModel.deleteAlarm(alarm)
                             }
-                            // 햅틱 피드백
-                            let generator = UIImpactFeedbackGenerator(style: .medium)
-                            generator.impactOccurred()
+                        },
+                        onTap: {
+                            editingAlarm = alarm
+                        },
+                        index: index
+                    )
+                    .onLongPressGesture {
+                        // 롱프레스로 드래그 모드 활성화
+                        withAnimation {
+                            editMode = .active
                         }
+                        // 햅틱 피드백
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
                     }
                 }
-                .frame(maxWidth: 448)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 16)
-                .frame(maxWidth: .infinity)
-                .frame(minHeight: geometry.size.height)
             }
+            .frame(maxWidth: 448)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
         }
         .environment(\.editMode, $editMode)
         .sheet(item: $editingAlarm) { alarm in

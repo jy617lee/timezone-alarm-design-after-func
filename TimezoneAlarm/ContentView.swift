@@ -145,6 +145,7 @@ struct ContentView: View {
                 } else {
                     // Alarm List
                     AlarmListView(viewModel: viewModel, showAlarmForm: $showAlarmForm, showSettings: $showSettings, editMode: $editMode)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 }
             }

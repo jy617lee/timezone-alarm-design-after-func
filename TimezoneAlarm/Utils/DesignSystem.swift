@@ -153,37 +153,37 @@ extension Color {
     static let appDeleteBackground = Color(red: 216/255.0, green: 106/255.0, blue: 87/255.0).opacity(0.3)
     
     // MARK: - Card Color Palettes
-    /// Card palette 1: Strawberry Cream - background #FBE1EA, accent #F3A9C0
-    static let cardStrawberryBackground = Color(red: 251/255.0, green: 225/255.0, blue: 234/255.0)
-    static let cardStrawberryAccent = Color(red: 243/255.0, green: 169/255.0, blue: 192/255.0)
+    /// Card palette 1: Strawberry Cream - 하얀끼가 더 섞인 밝은 색상
+    static let cardStrawberryBackground = Color(red: 253/255.0, green: 235/255.0, blue: 242/255.0)
+    static let cardStrawberryAccent = Color(red: 247/255.0, green: 179/255.0, blue: 202/255.0)
     
-    /// Card palette 2: Pistachio Mint - background #E7F1E7, accent #B8D8B8
-    static let cardPistachioBackground = Color(red: 231/255.0, green: 241/255.0, blue: 231/255.0)
-    static let cardPistachioAccent = Color(red: 184/255.0, green: 216/255.0, blue: 184/255.0)
+    /// Card palette 2: Pistachio Mint - 하얀끼가 더 섞인 밝은 색상
+    static let cardPistachioBackground = Color(red: 239/255.0, green: 247/255.0, blue: 239/255.0)
+    static let cardPistachioAccent = Color(red: 196/255.0, green: 224/255.0, blue: 196/255.0)
     
-    /// Card palette 3: Lemon Shortbread - background #FFF2CF, accent #FFD6A5
-    static let cardLemonBackground = Color(red: 255/255.0, green: 242/255.0, blue: 207/255.0)
-    static let cardLemonAccent = Color(red: 255/255.0, green: 214/255.0, blue: 165/255.0)
+    /// Card palette 3: Lemon Shortbread - 하얀끼가 더 섞인 밝은 색상
+    static let cardLemonBackground = Color(red: 255/255.0, green: 248/255.0, blue: 223/255.0)
+    static let cardLemonAccent = Color(red: 255/255.0, green: 224/255.0, blue: 181/255.0)
     
-    /// Card palette 4: Berry Frost - background #EFE7F5, accent #C9A5CF
-    static let cardBerryBackground = Color(red: 239/255.0, green: 231/255.0, blue: 245/255.0)
-    static let cardBerryAccent = Color(red: 201/255.0, green: 165/255.0, blue: 207/255.0)
+    /// Card palette 4: Berry Frost - 하얀끼가 더 섞인 밝은 색상
+    static let cardBerryBackground = Color(red: 245/255.0, green: 239/255.0, blue: 250/255.0)
+    static let cardBerryAccent = Color(red: 213/255.0, green: 181/255.0, blue: 219/255.0)
     
-    /// Card palette 5: Cookie Dough - background #FBF2E3, accent #F0D6A7
-    static let cardCookieBackground = Color(red: 251/255.0, green: 242/255.0, blue: 227/255.0)
-    static let cardCookieAccent = Color(red: 240/255.0, green: 214/255.0, blue: 167/255.0)
+    /// Card palette 5: Cookie Dough - 하얀끼가 더 섞인 밝은 색상
+    static let cardCookieBackground = Color(red: 253/255.0, green: 248/255.0, blue: 237/255.0)
+    static let cardCookieAccent = Color(red: 246/255.0, green: 224/255.0, blue: 183/255.0)
     
-    /// Card palette 6: Orange - background #FFE8D6, accent #FFB88C
-    static let cardOrangeBackground = Color(red: 255/255.0, green: 232/255.0, blue: 214/255.0)
-    static let cardOrangeAccent = Color(red: 255/255.0, green: 184/255.0, blue: 140/255.0)
+    /// Card palette 6: Orange - 하얀끼가 더 섞인 밝은 색상
+    static let cardOrangeBackground = Color(red: 255/255.0, green: 240/255.0, blue: 224/255.0)
+    static let cardOrangeAccent = Color(red: 255/255.0, green: 196/255.0, blue: 156/255.0)
     
-    /// Card palette 7: Hot Pink - background #FFD6E8, accent #FF8FB8
-    static let cardHotPinkBackground = Color(red: 255/255.0, green: 214/255.0, blue: 232/255.0)
-    static let cardHotPinkAccent = Color(red: 255/255.0, green: 143/255.0, blue: 184/255.0)
+    /// Card palette 7: Hot Pink - 하얀끼가 더 섞인 밝은 색상
+    static let cardHotPinkBackground = Color(red: 255/255.0, green: 224/255.0, blue: 242/255.0)
+    static let cardHotPinkAccent = Color(red: 255/255.0, green: 159/255.0, blue: 200/255.0)
     
-    /// Card palette 8: Light Brown - background #F5E6D3, accent #D4B896
-    static let cardLightBrownBackground = Color(red: 245/255.0, green: 230/255.0, blue: 211/255.0)
-    static let cardLightBrownAccent = Color(red: 212/255.0, green: 184/255.0, blue: 150/255.0)
+    /// Card palette 8: Light Brown - 하얀끼가 더 섞인 밝은 색상
+    static let cardLightBrownBackground = Color(red: 249/255.0, green: 238/255.0, blue: 223/255.0)
+    static let cardLightBrownAccent = Color(red: 224/255.0, green: 196/255.0, blue: 166/255.0)
     
     /// Cookie color for settings icon: #8B6F47 (밝은 쿠키 브라운)
     static let appCookieColor = Color(red: 139/255.0, green: 111/255.0, blue: 71/255.0)

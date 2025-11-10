@@ -12,14 +12,12 @@ struct AlarmCardView: View {
     let onToggle: () -> Void
     let onDelete: () -> Void
     let onTap: (() -> Void)?
-    
-    @State private var dragOffset: CGFloat = 0
-    @State private var isDragging: Bool = false
+    let index: Int // 카드 색상 순서를 위한 인덱스
     
     private let weekdays = ["S", "M", "T", "W", "T", "F", "S"]
     private let weekdayIndices = [1, 2, 3, 4, 5, 6, 7] // Sunday=1, Monday=2, ..., Saturday=7
     
-    // 카드 색상 팔레트 선택 (알람 ID 기반)
+    // 카드 색상 팔레트 선택 (인덱스 기반으로 순서대로)
     // 순서: 핫핑크 > 피스타치오 > 오렌지 > 베리 > 레몬 > 쿠키 > 딸기 > 연한갈색
     private var cardPalette: (background: Color, accent: Color) {
         let palettes: [(background: Color, accent: Color)] = [
@@ -32,22 +30,123 @@ struct AlarmCardView: View {
             (.cardStrawberryBackground, .cardStrawberryAccent),
             (.cardLightBrownBackground, .cardLightBrownAccent)
         ]
-        let index = abs(alarm.id.hashValue) % palettes.count
-        return palettes[index]
+        let paletteIndex = index % palettes.count
+        return palettes[paletteIndex]
     }
     
     var body: some View {
         HStack(spacing: 0) {
-            // 메인 카드 컨텐츠
-            VStack(alignment: .leading, spacing: 16) {
-                // 상단 행: 알람명, 삭제 버튼, 토글
-                HStack {
-                    Text(alarm.name)
-                        .font(.geist(size: 18, weight: .semibold))
-                        .foregroundColor(.appTextPrimary)
+            // 카드 전체를 Button으로 감싸서 수정 화면으로 이동
+            Button(action: {
+                onTap?()
+            }) {
+                // 메인 카드 컨텐츠
+                VStack(alignment: .leading, spacing: 12) {
+                    // 상단 행: 알람명
+                    HStack(alignment: .center) {
+                        // 알람명
+                        Text(alarm.name)
+                            .font(.geist(size: 18, weight: .semibold))
+                            .foregroundColor(.appTextPrimary)
+                        
+                        Spacer()
+                    }
                     
-                    Spacer()
+                    // 중간 행: 시간, AM/PM, 국가 정보, 날짜 (한 줄에)
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text(alarm.timeOnly)
+                            .font(.geist(size: 36, weight: .bold))
+                            .foregroundColor(.appTextPrimary)
+                        
+                        Text(alarm.amPm)
+                            .font(.geist(size: 14, weight: .semibold))
+                            .foregroundColor(.appTextSecondary)
+                            .padding(.leading, 1)
+                        
+                        // 국가 정보
+                        HStack(spacing: 8) {
+                            Text(alarm.countryFlag)
+                                .font(.geist(size: 20, weight: .regular))
+                            
+                            Text(alarm.countryName)
+                                .font(.geist(size: 14, weight: .regular))
+                                .foregroundColor(.appTextSecondary)
+                        }
+                        .padding(.leading, 8)
+                        
+                        // 날짜 표시 (날짜가 선택된 경우만)
+                        if let selectedDate = alarm.selectedDate {
+                            HStack(spacing: 8) {
+                                Text("•")
+                                    .font(.geist(size: 14, weight: .regular))
+                                    .foregroundColor(.appTextSecondary)
+                                Text(formatDate(selectedDate))
+                                    .font(.geist(size: 14, weight: .regular))
+                                    .foregroundColor(.appTextSecondary)
+                            }
+                            .padding(.leading, 4)
+                        }
+                        
+                        Spacer()
+                    }
                     
+                    // 하단 행: 요일 버튼 (요일이 선택된 경우)
+                    if !alarm.selectedWeekdays.isEmpty && alarm.selectedDate == nil {
+                        HStack(spacing: 6) {
+                            ForEach(Array(zip(weekdays, weekdayIndices)), id: \.1) { weekday, index in
+                                let isSelected = alarm.selectedWeekdays.contains(index)
+                                Text(weekday)
+                                    .font(.geist(size: 13, weight: .semibold))
+                                    .foregroundColor(isSelected ? .appTextPrimary : .appTextSecondary)
+                                    .frame(width: 32, height: 32)
+                                    .background(
+                                        Circle()
+                                            .fill(isSelected ? cardPalette.accent : Color.clear)
+                                    )
+                                    .overlay(
+                                        // 선택되지 않은 요일: 투명도가 있는 하얀색 동그라미 배경이 글자 위를 덮음
+                                        Group {
+                                            if !isSelected {
+                                                Circle()
+                                                    .fill(Color.white.opacity(0.6))
+                                            }
+                                        }
+                                    )
+                            }
+                            Spacer()
+                        }
+                        .padding(.top, -4)
+                    }
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(cardPalette.background)
+                .cornerRadius(24)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .stroke(Color.appCardBorder, lineWidth: 1)
+                )
+                .overlay(
+                    // Vignette 효과 (방사형 그라데이션)
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(
+                            RadialGradient(
+                                gradient: Gradient(colors: [
+                                    Color.clear,
+                                    Color.black.opacity(0.05)
+                                ]),
+                                center: .center,
+                                startRadius: 50,
+                                endRadius: 200
+                            )
+                        )
+                )
+                .shadow(color: Color.appShadow.opacity(0.3), radius: 8, x: 0, y: 4)
+            }
+            .buttonStyle(.plain)
+            // 삭제 버튼과 토글을 overlay로 위에 올려서 탭 우선순위를 높임
+            .overlay(alignment: .topTrailing) {
+                HStack(spacing: 4) {
                     // 삭제 버튼
                     Button(action: {
                         // 햅틱 피드백
@@ -55,229 +154,74 @@ struct AlarmCardView: View {
                         generator.impactOccurred()
                         onDelete()
                     }) {
-                        // 커스텀 휴지통 아이콘 (SVG 기반)
-                        ZStack {
-                            // 상단 가로선: M3 6h18
-                            Path { path in
-                                path.move(to: CGPoint(x: 3, y: 6))
-                                path.addLine(to: CGPoint(x: 21, y: 6))
-                            }
-                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2, lineCap: .round))
-                            
-                            // 몸체: M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6
-                            Path { path in
-                                path.move(to: CGPoint(x: 19, y: 6))
-                                path.addLine(to: CGPoint(x: 19, y: 20))
-                                path.addCurve(to: CGPoint(x: 17, y: 22), control1: CGPoint(x: 19, y: 21), control2: CGPoint(x: 18, y: 22))
-                                path.addLine(to: CGPoint(x: 7, y: 22))
-                                path.addCurve(to: CGPoint(x: 5, y: 20), control1: CGPoint(x: 6, y: 22), control2: CGPoint(x: 5, y: 21))
-                                path.addLine(to: CGPoint(x: 5, y: 6))
-                                path.addLine(to: CGPoint(x: 19, y: 6))
-                            }
-                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
-                            
-                            // 상단 손잡이: M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2
-                            Path { path in
-                                path.move(to: CGPoint(x: 8, y: 6))
-                                path.addLine(to: CGPoint(x: 8, y: 4))
-                                path.addCurve(to: CGPoint(x: 10, y: 2), control1: CGPoint(x: 8, y: 3), control2: CGPoint(x: 9, y: 2))
-                                path.addLine(to: CGPoint(x: 14, y: 2))
-                                path.addCurve(to: CGPoint(x: 16, y: 4), control1: CGPoint(x: 15, y: 2), control2: CGPoint(x: 16, y: 3))
-                                path.addLine(to: CGPoint(x: 16, y: 6))
-                            }
-                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
-                            
-                            // 왼쪽 세로줄: line x1="10" x2="10" y1="11" y2="17"
-                            Path { path in
-                                path.move(to: CGPoint(x: 10, y: 11))
-                                path.addLine(to: CGPoint(x: 10, y: 17))
-                            }
-                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2, lineCap: .round))
-                            
-                            // 오른쪽 세로줄: line x1="14" x2="14" y1="11" y2="17"
-                            Path { path in
-                                path.move(to: CGPoint(x: 14, y: 11))
-                                path.addLine(to: CGPoint(x: 14, y: 17))
-                            }
-                            .stroke(Color.appTextSecondary, style: StrokeStyle(lineWidth: 2, lineCap: .round))
-                        }
-                        .frame(width: 17, height: 17)
+                        TrashIconView(size: 16, color: .appTextSecondary)
+                            .frame(width: 44, height: 44) // 최소 터치 영역 44x44pt (iOS 가이드라인)
+                            .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    .padding(.trailing, 8)
                     
-                    Toggle("", isOn: Binding(
-                        get: { alarm.isEnabled },
-                        set: { _ in
-                            // 햅틱 피드백
-                            let generator = UIImpactFeedbackGenerator(style: .medium)
-                            generator.impactOccurred()
-                            onToggle()
-                        }
-                    ))
-                    .labelsHidden()
-                    .tint(cardPalette.accent)
-                }
-                
-                // 중간 행: 시간, AM/PM, 국가 정보, 날짜 (한 줄에)
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Text(alarm.timeOnly)
-                        .font(.geist(size: 36, weight: .bold))
-                        .foregroundColor(.appTextPrimary)
-                    
-                    Text(alarm.amPm)
-                        .font(.geist(size: 18, weight: .regular))
-                        .foregroundColor(.appTextSecondary)
-                        .padding(.leading, 4)
-                    
-                    // 국가 정보
-                    HStack(spacing: 8) {
-                        Text(alarm.countryFlag)
-                            .font(.geist(size: 20, weight: .regular))
-                        
-                        Text(alarm.countryName)
-                            .font(.geist(size: 14, weight: .regular))
-                            .foregroundColor(.appTextSecondary)
-                    }
-                    .padding(.leading, 8)
-                    
-                    // 날짜 표시 (날짜가 선택된 경우만)
-                    if let selectedDate = alarm.selectedDate {
-                        HStack(spacing: 8) {
-                            Text("•")
-                                .font(.geist(size: 14, weight: .regular))
-                                .foregroundColor(.appTextSecondary)
-                            Text(formatDate(selectedDate))
-                                .font(.geist(size: 14, weight: .regular))
-                                .foregroundColor(.appTextSecondary)
-                        }
-                        .padding(.leading, 4)
-                    }
-                    
-                    Spacer()
-                }
-                
-                // 하단 행: 요일 버튼 (요일이 선택된 경우)
-                if !alarm.selectedWeekdays.isEmpty && alarm.selectedDate == nil {
-                    HStack(spacing: 6) {
-                        ForEach(Array(zip(weekdays, weekdayIndices)), id: \.1) { weekday, index in
-                            let isSelected = alarm.selectedWeekdays.contains(index)
-                            Text(weekday)
-                                .font(.geist(size: 13, weight: .semibold))
-                                .foregroundColor(isSelected ? .appTextOnPrimary : .appTextSecondary)
-                                .frame(width: 32, height: 32)
-                                .background(
-                                    Circle()
-                                        .fill(isSelected ? cardPalette.accent : Color.appMutedBackground.opacity(0.5))
-                                )
-                        }
-                        Spacer()
-                    }
-                }
-            }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(cardPalette.background)
-            .cornerRadius(24)
-            .overlay(
-                RoundedRectangle(cornerRadius: 24)
-                    .stroke(Color.appCardBorder, lineWidth: 1)
-            )
-            .overlay(
-                // Vignette 효과 (방사형 그라데이션)
-                RoundedRectangle(cornerRadius: 24)
-                    .fill(
-                        RadialGradient(
-                            gradient: Gradient(colors: [
-                                Color.clear,
-                                Color.black.opacity(0.05)
-                            ]),
-                            center: .center,
-                            startRadius: 50,
-                            endRadius: 200
-                        )
+                    // 커스텀 토글
+                    CustomToggle(
+                        isOn: Binding(
+                            get: { alarm.isEnabled },
+                            set: { _ in
+                                onToggle()
+                            }
+                        ),
+                        accentColor: cardPalette.accent
                     )
-            )
-            .shadow(color: Color.appShadow.opacity(0.3), radius: 8, x: 0, y: 4)
-            .offset(x: dragOffset)
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 10)
-                    .onChanged { value in
-                        // 왼쪽으로만 스와이프 가능 (제한 없이 끝까지)
-                        if value.translation.width < 0 {
-                            dragOffset = value.translation.width
-                            isDragging = true
-                        } else if value.translation.width > 0 && dragOffset < 0 {
-                            // 왼쪽으로 스와이프한 상태에서 오른쪽으로 되돌릴 때
-                            // 즉시 원래 위치로 복귀
-                            withAnimation(.spring()) {
-                                dragOffset = 0
-                                isDragging = false
-                            }
-                        }
-                        // 오른쪽으로 스와이프할 때는 아무 동작 안함 (dragOffset이 0인 상태에서)
-                    }
-                    .onEnded { value in
-                        // 왼쪽으로 스와이프한 경우에만 처리
-                        if value.translation.width < 0 {
-                            if value.translation.width < -50 {
-                                // 삭제 트리거
-                                withAnimation {
-                                    onDelete()
-                                }
-                            } else {
-                                // 원래 위치로 복귀
-                                withAnimation(.spring()) {
-                                    dragOffset = 0
-                                    isDragging = false
-                                }
-                            }
-                        } else {
-                            // 오른쪽으로 스와이프한 경우 아무 동작 안함
-                            // dragOffset은 이미 0이므로 그대로 유지
-                        }
-                    }
-            )
-            .onTapGesture {
-                // 스와이프 중이 아닐 때만 탭 처리
-                if !isDragging && dragOffset == 0 {
-                    onTap?()
+                    .frame(width: 56, height: 44) // 최소 터치 영역 44x44pt (iOS 가이드라인)
+                    .contentShape(Rectangle())
                 }
+                .padding(.top, 16)
+                .padding(.trailing, 16)
             }
-            .background(
-                // 오른쪽 삭제 아이콘 영역 (왼쪽 스와이프 시 표시, 동적으로 늘어남)
-                GeometryReader { cardGeometry in
-                    if dragOffset < 0 {
-                        Button(action: {
-                            withAnimation {
-                                onDelete()
-                            }
-                        }) {
-                            HStack {
-                                Spacer()
-                                Image(systemName: "trash")
-                                    .font(.geist(size: 22, weight: .regular))
-                                    .foregroundColor(.appTextOnPrimary)
-                                Spacer()
-                            }
-                            .frame(width: abs(dragOffset))
-                            .frame(height: cardGeometry.size.height)
-                            .background(Color.appDeleteBackground)
-                        }
-                        .offset(x: cardGeometry.size.width + dragOffset)
-                        .transition(.opacity)
-                    }
-                }
-            )
         }
         .clipped()
     }
     
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
+        formatter.dateFormat = "MMM d" // 연도 제외, 예: "Jan 15"
         return formatter.string(from: date)
+    }
+}
+
+// 커스텀 토글 컴포넌트 (작고 완전한 원형)
+struct CustomToggle: View {
+    @Binding var isOn: Bool
+    let accentColor: Color
+    
+    private let trackWidth: CGFloat = 40
+    private let trackHeight: CGFloat = 22
+    private let thumbSize: CGFloat = 18
+    
+    var body: some View {
+        Button(action: {
+            // 토글 작동
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                isOn.toggle()
+            }
+            // 햅틱 피드백
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+        }) {
+            ZStack(alignment: isOn ? .trailing : .leading) {
+                // 트랙 (배경)
+                RoundedRectangle(cornerRadius: trackHeight / 2)
+                    .fill(isOn ? accentColor : Color.gray.opacity(0.3))
+                    .frame(width: trackWidth, height: trackHeight)
+                
+                // 썸 (완전한 원형)
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: thumbSize, height: thumbSize)
+                    .shadow(color: Color.black.opacity(0.2), radius: 2, x: 0, y: 1)
+                    .padding(.horizontal, 2)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -295,7 +239,8 @@ struct AlarmCardView: View {
         ),
         onToggle: {},
         onDelete: {},
-        onTap: nil
+        onTap: nil,
+        index: 0
     )
     .padding()
 }
