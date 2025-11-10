@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var showAlarmAlert = false
     @State private var showSettings = false
     @State private var editMode: EditMode = .inactive
+    @State private var showCustomNotification = false
+    @State private var notificationAlarm: Alarm?
     @EnvironmentObject var notificationDelegate: NotificationDelegate
     
     private var hasDefaultCountry: Bool {
@@ -77,6 +79,47 @@ struct ContentView: View {
                                 .padding(.trailing, 20)
                             } else {
                                 HStack(spacing: 12) {
+                                    #if DEBUG
+                                    // 테스트용 알람 실행 화면 버튼 (개발용만)
+                                    Button(action: {
+                                        let testAlarm = Alarm(
+                                            name: "Test Alarm",
+                                            hour: 7,
+                                            minute: 30,
+                                            timezoneIdentifier: "Asia/Seoul",
+                                            countryName: "South Korea",
+                                            countryFlag: "🇰🇷"
+                                        )
+                                        viewModel.activeAlarm = testAlarm
+                                        
+                                        // 푸시 알림도 즉시 트리거
+                                        let content = UNMutableNotificationContent()
+                                        content.title = testAlarm.name
+                                        content.body = "\(testAlarm.formattedTime) - \(testAlarm.countryFlag) \(testAlarm.countryName)"
+                                        content.sound = UNNotificationSound(named: UNNotificationSoundName("alarm.wav"))
+                                        if #available(iOS 15.0, *) {
+                                            content.interruptionLevel = .timeSensitive
+                                        }
+                                        content.userInfo = [
+                                            "alarmId": testAlarm.id.uuidString,
+                                            "alarmName": testAlarm.name,
+                                            "alarmHour": testAlarm.hour,
+                                            "alarmMinute": testAlarm.minute,
+                                            "timezoneIdentifier": testAlarm.timezoneIdentifier,
+                                            "countryName": testAlarm.countryName,
+                                            "countryFlag": testAlarm.countryFlag
+                                        ]
+                                        
+                                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+                                        let request = UNNotificationRequest(identifier: "test-\(UUID().uuidString)", content: content, trigger: trigger)
+                                        UNUserNotificationCenter.current().add(request)
+                                    }) {
+                                        Image(systemName: "bell.fill")
+                                            .font(.geist(size: 16, weight: .medium))
+                                            .foregroundColor(.appTextPrimary)
+                                            .frame(width: 36, height: 36)
+                                    }
+                                    #endif
                                     Button(action: {
                                         showAlarmForm = true
                                     }) {
@@ -196,7 +239,25 @@ struct ContentView: View {
             debugLog("🔄 notificationDelegate.activeAlarm 변경: \(oldValue?.name ?? "nil") -> \(newValue?.name ?? "nil")")
             if newValue != nil {
                 debugLog("🔔 알림에서 알람 실행: \(newValue?.name ?? "Unknown")")
+                // 커스텀 알림 뷰 표시 (체인 알림이 계속 도착하면서 계속 표시됨)
+                notificationAlarm = newValue
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    showCustomNotification = true
+                }
                 showAlarmAlert = true
+            } else {
+                // activeAlarm이 nil이 되면 커스텀 알림 뷰 숨김
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    showCustomNotification = false
+                }
+                notificationAlarm = nil
+            }
+        }
+        .overlay(alignment: .top) {
+            // 커스텀 알림 뷰 (분홍색 배경, Geist 폰트)
+            if showCustomNotification, let alarm = notificationAlarm {
+                CustomNotificationView(alarm: alarm)
+                    .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
         .fullScreenCover(isPresented: $showAlarmAlert) {
@@ -254,6 +315,42 @@ struct ContentView: View {
                 }
             }
         }
+    }
+}
+
+// 커스텀 알림 뷰 (연한 분홍색 배경, Geist 폰트)
+struct CustomNotificationView: View {
+    let alarm: Alarm
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // 알람 아이콘
+            Image("alarm-icon")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 60, height: 60)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                // 알람명 (타이틀)
+                Text(alarm.name)
+                    .font(.geist(size: 18, weight: .bold))
+                    .foregroundColor(.appTextPrimary)
+                
+                // 시간 및 국가 (description)
+                Text("\(alarm.formattedTime) - \(alarm.countryFlag) \(alarm.countryName)")
+                    .font(.geist(size: 13, weight: .regular))
+                    .foregroundColor(.appTextPrimary.opacity(0.8))
+            }
+            
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Color.appBackgroundTop)
+        .cornerRadius(12)
+        .shadow(color: Color.appShadow.opacity(0.3), radius: 8, x: 0, y: 4)
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
     }
 }
 
