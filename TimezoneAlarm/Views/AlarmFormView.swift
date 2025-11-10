@@ -327,7 +327,7 @@ struct AlarmFormView: View {
             countryFlag: country.flag,
             selectedWeekdays: selectedWeekdays,
             selectedDate: selectedDate,
-            isEnabled: true,
+            isEnabled: editingAlarm?.isEnabled ?? true, // 수정 시 기존 상태 유지, 새 알람은 기본값 true
             createdAt: editingAlarm?.createdAt ?? Date(),
             sortOrder: editingAlarm?.sortOrder ?? viewModel.alarms.count
         )

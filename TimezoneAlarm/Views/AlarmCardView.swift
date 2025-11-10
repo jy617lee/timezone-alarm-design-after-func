@@ -11,6 +11,7 @@ struct AlarmCardView: View {
     let alarm: Alarm
     let onToggle: () -> Void
     let onDelete: () -> Void
+    let onTap: (() -> Void)?
     
     @State private var dragOffset: CGFloat = 0
     @State private var isDragging: Bool = false
@@ -156,6 +157,12 @@ struct AlarmCardView: View {
                         }
                     }
             )
+            .onTapGesture {
+                // 스와이프 중이 아닐 때만 탭 처리
+                if !isDragging && dragOffset == 0 {
+                    onTap?()
+                }
+            }
             .background(
                 // 오른쪽 삭제 아이콘 영역 (왼쪽 스와이프 시 표시, 동적으로 늘어남)
                 GeometryReader { cardGeometry in
@@ -208,7 +215,8 @@ struct AlarmCardView: View {
             isEnabled: true
         ),
         onToggle: {},
-        onDelete: {}
+        onDelete: {},
+        onTap: nil
     )
     .padding()
 }
