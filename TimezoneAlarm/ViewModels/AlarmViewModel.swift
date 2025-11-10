@@ -11,7 +11,6 @@ import SwiftUI
 @MainActor
 @Observable
 class AlarmViewModel {
-    // 테스트용: 5초 후 실행될 알람
     var activeAlarm: Alarm? = nil
     var alarms: [Alarm] = [] {
         didSet {
@@ -35,7 +34,7 @@ class AlarmViewModel {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            print("🕐 시스템 타임존 변경 감지 - 알람 재스케줄링")
+            debugLog("🕐 시스템 타임존 변경 감지 - 알람 재스케줄링")
             Task { @MainActor in
                 self?.rescheduleAllAlarms()
             }
@@ -48,9 +47,9 @@ class AlarmViewModel {
     
     // 모든 알람 재스케줄링 (타임존 변경 시)
     func rescheduleAllAlarms() {
-        print("🔄 모든 알람 재스케줄링 시작 (활성화된 알람: \(alarms.filter { $0.isEnabled }.count)개)")
+        debugLog("🔄 모든 알람 재스케줄링 시작 (활성화된 알람: \(alarms.filter { $0.isEnabled }.count)개)")
         for alarm in alarms where alarm.isEnabled {
-            AlarmScheduler.shared.scheduleTestAlarm(alarm)
+            AlarmScheduler.shared.scheduleAlarm(alarm)
         }
     }
     
@@ -121,7 +120,7 @@ class AlarmViewModel {
                 AlarmScheduler.shared.cancelAlarm(alarms[index])
             } else if !wasEnabled && alarms[index].isEnabled {
                 // 알람이 활성화되면 스케줄링
-                AlarmScheduler.shared.scheduleTestAlarm(alarms[index])
+                AlarmScheduler.shared.scheduleAlarm(alarms[index])
             }
         }
     }
@@ -148,7 +147,7 @@ class AlarmViewModel {
         
         // 알람이 활성화되어 있으면 스케줄링
         if newAlarm.isEnabled {
-            AlarmScheduler.shared.scheduleTestAlarm(newAlarm)
+            AlarmScheduler.shared.scheduleAlarm(newAlarm)
         }
     }
     
@@ -160,14 +159,9 @@ class AlarmViewModel {
             // 기존 알림 취소 후 재스케줄링
             AlarmScheduler.shared.cancelAlarm(oldAlarm)
             if alarm.isEnabled {
-                AlarmScheduler.shared.scheduleTestAlarm(alarm)
+                AlarmScheduler.shared.scheduleAlarm(alarm)
             }
         }
-    }
-    
-    // 테스트용: 5초 후 알람 실행 (로컬 알림 사용)
-    func scheduleTestAlarm(_ alarm: Alarm) {
-        AlarmScheduler.shared.scheduleTestAlarm(alarm)
     }
 }
 

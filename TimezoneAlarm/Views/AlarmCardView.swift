@@ -11,6 +11,7 @@ struct AlarmCardView: View {
     let alarm: Alarm
     let onToggle: () -> Void
     let onDelete: () -> Void
+    let onTap: (() -> Void)?
     
     @State private var dragOffset: CGFloat = 0
     @State private var isDragging: Bool = false
@@ -20,22 +21,6 @@ struct AlarmCardView: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            // 왼쪽 스와이프 삭제 영역
-            if dragOffset < 0 {
-                Button(action: {
-                    withAnimation {
-                        onDelete()
-                    }
-                }) {
-                    Image(systemName: "trash")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .frame(width: 80)
-                        .frame(maxHeight: .infinity)
-                        .background(Color.red)
-                }
-            }
-            
             // 메인 카드 컨텐츠
             VStack(alignment: .leading, spacing: 12) {
                 // 상단: 알람명과 삭제 아이콘
@@ -46,11 +31,18 @@ struct AlarmCardView: View {
                     
                     Spacer()
                     
-                    Button(action: onDelete) {
+                    Button(action: {
+                        // 햅틱 피드백
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.impactOccurred()
+                        onDelete()
+                    }) {
                         Image(systemName: "trash")
                             .font(.body)
                             .foregroundColor(.secondary)
                     }
+                    .buttonStyle(.plain)
+                    .contentShape(Rectangle())
                 }
                 
                 // 시간과 토글
@@ -127,29 +119,76 @@ struct AlarmCardView: View {
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
             .offset(x: dragOffset)
-            .gesture(
+            .simultaneousGesture(
                 DragGesture(minimumDistance: 10)
                     .onChanged { value in
-                        // 왼쪽으로만 스와이프 가능
+                        // 왼쪽으로만 스와이프 가능 (제한 없이 끝까지)
                         if value.translation.width < 0 {
-                            dragOffset = max(value.translation.width, -80)
+                            dragOffset = value.translation.width
                             isDragging = true
-                        }
-                    }
-                    .onEnded { value in
-                        if value.translation.width < -50 {
-                            // 삭제 트리거
-                            withAnimation {
-                                onDelete()
-                            }
-                        } else {
-                            // 원래 위치로 복귀
+                        } else if value.translation.width > 0 && dragOffset < 0 {
+                            // 왼쪽으로 스와이프한 상태에서 오른쪽으로 되돌릴 때
+                            // 즉시 원래 위치로 복귀
                             withAnimation(.spring()) {
                                 dragOffset = 0
                                 isDragging = false
                             }
                         }
+                        // 오른쪽으로 스와이프할 때는 아무 동작 안함 (dragOffset이 0인 상태에서)
                     }
+                    .onEnded { value in
+                        // 왼쪽으로 스와이프한 경우에만 처리
+                        if value.translation.width < 0 {
+                            if value.translation.width < -50 {
+                                // 삭제 트리거
+                                withAnimation {
+                                    onDelete()
+                                }
+                            } else {
+                                // 원래 위치로 복귀
+                                withAnimation(.spring()) {
+                                    dragOffset = 0
+                                    isDragging = false
+                                }
+                            }
+                        } else {
+                            // 오른쪽으로 스와이프한 경우 아무 동작 안함
+                            // dragOffset은 이미 0이므로 그대로 유지
+                        }
+                    }
+            )
+            .onTapGesture {
+                // 스와이프 중이 아닐 때만 탭 처리
+                if !isDragging && dragOffset == 0 {
+                    onTap?()
+                }
+            }
+            .background(
+                // 오른쪽 삭제 아이콘 영역 (왼쪽 스와이프 시 표시, 동적으로 늘어남)
+                GeometryReader { cardGeometry in
+                    if dragOffset < 0 {
+                        Button(action: {
+                            withAnimation {
+                                onDelete()
+                            }
+                        }) {
+                            HStack {
+                                Spacer()
+                                Image(systemName: "trash")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                                Spacer()
+                            }
+                            .frame(width: abs(dragOffset))
+                            .frame(height: cardGeometry.size.height)
+                            .background(
+                                Color.red.opacity(0.3)
+                            )
+                        }
+                        .offset(x: cardGeometry.size.width + dragOffset)
+                        .transition(.opacity)
+                    }
+                }
             )
         }
         .clipped()
@@ -176,7 +215,8 @@ struct AlarmCardView: View {
             isEnabled: true
         ),
         onToggle: {},
-        onDelete: {}
+        onDelete: {},
+        onTap: nil
     )
     .padding()
 }

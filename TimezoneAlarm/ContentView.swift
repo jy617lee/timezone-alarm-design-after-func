@@ -97,16 +97,16 @@ struct ContentView: View {
             }
         }
         .onChange(of: viewModel.activeAlarm) { oldValue, newValue in
-            print("🔄 viewModel.activeAlarm 변경: \(oldValue?.name ?? "nil") -> \(newValue?.name ?? "nil")")
+            debugLog("🔄 viewModel.activeAlarm 변경: \(oldValue?.name ?? "nil") -> \(newValue?.name ?? "nil")")
             if newValue != nil {
-                print("🔔 알람 알림 화면 표시: \(newValue?.name ?? "Unknown")")
+                debugLog("🔔 알람 알림 화면 표시: \(newValue?.name ?? "Unknown")")
                 showAlarmAlert = true
             }
         }
         .onChange(of: notificationDelegate.activeAlarm) { oldValue, newValue in
-            print("🔄 notificationDelegate.activeAlarm 변경: \(oldValue?.name ?? "nil") -> \(newValue?.name ?? "nil")")
+            debugLog("🔄 notificationDelegate.activeAlarm 변경: \(oldValue?.name ?? "nil") -> \(newValue?.name ?? "nil")")
             if newValue != nil {
-                print("🔔 알림에서 알람 실행: \(newValue?.name ?? "Unknown")")
+                debugLog("🔔 알림에서 알람 실행: \(newValue?.name ?? "Unknown")")
                 showAlarmAlert = true
             }
         }
@@ -140,7 +140,7 @@ struct ContentView: View {
                     let timeSinceNotification = now.timeIntervalSince(notificationDate)
                     
                     if timeSinceNotification <= 30.0 {
-                        print("🔔 최근 알람 알림 발견: \(alarmName) (도착 후 \(String(format: "%.1f", timeSinceNotification))초 경과)")
+                        debugLog("🔔 최근 알람 알림 발견: \(alarmName) (도착 후 \(String(format: "%.1f", timeSinceNotification))초 경과)")
                         
                         let alarm = Alarm(
                             id: UUID(uuidString: alarmId) ?? UUID(),

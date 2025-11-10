@@ -12,39 +12,39 @@ import AVFoundation
 @main
 struct TimezoneAlarmApp: App {
     init() {
-        print("🚀 TimezoneAlarm 앱 시작!")
+        debugLog("🚀 TimezoneAlarm 앱 시작!")
         
         // 백그라운드 오디오 재생을 위한 오디오 세션 설정
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
-            print("✅ 백그라운드 오디오 세션 활성화")
+            debugLog("✅ 백그라운드 오디오 세션 활성화")
         } catch {
-            print("⚠️ 오디오 세션 설정 실패: \(error.localizedDescription)")
+            debugLog("⚠️ 오디오 세션 설정 실패: \(error.localizedDescription)")
         }
         
         // 알림 델리게이트 설정 (싱글톤 인스턴스 사용)
         UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
-        print("✅ 알림 델리게이트 설정 완료")
+        debugLog("✅ 알림 델리게이트 설정 완료")
         
         // 알람 권한 확인 및 요청
         Task {
             let center = UNUserNotificationCenter.current()
             let settings = await center.notificationSettings()
             
-            print("📱 알림 권한 상태 확인: \(settings.authorizationStatus.rawValue)")
+            debugLog("📱 알림 권한 상태 확인: \(settings.authorizationStatus.rawValue)")
             
             switch settings.authorizationStatus {
             case .notDetermined:
-                print("📱 알림 권한이 없습니다. 권한 요청 중...")
+                debugLog("📱 알림 권한이 없습니다. 권한 요청 중...")
                 let granted = await AlarmScheduler.shared.requestAuthorization()
-                print("📱 권한 요청 결과: \(granted ? "허용됨" : "거부됨")")
+                debugLog("📱 권한 요청 결과: \(granted ? "허용됨" : "거부됨")")
             case .denied:
-                print("⚠️ 알림 권한이 거부되었습니다.")
+                debugLog("⚠️ 알림 권한이 거부되었습니다.")
             case .authorized, .provisional, .ephemeral:
-                print("✅ 알림 권한이 이미 허용되어 있습니다.")
+                debugLog("✅ 알림 권한이 이미 허용되어 있습니다.")
             @unknown default:
-                print("⚠️ 알 수 없는 권한 상태")
+                debugLog("⚠️ 알 수 없는 권한 상태")
             }
         }
     }
@@ -64,19 +64,29 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
     
     @Published var activeAlarm: Alarm?
     
+    // dismiss된 알람 ID를 추적 (해당 알람의 체인 알림 예약 방지)
+    private var dismissedAlarmIds: Set<UUID> = []
+    
     private override init() {
         super.init()
-        print("📱 NotificationDelegate 싱글톤 인스턴스 생성")
+        debugLog("📱 NotificationDelegate 싱글톤 인스턴스 생성")
+    }
+    
+    // 알람 dismiss 처리 (체인 알림 예약 중단)
+    func dismissAlarm(_ alarm: Alarm) {
+        dismissedAlarmIds.insert(alarm.id)
+        activeAlarm = nil
+        debugLog("🚫 알람 dismiss 처리: \(alarm.name) (ID: \(alarm.id.uuidString))")
     }
     
     // 알림이 앱이 포그라운드에 있을 때 표시
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let currentTime = Date()
-        print("🔔🔔🔔 willPresent 호출됨 - 알림 도착! (시간: \(currentTime))")
-        print("   - 제목: \(notification.request.content.title)")
-        print("   - 내용: \(notification.request.content.body)")
-        print("   - 사용자 정보: \(notification.request.content.userInfo)")
-        print("   - 트리거 타입: \(type(of: notification.request.trigger))")
+        debugLog("🔔🔔🔔 willPresent 호출됨 - 알림 도착! (시간: \(currentTime))")
+        debugLog("   - 제목: \(notification.request.content.title)")
+        debugLog("   - 내용: \(notification.request.content.body)")
+        debugLog("   - 사용자 정보: \(notification.request.content.userInfo)")
+        debugLog("   - 트리거 타입: \(type(of: notification.request.trigger))")
         
         // 포그라운드에서도 알림 표시 (사운드 없음 - 백그라운드 오디오만 사용)
         if #available(iOS 14.0, *) {
@@ -94,7 +104,7 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
            let countryName = notification.request.content.userInfo["countryName"] as? String,
            let countryFlag = notification.request.content.userInfo["countryFlag"] as? String {
             
-            print("✅ 알람 정보 추출 성공: \(alarmName)")
+            debugLog("✅ 알람 정보 추출 성공: \(alarmName)")
             
             let alarm = Alarm(
                 id: UUID(uuidString: alarmId) ?? UUID(),
@@ -110,9 +120,15 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             let notificationId = notification.request.identifier
             
             Task { @MainActor in
-                print("📱 activeAlarm 설정 중: \(alarm.name)")
+                // dismiss된 알람인지 확인
+                if self.dismissedAlarmIds.contains(alarm.id) {
+                    debugLog("🚫 이미 dismiss된 알람입니다. 체인 알림 예약하지 않음: \(alarm.name)")
+                    return
+                }
+                
+                debugLog("📱 activeAlarm 설정 중: \(alarm.name)")
                 self.activeAlarm = alarm
-                print("✅ activeAlarm 설정 완료")
+                debugLog("✅ activeAlarm 설정 완료")
                 
                 // 백그라운드에서도 연속 사운드 재생 시작 (앱이 실행 중일 때만)
                 self.startBackgroundAudioPlayback(for: alarm)
@@ -134,18 +150,18 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
                     chainIndex = 0
                 }
                 
-                print("🔗 다음 체인 알림 예약: chain-\(chainIndex)")
+                debugLog("🔗 다음 체인 알림 예약: chain-\(chainIndex)")
                 AlarmScheduler.shared.scheduleChainNotification(for: alarm, chainIndex: chainIndex)
             }
         } else {
-            print("❌ 알람 정보 추출 실패")
+            debugLog("❌ 알람 정보 추출 실패")
         }
     }
     
     // 알림을 탭했을 때 (백그라운드에서 알림을 탭하여 앱이 열릴 때)
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        print("🔔 didReceive 호출됨 - 알림 탭됨!")
-        print("   - 액션: \(response.actionIdentifier)")
+        debugLog("🔔 didReceive 호출됨 - 알림 탭됨!")
+        debugLog("   - 액션: \(response.actionIdentifier)")
         
         // 알림을 탭한 경우에만 처리 (자동으로 앱이 열린 경우)
         guard response.actionIdentifier == UNNotificationDefaultActionIdentifier else {
@@ -161,7 +177,7 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
            let countryName = response.notification.request.content.userInfo["countryName"] as? String,
            let countryFlag = response.notification.request.content.userInfo["countryFlag"] as? String {
             
-            print("✅ 알람 정보 추출 성공: \(alarmName)")
+            debugLog("✅ 알람 정보 추출 성공: \(alarmName)")
             
             let alarm = Alarm(
                 id: UUID(uuidString: alarmId) ?? UUID(),
@@ -177,7 +193,15 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             let notificationId = response.notification.request.identifier
             
             Task { @MainActor in
-                print("📱 activeAlarm 설정 중 (didReceive): \(alarm.name)")
+                // dismiss된 알람인지 확인
+                if self.dismissedAlarmIds.contains(alarm.id) {
+                    debugLog("🚫 이미 dismiss된 알람입니다. 체인 알림 예약하지 않음: \(alarm.name)")
+                    // 표시된 알림 제거
+                    AlarmScheduler.shared.removeDeliveredNotification(for: alarm)
+                    return
+                }
+                
+                debugLog("📱 activeAlarm 설정 중 (didReceive): \(alarm.name)")
                 self.activeAlarm = alarm
                 // 표시된 알림 제거
                 AlarmScheduler.shared.removeDeliveredNotification(for: alarm)
@@ -201,11 +225,11 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
                     chainIndex = 0
                 }
                 
-                print("🔗 다음 체인 알림 예약: chain-\(chainIndex)")
+                debugLog("🔗 다음 체인 알림 예약: chain-\(chainIndex)")
                 AlarmScheduler.shared.scheduleChainNotification(for: alarm, chainIndex: chainIndex)
             }
         } else {
-            print("❌ 알람 정보 추출 실패")
+            debugLog("❌ 알람 정보 추출 실패")
         }
         
         completionHandler()
@@ -218,12 +242,12 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
     func startBackgroundAudioPlayback(for alarm: Alarm) {
         // 이미 재생 중이면 중복 시작 방지
         if let player = backgroundAudioPlayer, player.isPlaying {
-            print("🔊 백그라운드 오디오가 이미 재생 중입니다")
+            debugLog("🔊 백그라운드 오디오가 이미 재생 중입니다")
             return
         }
         
         guard let soundURL = Bundle.main.url(forResource: "alarm", withExtension: "wav") else {
-            print("⚠️ alarm.wav 파일을 찾을 수 없습니다")
+            debugLog("⚠️ alarm.wav 파일을 찾을 수 없습니다")
             return
         }
         
@@ -242,12 +266,12 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             backgroundAudioPlayer?.volume = 1.0
             backgroundAudioPlayer?.play()
             
-            print("🔊 백그라운드 연속 사운드 재생 시작 (끊김 없이)")
+            debugLog("🔊 백그라운드 연속 사운드 재생 시작 (끊김 없이)")
             
             // 백그라운드에서도 계속 재생되도록 유지
             // dismiss 시 정지됨
         } catch {
-            print("❌ 백그라운드 오디오 재생 실패: \(error.localizedDescription)")
+            debugLog("❌ 백그라운드 오디오 재생 실패: \(error.localizedDescription)")
         }
     }
     
@@ -256,7 +280,7 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         backgroundAudioPlayer = nil
         backgroundAudioTimer?.invalidate()
         backgroundAudioTimer = nil
-        print("🔇 백그라운드 오디오 재생 정지")
+        debugLog("🔇 백그라운드 오디오 재생 정지")
     }
 }
 

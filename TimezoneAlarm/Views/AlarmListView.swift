@@ -11,6 +11,7 @@ struct AlarmListView: View {
     @Bindable var viewModel: AlarmViewModel
     @Binding var showAlarmForm: Bool
     @State private var editMode: EditMode = .inactive
+    @State private var editingAlarm: Alarm?
     
     init(viewModel: AlarmViewModel, showAlarmForm: Binding<Bool> = .constant(false)) {
         self.viewModel = viewModel
@@ -29,6 +30,9 @@ struct AlarmListView: View {
                         withAnimation {
                             viewModel.deleteAlarm(alarm)
                         }
+                    },
+                    onTap: {
+                        editingAlarm = alarm
                     }
                 )
                 .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
@@ -58,6 +62,9 @@ struct AlarmListView: View {
                     }
                 }
             }
+        }
+        .sheet(item: $editingAlarm) { alarm in
+            AlarmFormView(viewModel: viewModel, editingAlarm: alarm)
         }
     }
 }
