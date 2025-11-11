@@ -11,11 +11,20 @@ import UserNotifications
 struct AppRootView: View {
     @State private var showSplash = true
     @State private var hasRequestedPermission = false
+    @State private var showInitialSetup = false
+    @State private var isSetupComplete = false
+    
+    private var hasCompletedInitialSetup: Bool {
+        UserDefaults.standard.bool(forKey: "hasCompletedInitialSetup")
+    }
     
     var body: some View {
         ZStack {
             if showSplash {
                 SplashView(isPresented: $showSplash)
+                    .transition(.opacity)
+            } else if !isSetupComplete && !hasCompletedInitialSetup {
+                InitialSetupView(isSetupComplete: $isSetupComplete)
                     .transition(.opacity)
             } else {
                 ContentView()
@@ -23,6 +32,11 @@ struct AppRootView: View {
             }
         }
         .animation(.easeInOut(duration: 0.6), value: showSplash)
+        .animation(.easeInOut(duration: 0.6), value: isSetupComplete)
+        .onAppear {
+            // 초기 설정 완료 여부 확인
+            isSetupComplete = hasCompletedInitialSetup
+        }
         .onChange(of: showSplash) { oldValue, newValue in
             // 스플래시가 끝나면 권한 요청
             if !newValue && !hasRequestedPermission {

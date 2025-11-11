@@ -43,3 +43,12 @@
 "settings.title" = "Settings";
 "settings.default_country" = "Default Country";
 "settings.select_country" = "Select Country";
+
+/* InitialSetupView */
+"initial_setup.title" = "Stay in sync with\nevery city.";
+"initial_setup.description" = "Set alarms for different cities.\nThey'll always ring at the right time.";
+"initial_setup.select_primary_country" = "Select your primary country.";
+"initial_setup.country_placeholder" = "Tap to select country";
+"initial_setup.continue" = "Continue";
+"initial_setup.change_later" = "You can change it anytime in Settings.";
+"initial_setup.skip" = "Skip for now";
