@@ -62,14 +62,19 @@ struct InitialSetupView: View {
                 VStack(spacing: 24) {
                     // 타이틀과 설명 그룹
                     VStack(spacing: 8) {
-                        // 타이틀
-                        Text(NSLocalizedString("initial_setup.title", comment: "Stay in sync with every city."))
-                            .font(.geist(size: 32, weight: .bold))
-                            .foregroundColor(.appTextPrimary)
-                            .multilineTextAlignment(.center)
-                            .lineSpacing(-2)
-                            .padding(.horizontal, 40)
-                            .opacity(titleOpacity)
+                        // 타이틀 (각 줄을 별도 패러그래프로)
+                        VStack(spacing: 0) {
+                            Text("Stay in sync with")
+                                .font(.geist(size: 32, weight: .bold))
+                                .foregroundColor(.appTextPrimary)
+                                .opacity(titleOpacity)
+                            Text("every city.")
+                                .font(.geist(size: 32, weight: .bold))
+                                .foregroundColor(.appTextPrimary)
+                                .opacity(titleOpacity)
+                        }
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
                         
                         // 앱 설명
                         Text(NSLocalizedString("initial_setup.description", comment: "Set alarms for different cities"))
@@ -93,10 +98,11 @@ struct InitialSetupView: View {
                     .padding(.vertical, 16)
                     .opacity(mapOpacity)
                     
-                    // 국가 선택 폼 (FormSection 사용, 설정 화면과 동일한 스타일)
+                    // 국가 선택 폼 (제목 없이, placeholder로 표시)
                     VStack(spacing: 4) {
                         FormSection(
-                            title: NSLocalizedString("initial_setup.select_primary_country", comment: "Select your primary country.")
+                            title: "",
+                            hideBackground: false
                         ) {
                             Button(action: {
                                 showCountrySelection = true
@@ -109,7 +115,7 @@ struct InitialSetupView: View {
                                             .font(.geist(size: 16, weight: .medium))
                                             .foregroundColor(.appTextPrimary)
                                     } else {
-                                        Text(NSLocalizedString("initial_setup.country_placeholder", comment: "Tap to select country"))
+                                        Text(NSLocalizedString("initial_setup.select_primary_country", comment: "Select your primary country."))
                                             .font(.geist(size: 16, weight: .regular))
                                             .foregroundColor(.appTextSecondary)
                                     }
@@ -134,19 +140,20 @@ struct InitialSetupView: View {
                     .padding(.horizontal, 28)
                     .opacity(formOpacity)
                     
-                    // Continue 버튼
+                    // Continue 버튼 (가로 패딩만 남기고 전체 너비)
                     Button(action: {
                         completeSetup()
                     }) {
                         Text(NSLocalizedString("initial_setup.continue", comment: "Continue"))
                             .font(.geist(size: 17, weight: .semibold))
                             .foregroundColor(.appTextOnPrimary)
-                            .padding(.horizontal, 60)
+                            .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
                             .background(isFormValid ? Color.appPrimary : Color.appPrimary.opacity(0.5))
                             .cornerRadius(12)
                     }
                     .disabled(!isFormValid)
+                    .padding(.horizontal, 28)
                     .opacity(buttonOpacity)
                 }
                 
