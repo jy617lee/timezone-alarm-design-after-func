@@ -68,21 +68,25 @@ struct InitialSetupView: View {
                         .frame(width: 80, height: 80)
                         .opacity(iconOpacity)
                     
-                    // 타이틀
-                    Text(NSLocalizedString("initial_setup.title", comment: "Stay in sync with every city."))
-                        .font(.geist(size: 32, weight: .bold))
-                        .foregroundColor(.appTextPrimary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 40)
-                        .opacity(titleOpacity)
-                    
-                    // 앱 설명
-                    Text(NSLocalizedString("initial_setup.description", comment: "Set alarms for different cities"))
-                        .font(.geist(size: 18, weight: .regular))
-                        .foregroundColor(.appTextSecondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 40)
-                        .opacity(descriptionOpacity)
+                    // 타이틀과 설명 그룹
+                    VStack(spacing: 8) {
+                        // 타이틀
+                        Text(NSLocalizedString("initial_setup.title", comment: "Stay in sync with every city."))
+                            .font(.geist(size: 32, weight: .bold))
+                            .foregroundColor(.appTextPrimary)
+                            .multilineTextAlignment(.center)
+                            .lineSpacing(4)
+                            .padding(.horizontal, 40)
+                            .opacity(titleOpacity)
+                        
+                        // 앱 설명
+                        Text(NSLocalizedString("initial_setup.description", comment: "Set alarms for different cities"))
+                            .font(.geist(size: 18, weight: .regular))
+                            .foregroundColor(.appTextSecondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                            .opacity(descriptionOpacity)
+                    }
                     
                     // 세계 지도 이미지 (설명과 폼 사이)
                     Image("world-map")
@@ -94,7 +98,7 @@ struct InitialSetupView: View {
                         .opacity(mapOpacity)
                     
                     // 국가 선택 폼 (FormSection 사용, 설정 화면과 동일한 스타일)
-                    VStack(spacing: 16) {
+                    VStack(spacing: 8) {
                         FormSection(
                             title: NSLocalizedString("initial_setup.select_primary_country", comment: "Select your primary country.")
                         ) {
@@ -121,16 +125,18 @@ struct InitialSetupView: View {
                             }
                             .buttonStyle(.plain)
                         }
+                        
+                        // 보조 텍스트 (폼 바로 밑)
+                        Text(NSLocalizedString("initial_setup.change_later", comment: "You can change it anytime in Settings."))
+                            .font(.geist(size: 14, weight: .regular))
+                            .foregroundColor(.appTextSecondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 4)
+                            .opacity(helperTextOpacity)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 28)
                     .opacity(formOpacity)
-                    
-                    // 보조 텍스트 (Continue 버튼 위로 이동)
-                    Text(NSLocalizedString("initial_setup.change_later", comment: "You can change it anytime in Settings."))
-                        .font(.geist(size: 14, weight: .regular))
-                        .foregroundColor(.appTextSecondary)
-                        .opacity(helperTextOpacity)
                     
                     // Continue 버튼
                     Button(action: {
@@ -139,13 +145,12 @@ struct InitialSetupView: View {
                         Text(NSLocalizedString("initial_setup.continue", comment: "Continue"))
                             .font(.geist(size: 17, weight: .semibold))
                             .foregroundColor(.appTextOnPrimary)
-                            .frame(maxWidth: .infinity)
-                            .padding()
+                            .padding(.horizontal, 32)
+                            .padding(.vertical, 16)
                             .background(isFormValid ? Color.appPrimary : Color.appPrimary.opacity(0.5))
                             .cornerRadius(12)
                     }
                     .disabled(!isFormValid)
-                    .padding(.horizontal, 28)
                     .opacity(buttonOpacity)
                 }
                 
