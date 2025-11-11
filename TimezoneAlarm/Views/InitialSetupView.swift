@@ -15,10 +15,9 @@ struct InitialSetupView: View {
     // 순차 페이드인 애니메이션을 위한 opacity 상태
     @State private var titleOpacity: Double = 0.0
     @State private var descriptionOpacity: Double = 0.0
-    @State private var selectTextOpacity: Double = 0.0
     @State private var formOpacity: Double = 0.0
-    @State private var buttonOpacity: Double = 0.0
     @State private var helperTextOpacity: Double = 0.0
+    @State private var buttonOpacity: Double = 0.0
     
     private var isFormValid: Bool {
         selectedCountry != nil
@@ -27,16 +26,16 @@ struct InitialSetupView: View {
     var body: some View {
         ZStack {
             // 대각선 그라데이션 배경
-            // top-left, bottom-right: appBackgroundBottom
-            // center: appBackgroundTop
-            AngularGradient(
-                gradient: Gradient(colors: [
-                    Color.appBackgroundBottom,
-                    Color.appBackgroundTop,
-                    Color.appBackgroundBottom
+            // top-left, bottom-right: appBackgroundBottom (진한 색)
+            // center: appBackgroundTop (밝은 색)
+            LinearGradient(
+                gradient: Gradient(stops: [
+                    .init(color: Color.appBackgroundBottom, location: 0.0), // top-left
+                    .init(color: Color.appBackgroundTop, location: 0.5), // center
+                    .init(color: Color.appBackgroundBottom, location: 1.0) // bottom-right
                 ]),
-                center: .center,
-                angle: .degrees(135)
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
             )
             .ignoresSafeArea()
             
@@ -61,6 +60,7 @@ struct InitialSetupView: View {
                     .padding(.trailing, 20)
                     .padding(.top, 16)
                 }
+                .zIndex(1) // 스킵 버튼이 다른 요소 위에 표시되도록
                 
                 Spacer()
                 
@@ -82,45 +82,46 @@ struct InitialSetupView: View {
                         .padding(.horizontal, 40)
                         .opacity(descriptionOpacity)
                     
-                    // 국가 선택 안내 텍스트
-                    Text(NSLocalizedString("initial_setup.select_primary_country", comment: "Select your primary country."))
-                        .font(.geist(size: 16, weight: .medium))
-                        .foregroundColor(.appTextPrimary)
-                        .padding(.top, 32)
-                        .opacity(selectTextOpacity)
-                    
-                    // 국가 선택 폼
-                    Button(action: {
-                        showCountrySelection = true
-                    }) {
-                        HStack {
-                            if let country = selectedCountry {
-                                Text(country.flag)
-                                    .font(.geist(size: 24, weight: .regular))
-                                Text(country.name)
-                                    .font(.geist(size: 16, weight: .medium))
-                                    .foregroundColor(.appTextPrimary)
-                            } else {
-                                Text(NSLocalizedString("initial_setup.country_placeholder", comment: "Tap to select country"))
-                                    .font(.geist(size: 16, weight: .regular))
-                                    .foregroundColor(.appTextSecondary)
+                    // 국가 선택 폼 (FormSection 사용)
+                    VStack(spacing: 0) {
+                        FormSection(
+                            title: NSLocalizedString("initial_setup.select_primary_country", comment: "Select your primary country."),
+                            isRequired: true
+                        ) {
+                            Button(action: {
+                                showCountrySelection = true
+                            }) {
+                                HStack {
+                                    if let country = selectedCountry {
+                                        Text(country.flag)
+                                            .font(.geist(size: 24, weight: .regular))
+                                        Text(country.name)
+                                            .font(.geist(size: 16, weight: .medium))
+                                            .foregroundColor(.appTextPrimary)
+                                    } else {
+                                        Text(NSLocalizedString("initial_setup.country_placeholder", comment: "Tap to select country"))
+                                            .font(.geist(size: 16, weight: .regular))
+                                            .foregroundColor(.appTextSecondary)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.geist(size: 14, weight: .medium))
+                                        .foregroundColor(.appTextSecondary)
+                                }
                             }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.geist(size: 14, weight: .medium))
-                                .foregroundColor(.appTextSecondary)
+                            .buttonStyle(.plain)
                         }
-                        .padding(16)
-                        .background(Color.appCardBackground)
-                        .cornerRadius(16)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color.appCardBorder, lineWidth: 1)
-                        )
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 28)
-                    .padding(.top, 16)
+                    .padding(.top, 32)
                     .opacity(formOpacity)
+                    
+                    // 보조 텍스트 (Continue 버튼 위로 이동)
+                    Text(NSLocalizedString("initial_setup.change_later", comment: "You can change it anytime in Settings."))
+                        .font(.geist(size: 14, weight: .regular))
+                        .foregroundColor(.appTextSecondary)
+                        .opacity(helperTextOpacity)
                     
                     // Continue 버튼
                     Button(action: {
@@ -136,15 +137,7 @@ struct InitialSetupView: View {
                     }
                     .disabled(!isFormValid)
                     .padding(.horizontal, 28)
-                    .padding(.top, 24)
                     .opacity(buttonOpacity)
-                    
-                    // 보조 텍스트
-                    Text(NSLocalizedString("initial_setup.change_later", comment: "You can change it anytime in Settings."))
-                        .font(.geist(size: 14, weight: .regular))
-                        .foregroundColor(.appTextSecondary)
-                        .padding(.top, 8)
-                        .opacity(helperTextOpacity)
                 }
                 
                 Spacer()
@@ -166,19 +159,15 @@ struct InitialSetupView: View {
             }
             
             withAnimation(.easeIn(duration: 0.6).delay(0.5)) {
-                selectTextOpacity = 1.0
+                formOpacity = 1.0
             }
             
             withAnimation(.easeIn(duration: 0.6).delay(0.7)) {
-                formOpacity = 1.0
+                helperTextOpacity = 1.0
             }
             
             withAnimation(.easeIn(duration: 0.6).delay(0.9)) {
                 buttonOpacity = 1.0
-            }
-            
-            withAnimation(.easeIn(duration: 0.6).delay(1.1)) {
-                helperTextOpacity = 1.0
             }
         }
     }
