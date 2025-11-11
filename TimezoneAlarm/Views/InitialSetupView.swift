@@ -59,11 +59,11 @@ struct InitialSetupView: View {
                 Spacer()
                 
                 // 컨텐츠 영역
-                VStack(spacing: 24) {
+                VStack(spacing: 16) {
                     // 타이틀과 설명 그룹
                     VStack(spacing: 8) {
-                        // 타이틀 (각 줄을 별도 패러그래프로)
-                        VStack(spacing: 0) {
+                        // 타이틀 (각 줄을 별도 패러그래프로, 매우 가까이)
+                        VStack(spacing: -8) {
                             Text("Stay in sync with")
                                 .font(.geist(size: 32, weight: .bold))
                                 .foregroundColor(.appTextPrimary)
@@ -141,6 +141,7 @@ struct InitialSetupView: View {
                     .opacity(formOpacity)
                     
                     // Continue 버튼 (가로 패딩만 남기고 전체 너비)
+                    .padding(.top, 8)
                     Button(action: {
                         completeSetup()
                     }) {
