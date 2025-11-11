@@ -13,7 +13,6 @@ struct InitialSetupView: View {
     @State private var showCountrySelection = false
     
     // 순차 페이드인 애니메이션을 위한 opacity 상태
-    @State private var iconOpacity: Double = 0.0
     @State private var titleOpacity: Double = 0.0
     @State private var descriptionOpacity: Double = 0.0
     @State private var mapOpacity: Double = 0.0
@@ -61,13 +60,6 @@ struct InitialSetupView: View {
                 
                 // 컨텐츠 영역
                 VStack(spacing: 24) {
-                    // 앱 아이콘
-                    Image("alarm-icon")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 80, height: 80)
-                        .opacity(iconOpacity)
-                    
                     // 타이틀과 설명 그룹
                     VStack(spacing: 8) {
                         // 타이틀
@@ -75,7 +67,7 @@ struct InitialSetupView: View {
                             .font(.geist(size: 32, weight: .bold))
                             .foregroundColor(.appTextPrimary)
                             .multilineTextAlignment(.center)
-                            .lineSpacing(4)
+                            .lineSpacing(-2)
                             .padding(.horizontal, 40)
                             .opacity(titleOpacity)
                         
@@ -88,17 +80,21 @@ struct InitialSetupView: View {
                             .opacity(descriptionOpacity)
                     }
                     
-                    // 세계 지도 이미지 (설명과 폼 사이)
-                    Image("world-map")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 200)
-                        .opacity(0.3)
-                        .padding(.vertical, 16)
-                        .opacity(mapOpacity)
+                    // 세계 지도 이미지 (설명과 폼 사이, 가로 꽉 채우기)
+                    GeometryReader { geometry in
+                        Image("world-map")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: geometry.size.width, height: min(200, geometry.size.width * 0.5))
+                            .clipped()
+                    }
+                    .frame(height: 200)
+                    .opacity(0.3)
+                    .padding(.vertical, 16)
+                    .opacity(mapOpacity)
                     
                     // 국가 선택 폼 (FormSection 사용, 설정 화면과 동일한 스타일)
-                    VStack(spacing: 8) {
+                    VStack(spacing: 4) {
                         FormSection(
                             title: NSLocalizedString("initial_setup.select_primary_country", comment: "Select your primary country.")
                         ) {
@@ -145,7 +141,7 @@ struct InitialSetupView: View {
                         Text(NSLocalizedString("initial_setup.continue", comment: "Continue"))
                             .font(.geist(size: 17, weight: .semibold))
                             .foregroundColor(.appTextOnPrimary)
-                            .padding(.horizontal, 32)
+                            .padding(.horizontal, 60)
                             .padding(.vertical, 16)
                             .background(isFormValid ? Color.appPrimary : Color.appPrimary.opacity(0.5))
                             .cornerRadius(12)
@@ -165,30 +161,26 @@ struct InitialSetupView: View {
         .onAppear {
             // 순차 페이드인 애니메이션
             withAnimation(.easeIn(duration: 0.6).delay(0.1)) {
-                iconOpacity = 1.0
-            }
-            
-            withAnimation(.easeIn(duration: 0.6).delay(0.2)) {
                 titleOpacity = 1.0
             }
             
-            withAnimation(.easeIn(duration: 0.6).delay(0.3)) {
+            withAnimation(.easeIn(duration: 0.6).delay(0.2)) {
                 descriptionOpacity = 1.0
             }
             
-            withAnimation(.easeIn(duration: 0.6).delay(0.4)) {
+            withAnimation(.easeIn(duration: 0.6).delay(0.3)) {
                 mapOpacity = 1.0
             }
             
-            withAnimation(.easeIn(duration: 0.6).delay(0.5)) {
+            withAnimation(.easeIn(duration: 0.6).delay(0.4)) {
                 formOpacity = 1.0
             }
             
-            withAnimation(.easeIn(duration: 0.6).delay(0.7)) {
+            withAnimation(.easeIn(duration: 0.6).delay(0.6)) {
                 helperTextOpacity = 1.0
             }
             
-            withAnimation(.easeIn(duration: 0.6).delay(0.9)) {
+            withAnimation(.easeIn(duration: 0.6).delay(0.8)) {
                 buttonOpacity = 1.0
             }
         }
