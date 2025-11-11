@@ -32,7 +32,12 @@ struct InitialSetupView: View {
             )
             .ignoresSafeArea()
             
-            // 세계 지도 배경 이미지 (추후 추가)
+            // 세계 지도 배경 이미지
+            Image("world-map")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .opacity(0.3)
+                .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 // 스킵 버튼 (우측 상단)
