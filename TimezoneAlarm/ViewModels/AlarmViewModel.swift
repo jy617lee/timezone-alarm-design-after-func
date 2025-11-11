@@ -55,6 +55,15 @@ class AlarmViewModel {
     
     // 저장된 알람 로드
     private func loadAlarms() {
+        // 초기 설정이 완료되지 않았으면 알람을 비움
+        let hasCompletedInitialSetup = UserDefaults.standard.bool(forKey: "hasCompletedInitialSetup")
+        if !hasCompletedInitialSetup {
+            alarms = []
+            // 저장된 알람 데이터도 삭제
+            UserDefaults.standard.removeObject(forKey: alarmsKey)
+            return
+        }
+        
         guard let data = UserDefaults.standard.data(forKey: alarmsKey),
               let decoded = try? JSONDecoder().decode([Alarm].self, from: data) else {
             // 저장된 데이터가 없으면 빈 배열로 시작 (샘플 데이터 로드하지 않음)
