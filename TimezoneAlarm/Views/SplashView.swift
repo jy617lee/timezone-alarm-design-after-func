@@ -41,7 +41,7 @@ struct SplashView: View {
                         .opacity(opacity)
                     
                     // 서브타이틀
-                    Text("Alarms in sync with every city")
+                    Text("Stay in sync with every city")
                         .font(.geist(size: 20, weight: .light))
                         .foregroundColor(.appTextSecondary)
                         .padding(.top, 6)

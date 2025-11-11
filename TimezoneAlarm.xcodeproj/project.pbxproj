@@ -34,6 +34,7 @@
 		a9b8c7d6e5f4a3b2c1d0e9f8 /* TrashIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = b0c1d2e3f4a5b6c7d8e9f0a1 /* TrashIconView.swift */; };
 		b1c2d3e4f5a6b7c8d9e0f1a2b3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = c1d2e3f4a5b6c7d8e9f0a1b2c3d4 /* Localizable.strings */; };
 		b2c3d4e5f6a7b8c9d0e1f2a3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = c3d4e5f6a7b8c9d0e1f2a3b4 /* SettingsView.swift */; };
+		d4e5f6a7b8c9d0e1f2a3b4c5 /* InitialSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = e5f6a7b8c9d0e1f2a3b4c5d6 /* InitialSetupView.swift */; };
 		e487a86a7e78475ea73ee53738752ed0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 69189974529b46abb4ddc4567e78fd49 /* Localizable.strings */; };
 		f09dd84d11e9481c8d0f0cd11265d115 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6257a08d2a254cb4a78efde9368ba791 /* Localizable.strings */; };
 		f3fa27104f814f279aea8cf6 /* AlarmListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2055e47b01704302b9a69f9c /* AlarmListView.swift */; };
@@ -86,6 +87,7 @@
 		c1d2e3f4a5b6c7d8e9f0a1b2c3d4 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "TimezoneAlarm/Resources/pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		c3d4e5f6a7b8c9d0e1f2a3b4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		c926d1891e7e466b9a173335a435283e /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = TimezoneAlarm/Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		e5f6a7b8c9d0e1f2a3b4c5d6 /* InitialSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialSetupView.swift; sourceTree = "<group>"; };
 		f1c854c0da854c6da495d9c1 /* AlarmFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmFormView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -227,6 +229,7 @@
 				b0c1d2e3f4a5b6c7d8e9f0a1 /* TrashIconView.swift */,
 				F2A3B4C5D6E7F8A9B0C1D2E3F4 /* AppRootView.swift */,
 				B4C5D6E7F8A9B0C1D2E3F4A5B6 /* SplashView.swift */,
+				e5f6a7b8c9d0e1f2a3b4c5d6 /* InitialSetupView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -390,6 +393,7 @@
 				a9b8c7d6e5f4a3b2c1d0e9f8 /* TrashIconView.swift in Sources */,
 				a1b2c3d4e5f6a7b8c9d0e1f3 /* AlarmAlertView.swift in Sources */,
 				b2c3d4e5f6a7b8c9d0e1f2a3 /* SettingsView.swift in Sources */,
+				d4e5f6a7b8c9d0e1f2a3b4c5 /* InitialSetupView.swift in Sources */,
 				694c41ecac5043e7aa3f3d070dd315aa /* AlarmScheduler.swift in Sources */,
 				C5D6E7F8A9B0C1D2E3F4A5B6 /* AnalyticsService.swift in Sources */,
 				9BCFF78819A255F7ECC7C92C /* ContentView.swift in Sources */,
