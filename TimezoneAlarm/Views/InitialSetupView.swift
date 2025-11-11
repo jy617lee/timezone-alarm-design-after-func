@@ -90,10 +90,10 @@ struct InitialSetupView: View {
                         Image("world-map")
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: geometry.size.width, height: min(200, geometry.size.width * 0.5))
+                            .frame(width: geometry.size.width, height: min(250, geometry.size.width * 0.6))
                             .clipped()
                     }
-                    .frame(height: 200)
+                    .frame(height: 250)
                     .opacity(0.3)
                     .padding(.vertical, 16)
                     .opacity(mapOpacity)
