@@ -115,6 +115,9 @@ struct InitialSetupView: View {
                                             .font(.geist(size: 16, weight: .medium))
                                             .foregroundColor(.appTextPrimary)
                                     } else {
+                                        Image(systemName: "globe")
+                                            .font(.geist(size: 16, weight: .regular))
+                                            .foregroundColor(.appTextSecondary)
                                         Text(NSLocalizedString("initial_setup.select_primary_country", comment: "Select your primary country."))
                                             .font(.geist(size: 16, weight: .regular))
                                             .foregroundColor(.appTextSecondary)
