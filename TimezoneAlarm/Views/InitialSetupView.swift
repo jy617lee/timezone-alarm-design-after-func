@@ -141,7 +141,6 @@ struct InitialSetupView: View {
                     .opacity(formOpacity)
                     
                     // Continue 버튼 (가로 패딩만 남기고 전체 너비)
-                    .padding(.top, 8)
                     Button(action: {
                         completeSetup()
                     }) {
@@ -155,6 +154,7 @@ struct InitialSetupView: View {
                     }
                     .disabled(!isFormValid)
                     .padding(.horizontal, 28)
+                    .padding(.top, 8)
                     .opacity(buttonOpacity)
                 }
                 
