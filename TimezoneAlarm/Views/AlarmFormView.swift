@@ -693,16 +693,18 @@ struct FormSection<Content: View>: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text(title)
-                    .font(.geist(size: 16, weight: .semibold))
-                    .foregroundColor(.appTextPrimary)
-                
-                if isRequired {
-                    Text("*")
+            if !title.isEmpty {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text(title)
                         .font(.geist(size: 16, weight: .semibold))
-                        .foregroundColor(.appPrimary)
-                        .baselineOffset(0)
+                        .foregroundColor(.appTextPrimary)
+                    
+                    if isRequired {
+                        Text("*")
+                            .font(.geist(size: 16, weight: .semibold))
+                            .foregroundColor(.appPrimary)
+                            .baselineOffset(0)
+                    }
                 }
             }
             
