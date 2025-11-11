@@ -12,6 +12,14 @@ struct InitialSetupView: View {
     @State private var selectedCountry: Country?
     @State private var showCountrySelection = false
     
+    // 순차 페이드인 애니메이션을 위한 opacity 상태
+    @State private var titleOpacity: Double = 0.0
+    @State private var descriptionOpacity: Double = 0.0
+    @State private var selectTextOpacity: Double = 0.0
+    @State private var formOpacity: Double = 0.0
+    @State private var buttonOpacity: Double = 0.0
+    @State private var helperTextOpacity: Double = 0.0
+    
     private var isFormValid: Bool {
         selectedCountry != nil
     }
@@ -64,6 +72,7 @@ struct InitialSetupView: View {
                         .foregroundColor(.appTextPrimary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
+                        .opacity(titleOpacity)
                     
                     // 앱 설명
                     Text(NSLocalizedString("initial_setup.description", comment: "Set alarms for different cities"))
@@ -71,12 +80,14 @@ struct InitialSetupView: View {
                         .foregroundColor(.appTextSecondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 40)
+                        .opacity(descriptionOpacity)
                     
                     // 국가 선택 안내 텍스트
                     Text(NSLocalizedString("initial_setup.select_primary_country", comment: "Select your primary country."))
                         .font(.geist(size: 16, weight: .medium))
                         .foregroundColor(.appTextPrimary)
                         .padding(.top, 32)
+                        .opacity(selectTextOpacity)
                     
                     // 국가 선택 폼
                     Button(action: {
@@ -109,6 +120,7 @@ struct InitialSetupView: View {
                     }
                     .padding(.horizontal, 28)
                     .padding(.top, 16)
+                    .opacity(formOpacity)
                     
                     // Continue 버튼
                     Button(action: {
@@ -125,12 +137,14 @@ struct InitialSetupView: View {
                     .disabled(!isFormValid)
                     .padding(.horizontal, 28)
                     .padding(.top, 24)
+                    .opacity(buttonOpacity)
                     
                     // 보조 텍스트
                     Text(NSLocalizedString("initial_setup.change_later", comment: "You can change it anytime in Settings."))
                         .font(.geist(size: 14, weight: .regular))
                         .foregroundColor(.appTextSecondary)
                         .padding(.top, 8)
+                        .opacity(helperTextOpacity)
                 }
                 
                 Spacer()
@@ -139,6 +153,32 @@ struct InitialSetupView: View {
         .sheet(isPresented: $showCountrySelection) {
             NavigationView {
                 CountrySelectionView(selectedCountry: $selectedCountry)
+            }
+        }
+        .onAppear {
+            // 순차 페이드인 애니메이션
+            withAnimation(.easeIn(duration: 0.6).delay(0.1)) {
+                titleOpacity = 1.0
+            }
+            
+            withAnimation(.easeIn(duration: 0.6).delay(0.3)) {
+                descriptionOpacity = 1.0
+            }
+            
+            withAnimation(.easeIn(duration: 0.6).delay(0.5)) {
+                selectTextOpacity = 1.0
+            }
+            
+            withAnimation(.easeIn(duration: 0.6).delay(0.7)) {
+                formOpacity = 1.0
+            }
+            
+            withAnimation(.easeIn(duration: 0.6).delay(0.9)) {
+                buttonOpacity = 1.0
+            }
+            
+            withAnimation(.easeIn(duration: 0.6).delay(1.1)) {
+                helperTextOpacity = 1.0
             }
         }
     }
