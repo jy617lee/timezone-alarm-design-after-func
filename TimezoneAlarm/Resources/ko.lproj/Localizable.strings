@@ -19,13 +19,13 @@
 "alarm_form.alarm_name" = "알람 이름";
 "alarm_form.time" = "시간";
 "alarm_form.select_time" = "시간 선택";
-"alarm_form.country" = "국가";
-"alarm_form.select_country" = "국가 선택";
+"alarm_form.city" = "도시";
+"alarm_form.select_city" = "도시 선택";
+"alarm_form.search_cities" = "도시 검색";
 "alarm_form.date" = "날짜";
 "alarm_form.date_not_selected" = "선택 안 함";
 "alarm_form.select_date" = "날짜 선택";
 "alarm_form.repeat" = "반복";
-"alarm_form.search_countries" = "국가 검색";
 
 /* Weekdays */
 "weekday.sun" = "일";
@@ -41,14 +41,13 @@
 
 /* SettingsView */
 "settings.title" = "설정";
-"settings.default_country" = "기본 국가";
-"settings.select_country" = "국가 선택";
+"settings.default_city" = "기본 도시";
+"settings.select_city" = "도시 선택";
 
 /* InitialSetupView */
 "initial_setup.title" = "모든 도시와\n동기화하세요.";
 "initial_setup.description" = "다양한 도시의 알람을 설정하세요.\n항상 정확한 시간에 울립니다.";
-"initial_setup.select_primary_country" = "주로 사용할 국가를 선택하세요.";
-"initial_setup.country_placeholder" = "국가를 선택하세요";
+"initial_setup.select_primary_city" = "주로 사용할 도시를 선택하세요";
 "initial_setup.continue" = "계속하기";
 "initial_setup.change_later" = "설정에서 언제든지 변경할 수 있습니다.";
 "initial_setup.skip" = "건너뛰기";
