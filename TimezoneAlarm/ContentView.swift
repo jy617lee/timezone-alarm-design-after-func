@@ -18,8 +18,8 @@ struct ContentView: View {
     @State private var notificationAlarm: Alarm?
     @EnvironmentObject var notificationDelegate: NotificationDelegate
     
-    private var hasDefaultCountry: Bool {
-        UserDefaults.standard.string(forKey: "defaultCountryId") != nil
+    private var hasDefaultCity: Bool {
+        UserDefaults.standard.string(forKey: "defaultTimezoneId") != nil
     }
     
     var body: some View {

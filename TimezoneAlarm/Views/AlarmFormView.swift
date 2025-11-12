@@ -14,7 +14,7 @@ struct AlarmFormView: View {
     @State private var alarmName: String = ""
     @State private var selectedHour: Int = 7
     @State private var selectedMinute: Int = 0
-    @State private var selectedCountry: Country?
+    @State private var selectedCity: City?
     @State private var selectedDate: Date?
     @State private var selectedWeekdays: Set<Int> = []
     @State private var datePickerValue: Date = Date()
@@ -36,7 +36,7 @@ struct AlarmFormView: View {
         _alarmName = State(initialValue: "")
         _selectedHour = State(initialValue: 7)
         _selectedMinute = State(initialValue: 0)
-        _selectedCountry = State(initialValue: nil)
+        _selectedCity = State(initialValue: nil)
         _selectedDate = State(initialValue: nil)
         _selectedWeekdays = State(initialValue: [])
         _datePickerValue = State(initialValue: tomorrow)
@@ -58,15 +58,15 @@ struct AlarmFormView: View {
                 _datePickerValue = State(initialValue: date)
             }
             
-            // 국가 찾기
-            if let country = Country.popularCountries.first(where: { $0.timezoneIdentifier == alarm.timezoneIdentifier }) {
-                _selectedCountry = State(initialValue: country)
+            // 도시 찾기
+            if let city = City.popularCities.first(where: { $0.timezoneIdentifier == alarm.timezoneIdentifier }) {
+                _selectedCity = State(initialValue: city)
             }
         } else {
-            // 새 알람 생성 시 기본 국가 로드
-            if let countryId = UserDefaults.standard.string(forKey: "defaultCountryId"),
-               let country = Country.popularCountries.first(where: { $0.id == countryId }) {
-                _selectedCountry = State(initialValue: country)
+            // 새 알람 생성 시 기본 도시 로드
+            if let timezoneId = UserDefaults.standard.string(forKey: "defaultTimezoneId"),
+               let city = City.popularCities.first(where: { $0.timezoneIdentifier == timezoneId }) {
+                _selectedCity = State(initialValue: city)
             }
             // 새 알람 생성 시 날짜 초기값을 내일 날짜로 설정
             _selectedDate = State(initialValue: tomorrow)
@@ -75,7 +75,7 @@ struct AlarmFormView: View {
     
     private var isFormValid: Bool {
         !alarmName.isEmpty && 
-        selectedCountry != nil &&
+        selectedCity != nil &&
         (!selectedWeekdays.isEmpty || selectedDate != nil)
     }
     
@@ -128,23 +128,23 @@ struct AlarmFormView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        // 국가 선택 (필수)
+                        // 도시 선택 (필수)
                         FormSection(
-                            title: NSLocalizedString("alarm_form.country", comment: "Country header"),
+                            title: NSLocalizedString("alarm_form.city", comment: "City header"),
                             isRequired: true
                         ) {
                             NavigationLink {
-                                CountrySelectionView(selectedCountry: $selectedCountry)
+                                CitySelectionView(selectedCity: $selectedCity)
                             } label: {
                                 HStack {
-                                    if let country = selectedCountry {
-                                        Text(country.flag)
+                                    if let city = selectedCity {
+                                        Text(city.countryFlag)
                                             .font(.geist(size: 24, weight: .regular))
-                                        Text(country.name)
+                                        Text(city.name)
                                             .font(.geist(size: 16, weight: .light))
                                             .foregroundColor(.appTextPrimary)
                                     } else {
-                                        Text(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
+                                        Text(NSLocalizedString("alarm_form.select_city", comment: "Select city"))
                                             .font(.geist(size: 16, weight: .light))
                                             .foregroundColor(.appTextSecondary)
                                     }
@@ -466,16 +466,16 @@ struct AlarmFormView: View {
     }
     
     private func saveAlarm() {
-        guard let country = selectedCountry else { return }
+        guard let city = selectedCity else { return }
         
         let alarm = Alarm(
             id: editingAlarm?.id ?? UUID(),
             name: alarmName,
             hour: selectedHour,
             minute: selectedMinute,
-            timezoneIdentifier: country.timezoneIdentifier,
-            countryName: country.name,
-            countryFlag: country.flag,
+            timezoneIdentifier: city.timezoneIdentifier,
+            countryName: city.countryName,
+            countryFlag: city.countryFlag,
             selectedWeekdays: selectedWeekdays,
             selectedDate: selectedDate,
             isEnabled: editingAlarm?.isEnabled ?? true, // 수정 시 기존 상태 유지, 새 알람은 기본값 true
@@ -602,17 +602,18 @@ struct WeekdaySelectionView: View {
 }
 
 // 국가 선택 뷰
-struct CountrySelectionView: View {
-    @Binding var selectedCountry: Country?
+struct CitySelectionView: View {
+    @Binding var selectedCity: City?
     @Environment(\.dismiss) private var dismiss
     @State private var searchText: String = ""
     
-    private var filteredCountries: [Country] {
+    private var filteredCities: [City] {
         if searchText.isEmpty {
-            return Country.popularCountries
+            return City.popularCities
         } else {
-            return Country.popularCountries.filter { country in
-                country.name.localizedCaseInsensitiveContains(searchText)
+            return City.popularCities.filter { city in
+                city.name.localizedCaseInsensitiveContains(searchText) ||
+                city.countryName.localizedCaseInsensitiveContains(searchText)
             }
         }
     }
@@ -629,19 +630,24 @@ struct CountrySelectionView: View {
             
             ScrollView {
                 VStack(spacing: 12) {
-                    ForEach(filteredCountries) { country in
+                    ForEach(filteredCities) { city in
                         Button(action: {
-                            selectedCountry = country
+                            selectedCity = city
                             dismiss()
                         }) {
                             HStack {
-                                Text(country.flag)
+                                Text(city.countryFlag)
                                     .font(.geist(size: 22, weight: .regular))
-                                Text(country.name)
-                                    .font(.geist(size: 16, weight: .regular))
-                                    .foregroundColor(.appTextPrimary)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(city.name)
+                                        .font(.geist(size: 16, weight: .regular))
+                                        .foregroundColor(.appTextPrimary)
+                                    Text(city.countryName)
+                                        .font(.geist(size: 13, weight: .regular))
+                                        .foregroundColor(.appTextSecondary)
+                                }
                                 Spacer()
-                                if selectedCountry?.id == country.id {
+                                if selectedCity?.id == city.id {
                                     Image(systemName: "checkmark")
                                         .font(.geist(size: 16, weight: .semibold))
                                         .foregroundColor(.appPrimary)
@@ -664,12 +670,12 @@ struct CountrySelectionView: View {
                 .padding(.bottom, 20)
             }
         }
-        .searchable(text: $searchText, prompt: NSLocalizedString("alarm_form.search_countries", comment: "Search countries"))
-        .navigationTitle(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
+        .searchable(text: $searchText, prompt: NSLocalizedString("alarm_form.search_cities", comment: "Search cities"))
+        .navigationTitle(NSLocalizedString("alarm_form.select_city", comment: "Select city"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
+                Text(NSLocalizedString("alarm_form.select_city", comment: "Select city"))
                     .font(.geist(size: 18, weight: .semibold))
                     .foregroundColor(.appTextPrimary)
             }

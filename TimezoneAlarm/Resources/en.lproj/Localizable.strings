@@ -19,13 +19,13 @@
 "alarm_form.alarm_name" = "Alarm Name";
 "alarm_form.time" = "Time";
 "alarm_form.select_time" = "Select Time";
-"alarm_form.country" = "Country";
-"alarm_form.select_country" = "Select Country";
+"alarm_form.city" = "City";
+"alarm_form.select_city" = "Select City";
+"alarm_form.search_cities" = "Search cities";
 "alarm_form.date" = "Date";
 "alarm_form.date_not_selected" = "Not selected";
 "alarm_form.select_date" = "Select Date";
 "alarm_form.repeat" = "Repeat";
-"alarm_form.search_countries" = "Search countries";
 
 /* Weekdays */
 "weekday.sun" = "Sun";
@@ -41,14 +41,13 @@
 
 /* SettingsView */
 "settings.title" = "Settings";
-"settings.default_country" = "Default Country";
-"settings.select_country" = "Select Country";
+"settings.default_city" = "Default City";
+"settings.select_city" = "Select City";
 
 /* InitialSetupView */
 "initial_setup.title" = "Stay in sync with\nevery city.";
 "initial_setup.description" = "Set alarms for different cities.\nThey'll always ring at the right time.";
-"initial_setup.select_primary_country" = "Select your primary country.";
-"initial_setup.country_placeholder" = "Tap to select country";
+"initial_setup.select_primary_city" = "Select your primary city";
 "initial_setup.continue" = "Continue";
 "initial_setup.change_later" = "You can change it anytime in Settings.";
 "initial_setup.skip" = "Skip";
