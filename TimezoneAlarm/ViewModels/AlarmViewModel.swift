@@ -9,10 +9,9 @@ import Foundation
 import SwiftUI
 
 @MainActor
-@Observable
-class AlarmViewModel {
-    var activeAlarm: Alarm? = nil
-    var alarms: [Alarm] = [] {
+class AlarmViewModel: ObservableObject {
+    @Published var activeAlarm: Alarm? = nil
+    @Published var alarms: [Alarm] = [] {
         didSet {
             // 알람이 변경될 때마다 저장
             saveAlarms()
@@ -78,35 +77,6 @@ class AlarmViewModel {
         if let encoded = try? JSONEncoder().encode(alarms) {
             UserDefaults.standard.set(encoded, forKey: alarmsKey)
         }
-    }
-    
-    private func loadSampleData() {
-        alarms = [
-            Alarm(
-                name: "Morning Wake Up",
-                hour: 7,
-                minute: 30,
-                timezoneIdentifier: "Asia/Seoul",
-                countryName: "South Korea",
-                countryFlag: "🇰🇷",
-                selectedWeekdays: [2, 3, 4, 5, 6], // 월-금
-                isEnabled: true,
-                createdAt: Date().addingTimeInterval(-86400),
-                sortOrder: 0
-            ),
-            Alarm(
-                name: "Evening Reminder",
-                hour: 9,
-                minute: 0,
-                timezoneIdentifier: "America/New_York",
-                countryName: "United States",
-                countryFlag: "🇺🇸",
-                selectedWeekdays: [1, 7], // 일, 토
-                isEnabled: true,
-                createdAt: Date(),
-                sortOrder: 1
-            )
-        ]
     }
     
     // 생성일 기준 최신순 정렬 (sortOrder가 같으면)

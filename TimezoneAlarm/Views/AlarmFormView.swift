@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AlarmFormView: View {
     @Environment(\.dismiss) private var dismiss
-    @Bindable var viewModel: AlarmViewModel
+    @ObservedObject var viewModel: AlarmViewModel
     
     @State private var alarmName: String = ""
     @State private var selectedHour: Int = 7
@@ -80,7 +80,7 @@ struct AlarmFormView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             ZStack {
                 // 그라데이션 백그라운드
                 LinearGradient(
@@ -207,14 +207,10 @@ struct AlarmFormView: View {
                     .padding(.bottom, 100)
                     .frame(maxWidth: .infinity)
                 }
-                .scrollContentBackground(.hidden)
             }
             .navigationTitle(editingAlarm == nil ? NSLocalizedString("alarm_form.title.new", comment: "New alarm") : NSLocalizedString("alarm_form.title.edit", comment: "Edit alarm"))
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
-            .toolbarBackground(Color.appHeaderBackground, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.light, for: .navigationBar)
             .onAppear {
                 // NavigationBar 버튼 배경 완전히 제거
                 let appearance = UINavigationBarAppearance()
@@ -306,7 +302,7 @@ struct AlarmFormView: View {
                 }
             }
             .sheet(isPresented: $showDatePicker) {
-                NavigationStack {
+                NavigationView {
                     ZStack {
                         // 그라데이션 백그라운드
                         LinearGradient(
@@ -326,6 +322,7 @@ struct AlarmFormView: View {
                     }
                     .navigationTitle(NSLocalizedString("alarm_form.select_date", comment: "Select date"))
                     .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarBackButtonHidden(true)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             Text(NSLocalizedString("alarm_form.select_date", comment: "Select date"))
@@ -333,14 +330,17 @@ struct AlarmFormView: View {
                                 .foregroundColor(.appTextPrimary)
                         }
                         ToolbarItem(placement: .navigationBarLeading) {
-                            Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
+                            Button(action: {
                                 showDatePicker = false
+                            }) {
+                                Image(systemName: "chevron.left")
+                                    .font(.geist(size: 18, weight: .medium))
+                                    .foregroundColor(.appTextPrimary)
                             }
-                            .font(.geist(size: 16, weight: .regular))
-                            .foregroundColor(.appTextPrimary)
+                            .buttonStyle(.plain)
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(NSLocalizedString("button.done", comment: "Done button")) {
+                            Button(action: {
                                 // 선택한 날짜와 시간을 조합하여 알람 시간 생성
                                 let calendar = Calendar.current
                                 
@@ -368,17 +368,20 @@ struct AlarmFormView: View {
                                 selectedDate = datePickerValue
                                 selectedWeekdays = []
                                 showDatePicker = false
+                            }) {
+                                Text(NSLocalizedString("button.done", comment: "Done button"))
+                                    .font(.geist(size: 16, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                    .background(Color.appPrimary)
+                                    .cornerRadius(20)
                             }
-                            .font(.geist(size: 16, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(Color.appPrimary)
-                            .cornerRadius(20)
+                            .buttonStyle(.plain)
+                            .background(Color.clear)
                         }
                     }
                 }
-                .presentationDetents([.medium])
             }
             .overlay(
                 // 토스트 메시지
@@ -406,6 +409,7 @@ struct AlarmFormView: View {
                     }
                     .navigationTitle(NSLocalizedString("alarm_form.select_time", comment: "Select time"))
                     .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarBackButtonHidden(true)
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             Text(NSLocalizedString("alarm_form.select_time", comment: "Select time"))
@@ -413,14 +417,17 @@ struct AlarmFormView: View {
                                 .foregroundColor(.appTextPrimary)
                         }
                         ToolbarItem(placement: .navigationBarLeading) {
-                            Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
+                            Button(action: {
                                 showTimePicker = false
+                            }) {
+                                Image(systemName: "chevron.left")
+                                    .font(.geist(size: 18, weight: .medium))
+                                    .foregroundColor(.appTextPrimary)
                             }
-                            .font(.geist(size: 16, weight: .regular))
-                            .foregroundColor(.appTextPrimary)
+                            .buttonStyle(.plain)
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(NSLocalizedString("button.done", comment: "Done button")) {
+                            Button(action: {
                                 // 선택한 날짜와 시간을 조합하여 알람 시간 생성
                                 let calendar = Calendar.current
                                 let selectedDateForValidation = selectedDate ?? Date() // 날짜가 없으면 오늘
@@ -451,13 +458,17 @@ struct AlarmFormView: View {
                                 selectedHour = components.hour ?? 7
                                 selectedMinute = components.minute ?? 0
                                 showTimePicker = false
+                            }) {
+                                Text(NSLocalizedString("button.done", comment: "Done button"))
+                                    .font(.geist(size: 16, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                    .background(Color.appPrimary)
+                                    .cornerRadius(20)
                             }
-                            .font(.geist(size: 16, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(Color.appPrimary)
-                            .cornerRadius(20)
+                            .buttonStyle(.plain)
+                            .background(Color.clear)
                         }
                     }
                 }
@@ -474,6 +485,7 @@ struct AlarmFormView: View {
             hour: selectedHour,
             minute: selectedMinute,
             timezoneIdentifier: city.timezoneIdentifier,
+            cityName: city.name,
             countryName: city.countryName,
             countryFlag: city.countryFlag,
             selectedWeekdays: selectedWeekdays,

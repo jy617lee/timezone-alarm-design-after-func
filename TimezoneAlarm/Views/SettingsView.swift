@@ -64,8 +64,6 @@ struct SettingsView: View {
             }
             .navigationTitle(NSLocalizedString("settings.title", comment: "Settings"))
             .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Color.appHeaderBackground, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
             .onAppear {
                 // NavigationBar 버튼 배경 제거
                 let appearance = UINavigationBarAppearance()

@@ -35,7 +35,7 @@ struct AlarmAlertView: View {
                 // 카드 스타일 컨텐츠
                 VStack(spacing: 24) {
                     // 알람 아이콘 (펄스 애니메이션)
-                    Image("alarm-icon")
+                    Image.fromResources("alarm-icon")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 120, height: 120)

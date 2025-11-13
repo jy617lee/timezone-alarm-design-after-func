@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		0144a2d85809419290ca5416 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = a53bffc5b8d7435f85512728 /* Country.swift */; };
-		326a5c5aa7784ad8a4b63fcf /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326a5c5aa7784ad8a4b63fce /* City.swift */; };
 		0926bbd73f084171927045e9 /* AlarmCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7cf857b200ed4242858a4214 /* AlarmCardView.swift */; };
 		0d531177a8524c6eaff0cb63 /* AlarmFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = f1c854c0da854c6da495d9c1 /* AlarmFormView.swift */; };
 		1D0FB537CB6FB6CB1768AB27 /* Pods_TimezoneAlarm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E68077AEA736E39192BAAF9 /* Pods_TimezoneAlarm.framework */; };
 		1ea0cb3bc98c478aaf71ec71 /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23c1b019e3ca48f99a2512ba /* Alarm.swift */; };
+		326a5c5aa7784ad8a4b63fcf /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326a5c5aa7784ad8a4b63fce /* City.swift */; };
 		4d7f560ed097476cae0cd291 /* alarm.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5012fb61d559485e91c01c68 /* alarm.wav */; };
 		51C503CA6D2F46F88D80A5DF /* TimezoneAlarmApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB57D6CC548EA702320A886 /* TimezoneAlarmApp.swift */; };
 		537fae38370d4857a0f0282c /* AlarmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = c0d93f8293644af99db05acb /* AlarmViewModel.swift */; };
@@ -21,15 +21,17 @@
 		7a248f46d52048c497f8450686a54e1e /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8fded048a8c64ccb9bc49a2ad8ac407a /* Localizable.strings */; };
 		9BCFF78819A255F7ECC7C92C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB581C9CBC9D09BF2208EFC /* ContentView.swift */; };
 		A3B4C5D6E7F8A9B0C1D2E3F4A5 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C5D6E7F8A9B0C1D2E3F4A5B6 /* SplashView.swift */; };
-		A9B8C7D6E5F4A3B2C1D0E9F8 /* alarm-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B0C1D2E3F4A5B6C7D8E9F0A1 /* alarm-icon.png */; };
 		B3C4D5E6F7A8B9C0D1E2F3A4 /* Geist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4D5E6F7A8B9C0D1E2F3A4B5 /* Geist-Medium.ttf */; };
+		B4211A6B599F4D488BE3F7C9 /* alarm-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B4211A6B599F4D488BE3F7C8 /* alarm-icon.png */; };
 		C1D2E3F4A5B6C7D8E9F0A1B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2E3F4A5B6C7D8E9F0A1B2C3D4 /* Assets.xcassets */; };
 		C5D6E7F8A9B0C1D2E3F4A5B6 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6E7F8A9B0C1D2E3F4A5B6C7 /* AnalyticsService.swift */; };
+		CB3864B374EE45949F2610E6 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3864B374EE45949F2610E5 /* ImageLoader.swift */; };
 		D1E2F3A4B5C6D7E8F9A0B1C2 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E3F4A5B6C7D8E9F0A1B2C3 /* DesignSystem.swift */; };
 		D5E6F7A8B9C0D1E2F3A4B5C6 /* Geist-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E6F7A8B9C0D1E2F3A4B5C6D7 /* Geist-SemiBold.ttf */; };
 		E1F2A3B4C5D6E7F8A9B0C1D2E3 /* AppRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A3B4C5D6E7F8A9B0C1D2E3F4 /* AppRootView.swift */; };
 		E7F8A9B0C1D2E3F4A5B6C7D8 /* Geist-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F8A9B0C1D2E3F4A5B6C7D8E9 /* Geist-Bold.ttf */; };
 		F1A2B3C4D5E6F7A8B9C0D1E2 /* Geist-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A2B3C4D5E6F7A8B9C0D1E2F3 /* Geist-Regular.ttf */; };
+		F1A2B3C4D5E6F7A8B9C0D1E2F4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F7A8B9C0D1E2F3 /* GoogleService-Info.plist */; };
 		F8E9D0A1B2C3D4E5F6A7B8C9 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */; };
 		a1b2c3d4e5f6a7b8c9d0e1f3 /* AlarmAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = a1b2c3d4e5f6a7b8c9d0e1f4 /* AlarmAlertView.swift */; };
 		a9b8c7d6e5f4a3b2c1d0e9f8 /* TrashIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = b0c1d2e3f4a5b6c7d8e9f0a1 /* TrashIconView.swift */; };
@@ -39,7 +41,6 @@
 		e487a86a7e78475ea73ee53738752ed0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 69189974529b46abb4ddc4567e78fd49 /* Localizable.strings */; };
 		f09dd84d11e9481c8d0f0cd11265d115 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6257a08d2a254cb4a78efde9368ba791 /* Localizable.strings */; };
 		f3fa27104f814f279aea8cf6 /* AlarmListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2055e47b01704302b9a69f9c /* AlarmListView.swift */; };
-		F1A2B3C4D5E6F7A8B9C0D1E2F4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F7A8B9C0D1E2F3 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		1E68077AEA736E39192BAAF9 /* Pods_TimezoneAlarm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TimezoneAlarm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2055e47b01704302b9a69f9c /* AlarmListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmListView.swift; sourceTree = "<group>"; };
 		23c1b019e3ca48f99a2512ba /* Alarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
+		326a5c5aa7784ad8a4b63fce /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		5012fb61d559485e91c01c68 /* alarm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = alarm.wav; sourceTree = "<group>"; };
 		5D25D70292A40C0AA7B7CE59 /* TimezoneAlarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimezoneAlarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6257a08d2a254cb4a78efde9368ba791 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = TimezoneAlarm/Resources/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -67,11 +69,12 @@
 		A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		A2B3C4D5E6F7A8B9C0D1E2F3 /* Geist-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Regular.ttf"; sourceTree = "<group>"; };
 		A9751D7E0C19685C20776C40 /* Pods-TimezoneAlarm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TimezoneAlarm.debug.xcconfig"; path = "Target Support Files/Pods-TimezoneAlarm/Pods-TimezoneAlarm.debug.xcconfig"; sourceTree = "<group>"; };
-		B0C1D2E3F4A5B6C7D8E9F0A1 /* alarm-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "alarm-icon.png"; sourceTree = "<group>"; };
+		B4211A6B599F4D488BE3F7C8 /* alarm-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "alarm-icon.png"; sourceTree = "<group>"; };
 		B4C5D6E7F8A9B0C1D2E3F4A5B6 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		BAB581C9CBC9D09BF2208EFC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C4D5E6F7A8B9C0D1E2F3A4B5 /* Geist-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Medium.ttf"; sourceTree = "<group>"; };
-		C9280CEC28D1C9EB1F6C08BB /* TimezoneAlarmTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TimezoneAlarmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9280CEC28D1C9EB1F6C08BB /* TimezoneAlarmTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimezoneAlarmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB3864B374EE45949F2610E5 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		CB864B139FD73FF46A788586 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D2E3F4A5B6C7D8E9F0A1B2C3 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		D2E3F4A5B6C7D8E9F0A1B2C3D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -83,7 +86,6 @@
 		a1b2c3d4e5f6a7b8c9d0e1f2 /* AlarmScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmScheduler.swift; sourceTree = "<group>"; };
 		a1b2c3d4e5f6a7b8c9d0e1f4 /* AlarmAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmAlertView.swift; sourceTree = "<group>"; };
 		a53bffc5b8d7435f85512728 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
-		326a5c5aa7784ad8a4b63fce /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		b0c1d2e3f4a5b6c7d8e9f0a1 /* TrashIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrashIconView.swift; sourceTree = "<group>"; };
 		c0d93f8293644af99db05acb /* AlarmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmViewModel.swift; sourceTree = "<group>"; };
 		c1d2e3f4a5b6c7d8e9f0a1b2c3d4 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "TimezoneAlarm/Resources/pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -167,7 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				5012fb61d559485e91c01c68 /* alarm.wav */,
-				B0C1D2E3F4A5B6C7D8E9F0A1 /* alarm-icon.png */,
+				B4211A6B599F4D488BE3F7C8 /* alarm-icon.png */,
 				A2B3C4D5E6F7A8B9C0D1E2F3 /* Geist-Regular.ttf */,
 				C4D5E6F7A8B9C0D1E2F3A4B5 /* Geist-Medium.ttf */,
 				E6F7A8B9C0D1E2F3A4B5C6D7 /* Geist-SemiBold.ttf */,
@@ -208,7 +210,6 @@
 				A9751D7E0C19685C20776C40 /* Pods-TimezoneAlarm.debug.xcconfig */,
 				00D013649BF8D3C5938D2598 /* Pods-TimezoneAlarm.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -216,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */,
+				CB3864B374EE45949F2610E5 /* ImageLoader.swift */,
 				D2E3F4A5B6C7D8E9F0A1B2C3 /* DesignSystem.swift */,
 			);
 			path = Utils;
@@ -323,7 +325,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4d7f560ed097476cae0cd291 /* alarm.wav in Resources */,
-				A9B8C7D6E5F4A3B2C1D0E9F8 /* alarm-icon.png in Resources */,
+				B4211A6B599F4D488BE3F7C9 /* alarm-icon.png in Resources */,
 				C1D2E3F4A5B6C7D8E9F0A1B2 /* Assets.xcassets in Resources */,
 				F1A2B3C4D5E6F7A8B9C0D1E2 /* Geist-Regular.ttf in Resources */,
 				B3C4D5E6F7A8B9C0D1E2F3A4 /* Geist-Medium.ttf in Resources */,
@@ -349,9 +351,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TimezoneAlarm/Pods-TimezoneAlarm-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-TimezoneAlarm/Pods-TimezoneAlarm-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -405,6 +411,7 @@
 				E1F2A3B4C5D6E7F8A9B0C1D2E3 /* AppRootView.swift in Sources */,
 				A3B4C5D6E7F8A9B0C1D2E3F4A5 /* SplashView.swift in Sources */,
 				F8E9D0A1B2C3D4E5F6A7B8C9 /* Logger.swift in Sources */,
+				CB3864B374EE45949F2610E6 /* ImageLoader.swift in Sources */,
 				D1E2F3A4B5C6D7E8F9A0B1C2 /* DesignSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -478,7 +485,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -495,7 +502,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -515,15 +522,17 @@
 			baseConfigurationReference = A9751D7E0C19685C20776C40 /* Pods-TimezoneAlarm.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9Q6XC7XQJN;
 				INFOPLIST_FILE = TimezoneAlarm/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.app;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
@@ -535,8 +544,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 9Q6XC7XQJN;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -556,15 +566,17 @@
 			baseConfigurationReference = 00D013649BF8D3C5938D2598 /* Pods-TimezoneAlarm.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9Q6XC7XQJN;
 				INFOPLIST_FILE = TimezoneAlarm/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.app;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
@@ -617,7 +629,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";

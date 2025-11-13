@@ -93,12 +93,12 @@ struct AlarmCardView: View {
                             .foregroundColor(alarm.isEnabled ? .appTextSecondary : .appTextSecondary.opacity(0.6))
                             .padding(.leading, 1)
                         
-                        // 국가 정보
+                        // 도시 정보
                         HStack(spacing: 8) {
                             Text(alarm.countryFlag)
                                 .font(.geist(size: 20, weight: .regular))
                             
-                            Text(alarm.countryName)
+                            Text(alarm.cityName)
                                 .font(.geist(size: 14, weight: .regular))
                                 .foregroundColor(.appTextSecondary)
                         }
@@ -272,6 +272,7 @@ struct CustomToggle: View {
             hour: 7,
             minute: 30,
             timezoneIdentifier: "Asia/Seoul",
+            cityName: "Seoul",
             countryName: "South Korea",
             countryFlag: "🇰🇷",
             selectedWeekdays: [2, 3, 4, 5, 6],

@@ -37,7 +37,7 @@ struct AppRootView: View {
             // 초기 설정 완료 여부 확인
             isSetupComplete = hasCompletedInitialSetup
         }
-        .onChange(of: showSplash) { oldValue, newValue in
+        .onChange(of: showSplash) { newValue in
             // 스플래시가 끝나면 권한 요청
             if !newValue && !hasRequestedPermission {
                 hasRequestedPermission = true

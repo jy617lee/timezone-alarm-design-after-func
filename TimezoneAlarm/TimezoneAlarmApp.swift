@@ -9,6 +9,7 @@ import SwiftUI
 import UserNotifications
 import AVFoundation
 import FirebaseCore
+import FirebaseAnalytics
 
 @main
 struct TimezoneAlarmApp: App {
@@ -17,7 +18,14 @@ struct TimezoneAlarmApp: App {
         
         // Firebase 초기화
         FirebaseApp.configure()
+        
+        // 디버그 모드에서는 Analytics 수집 비활성화
+        #if DEBUG
+        Analytics.setAnalyticsCollectionEnabled(false)
+        debugLog("✅ Firebase 초기화 완료 (Analytics 수집 비활성화 - DEBUG 모드)")
+        #else
         debugLog("✅ Firebase 초기화 완료")
+        #endif
         
         // 백그라운드 오디오 재생을 위한 오디오 세션 설정
         do {
@@ -92,12 +100,16 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             
             debugLog("✅ 알람 정보 추출 성공: \(alarmName)")
             
+            // timezoneIdentifier로 City 찾기
+            let cityName = City.popularCities.first(where: { $0.timezoneIdentifier == timezoneIdentifier })?.name ?? countryName
+            
             let alarm = Alarm(
                 id: UUID(uuidString: alarmId) ?? UUID(),
                 name: alarmName,
                 hour: alarmHour,
                 minute: alarmMinute,
                 timezoneIdentifier: timezoneIdentifier,
+                cityName: cityName,
                 countryName: countryName,
                 countryFlag: countryFlag
             )
@@ -165,12 +177,16 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             
             debugLog("✅ 알람 정보 추출 성공: \(alarmName)")
             
+            // timezoneIdentifier로 City 찾기
+            let cityName = City.popularCities.first(where: { $0.timezoneIdentifier == timezoneIdentifier })?.name ?? countryName
+            
             let alarm = Alarm(
                 id: UUID(uuidString: alarmId) ?? UUID(),
                 name: alarmName,
                 hour: alarmHour,
                 minute: alarmMinute,
                 timezoneIdentifier: timezoneIdentifier,
+                cityName: cityName,
                 countryName: countryName,
                 countryFlag: countryFlag
             )
