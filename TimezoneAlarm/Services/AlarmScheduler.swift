@@ -221,12 +221,13 @@ final class AlarmScheduler: @unchecked Sendable {
         }
         
         // 알람 시간 설정 (알람 시간대의 오늘 날짜에 알람 시간)
-        var alarmComponents = alarmTimezoneComponents
-        alarmComponents.hour = alarm.hour
-        alarmComponents.minute = alarm.minute
-        alarmComponents.second = 0
-        
-        guard let todayAlarmTime = calendar.date(from: alarmComponents) else {
+        // alarmTimezoneNow를 알람 시간대 기준으로 해석한 날짜로 사용
+        guard let todayAlarmTime = TimezoneConverter.convertToUTCDate(
+            alarmHour: alarm.hour,
+            alarmMinute: alarm.minute,
+            alarmTimezone: alarmTimezone,
+            alarmDate: alarmTimezoneNow
+        ) else {
             debugLog("⚠️ findNextAlarmDate: 오늘 알람 시간 생성 실패")
             return date
         }
@@ -241,12 +242,12 @@ final class AlarmScheduler: @unchecked Sendable {
         if todayAlarmTime <= alarmTimezoneNow {
             // 다음 날의 알람 시간 계산
             if let nextDay = calendar.date(byAdding: .day, value: 1, to: todayAlarmTime) {
-                var nextDayComponents = calendar.dateComponents([.year, .month, .day], from: nextDay)
-                nextDayComponents.hour = alarm.hour
-                nextDayComponents.minute = alarm.minute
-                nextDayComponents.second = 0
-                
-                if let nextAlarmTime = calendar.date(from: nextDayComponents) {
+                if let nextAlarmTime = TimezoneConverter.convertToUTCDate(
+                    alarmHour: alarm.hour,
+                    alarmMinute: alarm.minute,
+                    alarmTimezone: alarmTimezone,
+                    alarmDate: nextDay
+                ) {
                     debugLog("   - 다음 날로 이동: \(nextAlarmTime)")
                     return nextAlarmTime
                 }
