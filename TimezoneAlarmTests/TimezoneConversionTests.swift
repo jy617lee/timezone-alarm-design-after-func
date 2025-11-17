@@ -427,6 +427,67 @@ final class TimezoneConversionTests: XCTestCase {
         let timeDifference = utcDate2.timeIntervalSince(utcDate1)
         XCTAssertEqual(timeDifference, 24 * 60 * 60, accuracy: 60, "하루 차이(24시간)가 있어야 합니다")
     }
+    
+    func testInterpretDateInAlarmTimezone() {
+        guard let seoulTimezone = TimeZone(identifier: "Asia/Seoul") else {
+            XCTFail("서울 시간대를 찾을 수 없습니다")
+            return
+        }
+        
+        guard let laTimezone = TimeZone(identifier: "America/Los_Angeles") else {
+            XCTFail("LA 시간대를 찾을 수 없습니다")
+            return
+        }
+        
+        let calendar = Calendar.current
+        
+        // 로컬 시간대: 2024년 11월 21일 15시 (한국 시간 기준)
+        var localComponents = DateComponents()
+        localComponents.year = 2024
+        localComponents.month = 11
+        localComponents.day = 21
+        localComponents.hour = 15
+        localComponents.minute = 0
+        localComponents.second = 0
+        localComponents.timeZone = seoulTimezone
+        
+        guard let localDate = calendar.date(from: localComponents) else {
+            XCTFail("로컬 날짜 생성 실패")
+            return
+        }
+        
+        // 한국 시간대 기준으로 해석
+        guard let seoulDate = TimezoneConverter.interpretDateInAlarmTimezone(
+            date: localDate,
+            alarmTimezone: seoulTimezone
+        ) else {
+            XCTFail("한국 시간대 해석 실패")
+            return
+        }
+        
+        let seoulComponents = calendar.dateComponents(in: seoulTimezone, from: seoulDate)
+        XCTAssertEqual(seoulComponents.year, 2024)
+        XCTAssertEqual(seoulComponents.month, 11)
+        XCTAssertEqual(seoulComponents.day, 21)
+        XCTAssertEqual(seoulComponents.hour, 0, "날짜만 추출하므로 시간은 0시여야 합니다")
+        XCTAssertEqual(seoulComponents.minute, 0)
+        
+        // LA 시간대 기준으로 해석 (한국 11월 21일 15시는 LA 11월 20일 23시)
+        guard let laDate = TimezoneConverter.interpretDateInAlarmTimezone(
+            date: localDate,
+            alarmTimezone: laTimezone
+        ) else {
+            XCTFail("LA 시간대 해석 실패")
+            return
+        }
+        
+        let laComponents = calendar.dateComponents(in: laTimezone, from: laDate)
+        XCTAssertEqual(laComponents.year, 2024)
+        XCTAssertEqual(laComponents.month, 11)
+        XCTAssertEqual(laComponents.day, 20, "한국 11월 21일 15시는 LA 시간대로는 11월 20일입니다")
+        XCTAssertEqual(laComponents.hour, 0, "날짜만 추출하므로 시간은 0시여야 합니다")
+        XCTAssertEqual(laComponents.minute, 0)
+    }
 }
 
 

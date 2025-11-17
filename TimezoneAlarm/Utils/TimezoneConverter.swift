@@ -10,6 +10,22 @@ import Foundation
 /// 시간대 변환 관련 유틸리티
 enum TimezoneConverter {
     
+    /// 로컬 시간대의 날짜를 알람 시간대 기준으로 해석하여 날짜만 추출
+    /// - Parameters:
+    ///   - date: 로컬 시간대의 날짜
+    ///   - alarmTimezone: 알람이 설정된 시간대
+    /// - Returns: 알람 시간대 기준으로 해석된 날짜 (nil이면 변환 실패)
+    static func interpretDateInAlarmTimezone(
+        date: Date,
+        alarmTimezone: TimeZone
+    ) -> Date? {
+        var alarmCalendar = Calendar.current
+        alarmCalendar.timeZone = alarmTimezone
+        
+        let alarmDateComponents = alarmCalendar.dateComponents([.year, .month, .day], from: date)
+        return alarmCalendar.date(from: alarmDateComponents)
+    }
+    
     /// 알람 시간대의 시간을 UTC Date로 변환
     /// - Parameters:
     ///   - alarmHour: 알람 시간대의 시간 (0-23)

@@ -403,10 +403,10 @@ struct AlarmFormView: View {
                                 
                                 // 전체 일시 데이터 구성 (날짜 + 시간)
                                 // datePickerValue는 로컬 시간대 기준이지만, 알람 시간대에서 해석
-                                var alarmCalendar = Calendar.current
-                                alarmCalendar.timeZone = alarmTimezone
-                                let alarmDateComponents = alarmCalendar.dateComponents([.year, .month, .day], from: datePickerValue)
-                                guard let alarmDate = alarmCalendar.date(from: alarmDateComponents) else {
+                                guard let alarmDate = TimezoneConverter.interpretDateInAlarmTimezone(
+                                    date: datePickerValue,
+                                    alarmTimezone: alarmTimezone
+                                ) else {
                                     showDatePicker = false
                                     return
                                 }
@@ -542,10 +542,10 @@ struct AlarmFormView: View {
                                 let selectedDateForValidation = selectedDate ?? Date()
                                 
                                 // 알람 시간대 기준으로 날짜 해석
-                                var alarmCalendar = Calendar.current
-                                alarmCalendar.timeZone = alarmTimezone
-                                let alarmDateComponents = alarmCalendar.dateComponents([.year, .month, .day], from: selectedDateForValidation)
-                                guard let alarmDate = alarmCalendar.date(from: alarmDateComponents) else {
+                                guard let alarmDate = TimezoneConverter.interpretDateInAlarmTimezone(
+                                    date: selectedDateForValidation,
+                                    alarmTimezone: alarmTimezone
+                                ) else {
                                     showTimePicker = false
                                     return
                                 }
