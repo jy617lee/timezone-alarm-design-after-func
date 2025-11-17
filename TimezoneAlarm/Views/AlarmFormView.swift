@@ -401,7 +401,7 @@ struct AlarmFormView: View {
                                     return
                                 }
                                 
-                                // 알람 시간대 기준으로 날짜 해석
+                                // 전체 일시 데이터 구성 (날짜 + 시간)
                                 // datePickerValue는 로컬 시간대 기준이지만, 알람 시간대에서 해석
                                 var alarmCalendar = Calendar.current
                                 alarmCalendar.timeZone = alarmTimezone
@@ -411,12 +411,12 @@ struct AlarmFormView: View {
                                     return
                                 }
                                 
-                                // 공통 함수로 과거 시간 검증
+                                // 전체 일시(날짜 + 시간)로 과거 시간 검증
                                 if TimezoneConverter.isPastTime(
-                                    hour: selectedHour,
-                                    minute: selectedMinute,
+                                    alarmHour: selectedHour,
+                                    alarmMinute: selectedMinute,
                                     alarmTimezone: alarmTimezone,
-                                    date: alarmDate
+                                    alarmDate: alarmDate
                                 ) {
                                     // 토스트 메시지 표시 (사용자 기기 언어로)
                                     toastMessage = NSLocalizedString("past_time_selection_error", comment: "Past time selection error message")
@@ -537,6 +537,7 @@ struct AlarmFormView: View {
                                     return
                                 }
                                 
+                                // 전체 일시 데이터 구성 (날짜 + 시간)
                                 // 선택한 날짜 (로컬 시간대 기준)
                                 let selectedDateForValidation = selectedDate ?? Date()
                                 
@@ -558,12 +559,12 @@ struct AlarmFormView: View {
                                     return
                                 }
                                 
-                                // 공통 함수로 과거 시간 검증
+                                // 전체 일시(날짜 + 시간)로 과거 시간 검증
                                 if TimezoneConverter.isPastTime(
-                                    hour: hour,
-                                    minute: minute,
+                                    alarmHour: hour,
+                                    alarmMinute: minute,
                                     alarmTimezone: alarmTimezone,
-                                    date: alarmDate
+                                    alarmDate: alarmDate
                                 ) {
                                     // 토스트 메시지 표시 (사용자 기기 언어로)
                                     toastMessage = NSLocalizedString("past_time_selection_error", comment: "Past time selection error message")
