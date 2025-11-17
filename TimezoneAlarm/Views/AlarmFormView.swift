@@ -394,21 +394,30 @@ struct AlarmFormView: View {
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button(action: {
-                                // 선택한 날짜와 시간을 조합하여 알람 시간 생성
-                                let calendar = Calendar.current
-                                
-                                // 선택한 날짜의 시간을 현재 선택된 시간으로 설정
-                                var dateComponents = calendar.dateComponents([.year, .month, .day], from: datePickerValue)
-                                dateComponents.hour = selectedHour
-                                dateComponents.minute = selectedMinute
-                                
-                                guard let alarmDateTime = calendar.date(from: dateComponents) else {
+                                // 알람 시간대 확인
+                                guard let city = selectedCity,
+                                      let alarmTimezone = TimeZone(identifier: city.timezoneIdentifier) else {
                                     showDatePicker = false
                                     return
                                 }
                                 
-                                // 현재 시간보다 이전인지 확인
-                                if alarmDateTime <= Date() {
+                                // 전체 일시 데이터 구성 (날짜 + 시간)
+                                // datePickerValue는 로컬 시간대 기준이지만, 알람 시간대에서 해석
+                                guard let alarmDate = TimezoneConverter.interpretDateInAlarmTimezone(
+                                    date: datePickerValue,
+                                    alarmTimezone: alarmTimezone
+                                ) else {
+                                    showDatePicker = false
+                                    return
+                                }
+                                
+                                // 전체 일시(날짜 + 시간)로 과거 시간 검증
+                                if TimezoneConverter.isPastTime(
+                                    alarmHour: selectedHour,
+                                    alarmMinute: selectedMinute,
+                                    alarmTimezone: alarmTimezone,
+                                    alarmDate: alarmDate
+                                ) {
                                     // 토스트 메시지 표시 (사용자 기기 언어로)
                                     toastMessage = NSLocalizedString("past_time_selection_error", comment: "Past time selection error message")
                                     showToast = true
@@ -521,23 +530,42 @@ struct AlarmFormView: View {
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button(action: {
-                                // 선택한 날짜와 시간을 조합하여 알람 시간 생성
-                                let calendar = Calendar.current
-                                let selectedDateForValidation = selectedDate ?? Date() // 날짜가 없으면 오늘
-                                
-                                // 선택한 날짜의 시간을 선택한 시간으로 설정
-                                var dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDateForValidation)
-                                let timeComponents = calendar.dateComponents([.hour, .minute], from: tempTime)
-                                dateComponents.hour = timeComponents.hour
-                                dateComponents.minute = timeComponents.minute
-                                
-                                guard let alarmDateTime = calendar.date(from: dateComponents) else {
+                                // 알람 시간대 확인
+                                guard let city = selectedCity,
+                                      let alarmTimezone = TimeZone(identifier: city.timezoneIdentifier) else {
                                     showTimePicker = false
                                     return
                                 }
                                 
-                                // 현재 시간보다 이전인지 확인
-                                if alarmDateTime <= Date() {
+                                // 전체 일시 데이터 구성 (날짜 + 시간)
+                                // 선택한 날짜 (로컬 시간대 기준)
+                                let selectedDateForValidation = selectedDate ?? Date()
+                                
+                                // 알람 시간대 기준으로 날짜 해석
+                                guard let alarmDate = TimezoneConverter.interpretDateInAlarmTimezone(
+                                    date: selectedDateForValidation,
+                                    alarmTimezone: alarmTimezone
+                                ) else {
+                                    showTimePicker = false
+                                    return
+                                }
+                                
+                                // tempTime에서 시간 추출
+                                let calendar = Calendar.current
+                                let timeComponents = calendar.dateComponents([.hour, .minute], from: tempTime)
+                                guard let hour = timeComponents.hour,
+                                      let minute = timeComponents.minute else {
+                                    showTimePicker = false
+                                    return
+                                }
+                                
+                                // 전체 일시(날짜 + 시간)로 과거 시간 검증
+                                if TimezoneConverter.isPastTime(
+                                    alarmHour: hour,
+                                    alarmMinute: minute,
+                                    alarmTimezone: alarmTimezone,
+                                    alarmDate: alarmDate
+                                ) {
                                     // 토스트 메시지 표시 (사용자 기기 언어로)
                                     toastMessage = NSLocalizedString("past_time_selection_error", comment: "Past time selection error message")
                                     showToast = true
