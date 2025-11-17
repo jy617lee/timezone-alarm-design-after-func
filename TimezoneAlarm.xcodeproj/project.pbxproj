@@ -42,6 +42,8 @@
 		e487a86a7e78475ea73ee53738752ed0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 69189974529b46abb4ddc4567e78fd49 /* Localizable.strings */; };
 		f09dd84d11e9481c8d0f0cd11265d115 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6257a08d2a254cb4a78efde9368ba791 /* Localizable.strings */; };
 		f3fa27104f814f279aea8cf6 /* AlarmListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2055e47b01704302b9a69f9c /* AlarmListView.swift */; };
+		T1E2S3T4F5I6L7E8A9B0C1D2E3F4A5 /* TimezoneConversionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1E2S3T4F5I6L7E8A9B0C1D2E3F4A6 /* TimezoneConversionTests.swift */; };
+		T1E2S3T4F5I6L7E8A9B0C1D2E3F4A7 /* DaylightSavingTimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1E2S3T4F5I6L7E8A9B0C1D2E3F4A8 /* DaylightSavingTimeTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +97,8 @@
 		c926d1891e7e466b9a173335a435283e /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = TimezoneAlarm/Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		e5f6a7b8c9d0e1f2a3b4c5d6 /* InitialSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialSetupView.swift; sourceTree = "<group>"; };
 		f1c854c0da854c6da495d9c1 /* AlarmFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmFormView.swift; sourceTree = "<group>"; };
+		T1E2S3T4F5I6L7E8A9B0C1D2E3F4A6 /* TimezoneConversionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneConversionTests.swift; sourceTree = "<group>"; };
+		T1E2S3T4F5I6L7E8A9B0C1D2E3F4A8 /* DaylightSavingTimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaylightSavingTimeTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +147,8 @@
 		304F26C114F1E943094D4896 /* TimezoneAlarmTests */ = {
 			isa = PBXGroup;
 			children = (
+				T1E2S3T4F5I6L7E8A9B0C1D2E3F4A6 /* TimezoneConversionTests.swift */,
+				T1E2S3T4F5I6L7E8A9B0C1D2E3F4A8 /* DaylightSavingTimeTests.swift */,
 			);
 			path = TimezoneAlarmTests;
 			sourceTree = "<group>";
@@ -424,6 +430,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				T1E2S3T4F5I6L7E8A9B0C1D2E3F4A5 /* TimezoneConversionTests.swift in Sources */,
+				T1E2S3T4F5I6L7E8A9B0C1D2E3F4A7 /* DaylightSavingTimeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -503,6 +511,7 @@
 		};
 		26111A5CE0E59A7D6B32EC1B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 00D013649BF8D3C5938D2598 /* Pods-TimezoneAlarm.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -546,6 +555,7 @@
 		};
 		36F910E58F7697F7A951AE91 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9751D7E0C19685C20776C40 /* Pods-TimezoneAlarm.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 9Q6XC7XQJN;

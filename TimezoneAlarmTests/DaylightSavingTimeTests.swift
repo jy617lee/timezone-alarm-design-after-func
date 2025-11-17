@@ -13,47 +13,54 @@ final class DaylightSavingTimeTests: XCTestCase {
     /// 서머타임 시작 시점 테스트 (봄)
     /// 미국 서머타임은 3월 둘째 일요일 오전 2시에 시작
     func testDSTStart() {
-        // 2024년 3월 10일 (일요일) - 서머타임 시작일
-        let calendar = Calendar.current
-        var components = DateComponents()
-        components.year = 2024
-        components.month = 3
-        components.day = 10
-        components.hour = 2
-        components.minute = 0
-        components.timeZone = TimeZone(identifier: "America/Los_Angeles")
-        
-        guard let dstStartDate = calendar.date(from: components) else {
-            XCTFail("서머타임 시작 날짜 생성 실패")
+        guard let laTimezone = TimeZone(identifier: "America/Los_Angeles") else {
+            XCTFail("LA 시간대를 찾을 수 없습니다")
             return
         }
         
-        // 서머타임 시작 전 (PST, UTC-8)
-        var beforeDST = components
+        let calendar = Calendar.current
+        
+        // 서머타임 시작 전 (3월 10일 1:59 AM PST, UTC-8)
+        var beforeDST = DateComponents()
+        beforeDST.year = 2024
+        beforeDST.month = 3
+        beforeDST.day = 10
         beforeDST.hour = 1
         beforeDST.minute = 59
+        beforeDST.timeZone = laTimezone
+        
         guard let beforeDSTDate = calendar.date(from: beforeDST) else {
             XCTFail("서머타임 시작 전 날짜 생성 실패")
             return
         }
         
-        // 서머타임 시작 후 (PDT, UTC-7)
-        var afterDST = components
+        // 서머타임 시작 후 (3월 10일 3:00 AM PDT, UTC-7) - 2:00 AM이 건너뛰어짐
+        var afterDST = DateComponents()
+        afterDST.year = 2024
+        afterDST.month = 3
+        afterDST.day = 10
         afterDST.hour = 3
         afterDST.minute = 0
+        afterDST.timeZone = laTimezone
+        
         guard let afterDSTDate = calendar.date(from: afterDST) else {
             XCTFail("서머타임 시작 후 날짜 생성 실패")
             return
         }
         
         // UTC 변환 확인
+        // 서머타임 시작으로 인해 시간대가 UTC-8에서 UTC-7로 바뀌므로
+        // 1:59 AM PST와 3:00 AM PDT는 UTC에서는 1분 차이만 남
         let beforeDSTUTC = beforeDSTDate.timeIntervalSince1970
         let afterDSTUTC = afterDSTDate.timeIntervalSince1970
         let timeDifference = afterDSTUTC - beforeDSTUTC
         
-        // 서머타임 시작으로 인해 1시간이 건너뛰어지므로, 실제 시간 차이는 1시간이어야 함
-        // 하지만 날짜상으로는 2시간 차이가 나야 함 (1:59 -> 3:00)
-        XCTAssertEqual(timeDifference, 3600, accuracy: 60, "서머타임 시작 시 1시간이 건너뛰어져야 합니다")
+        // 실제로는 1분 차이 (60초)
+        XCTAssertEqual(timeDifference, 60, accuracy: 5, "서머타임 시작 시 로컬 시간은 1시간 1분 차이지만 UTC는 1분 차이입니다")
+        
+        // 로컬 시간 차이 확인 (1시간 1분 = 3660초)
+        let localTimeDifference = (afterDST.hour! * 3600 + afterDST.minute! * 60) - (beforeDST.hour! * 3600 + beforeDST.minute! * 60)
+        XCTAssertEqual(localTimeDifference, 3660, "로컬 시간 차이는 1시간 1분(3660초)이어야 합니다")
     }
     
     /// 서머타임 종료 시점 테스트 (가을)
