@@ -62,27 +62,12 @@ final class AlarmScheduler: @unchecked Sendable {
     ///   - date: 기준 날짜 (알람 시간을 만들기 위한 날짜)
     /// - Returns: 로컬 시간대 DateComponents (nil이면 변환 실패)
     private func convertToLocalComponents(alarm: Alarm, alarmTimezone: TimeZone, date: Date) -> DateComponents? {
-        // 알람 시간대의 Calendar 생성
-        var alarmCalendar = Calendar.current
-        alarmCalendar.timeZone = alarmTimezone
-        
-        // 알람 시간대에서 DateComponents 생성
-        var alarmComponents = alarmCalendar.dateComponents([.year, .month, .day], from: date)
-        alarmComponents.hour = alarm.hour
-        alarmComponents.minute = alarm.minute
-        alarmComponents.second = 0
-        
-        // 알람 시간대에서 Date 생성 (UTC 기준)
-        guard let alarmTime = alarmCalendar.date(from: alarmComponents) else {
-            return nil
-        }
-        
-        // 로컬 시간대 Calendar로 변환
-        let localCalendar = Calendar.current
-        var localComponents = localCalendar.dateComponents([.year, .month, .day, .hour, .minute, .weekday], from: alarmTime)
-        localComponents.second = 0
-        
-        return localComponents
+        return TimezoneConverter.convertToLocalComponents(
+            hour: alarm.hour,
+            minute: alarm.minute,
+            alarmTimezone: alarmTimezone,
+            date: date
+        )
     }
     
     // MARK: - 알람 타입별 스케줄링
