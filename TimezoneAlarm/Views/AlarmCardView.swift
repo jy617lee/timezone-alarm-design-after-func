@@ -84,14 +84,16 @@ struct AlarmCardView: View {
                     
                     // 중간 행: 시간, AM/PM, 국가 정보, 날짜 (한 줄에)
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text(alarm.timeOnly)
-                            .font(.geist(size: 36, weight: .bold))
-                            .foregroundColor(alarm.isEnabled ? .appTextPrimary : .appTextPrimary.opacity(0.6))
-                        
-                        Text(alarm.amPm)
-                            .font(.geist(size: 14, weight: .semibold))
-                            .foregroundColor(alarm.isEnabled ? .appTextSecondary : .appTextSecondary.opacity(0.6))
-                            .padding(.leading, 1)
+                        HStack(alignment: .firstTextBaseline, spacing: 4) {
+                            Text(alarm.timeOnly)
+                                .font(.geist(size: 36, weight: .bold))
+                                .foregroundColor(alarm.isEnabled ? .appTextPrimary : .appTextPrimary.opacity(0.6))
+                            
+                            Text(alarm.amPm)
+                                .font(.geist(size: 14, weight: .semibold))
+                                .foregroundColor(alarm.isEnabled ? .appTextSecondary : .appTextSecondary.opacity(0.6))
+                        }
+                        .frame(width: 140, alignment: .leading)
                         
                         // 도시 정보
                         HStack(spacing: 8) {
