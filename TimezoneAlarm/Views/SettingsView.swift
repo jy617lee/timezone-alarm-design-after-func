@@ -65,10 +65,14 @@ struct SettingsView: View {
             .navigationTitle(NSLocalizedString("settings.title", comment: "Settings"))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
-                // NavigationBar 버튼 배경 제거
+                // NavigationBar 헤더 백그라운드 설정 (홈화면과 동일)
                 let appearance = UINavigationBarAppearance()
-                appearance.configureWithTransparentBackground()
-                appearance.backgroundColor = UIColor.clear
+                appearance.configureWithDefaultBackground()
+                // appHeaderBackground: 그라데이션 시작색 #FFF6F6 80% opacity
+                let headerColor = UIColor(red: 255/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1.0)
+                appearance.backgroundColor = headerColor
+                appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+                appearance.shadowColor = UIColor.clear
                 
                 // 버튼 배경 제거
                 let buttonAppearance = UIBarButtonItemAppearance()
@@ -77,6 +81,7 @@ struct SettingsView: View {
                 buttonAppearance.disabled.backgroundImage = UIImage()
                 appearance.buttonAppearance = buttonAppearance
                 appearance.doneButtonAppearance = buttonAppearance
+                appearance.backButtonAppearance = buttonAppearance
                 
                 UINavigationBar.appearance().standardAppearance = appearance
                 UINavigationBar.appearance().compactAppearance = appearance
@@ -95,11 +100,14 @@ struct SettingsView: View {
                         dismiss()
                     }) {
                         Image(systemName: "chevron.left")
-                            .font(.geist(size: 18, weight: .medium))
-                            .foregroundColor(.appTextPrimary)
-                            .background(Color.clear)
+                            .renderingMode(.template)
+                            .foregroundColor(.brown)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .tint(.brown)
+                    .accentColor(.brown)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {

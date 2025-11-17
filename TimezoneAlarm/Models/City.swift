@@ -29,7 +29,7 @@ struct City: Identifiable, Hashable {
         
         // North America
         City(id: "America/New_York", name: "New York", countryName: "United States", countryFlag: "🇺🇸", timezoneIdentifier: "America/New_York"),
-        City(id: "America/Los_Angeles", name: "Los Angeles", countryName: "United States", countryFlag: "🇺🇸", timezoneIdentifier: "America/Los_Angeles"),
+        City(id: "America/Los_Angeles", name: "LA", countryName: "United States", countryFlag: "🇺🇸", timezoneIdentifier: "America/Los_Angeles"),
         City(id: "America/Chicago", name: "Chicago", countryName: "United States", countryFlag: "🇺🇸", timezoneIdentifier: "America/Chicago"),
         City(id: "America/Denver", name: "Denver", countryName: "United States", countryFlag: "🇺🇸", timezoneIdentifier: "America/Denver"),
         City(id: "America/Toronto", name: "Toronto", countryName: "Canada", countryFlag: "🇨🇦", timezoneIdentifier: "America/Toronto"),

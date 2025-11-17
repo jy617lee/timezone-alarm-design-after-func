@@ -112,63 +112,28 @@ struct AlarmAlertView: View {
             
             // 아이콘 펄스 애니메이션 시작
             startPulseAnimation()
-            
-            playAlarmSound()
         }
         .onDisappear {
-            stopAlarm()
-        }
-    }
-    
-    private func playAlarmSound() {
-        // 30초 오디오 파일을 무한 루프로 재생
-        guard let soundURL = Bundle.main.url(forResource: "alarm", withExtension: "wav") else {
-            debugLog("⚠️ alarm.wav 파일을 찾을 수 없습니다")
-            // 폴백: 시스템 알람 사운드 사용
-            AudioServicesPlaySystemSound(1005)
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            soundTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                AudioServicesPlaySystemSound(1005)
-                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            }
-            return
-        }
-        
-        do {
-            // AVAudioPlayer로 오디오 파일 재생
-            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
-            audioPlayer?.numberOfLoops = -1 // 무한 루프
-            audioPlayer?.volume = 1.0 // 최대 볼륨
-            audioPlayer?.play()
-            debugLog("🔊 알람 사운드 재생 시작 (무한 루프)")
-            
-            // 진동도 함께 반복 (약 29초마다, 파일 길이에 맞춤)
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            soundTimer = Timer.scheduledTimer(withTimeInterval: 29.0, repeats: true) { _ in
-                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            }
-        } catch {
-            debugLog("❌ 오디오 재생 실패: \(error.localizedDescription)")
-            // 폴백: 시스템 알람 사운드 사용
-            AudioServicesPlaySystemSound(1005)
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            soundTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-                AudioServicesPlaySystemSound(1005)
-                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            }
+            // onDisappear에서는 오디오를 정지하지 않음
+            // 백그라운드로 돌아갈 수 있으므로 계속 재생되도록 유지
+            // dismiss 버튼을 눌렀을 때만 정지됨
+            soundTimer?.invalidate()
+            soundTimer = nil
         }
     }
     
     private func stopAlarm() {
-        // 타이머 정지
+        // 타이머 정지 (로컬 타이머는 사용하지 않으므로 정리만)
         soundTimer?.invalidate()
         soundTimer = nil
         
-        // 오디오 플레이어 정지 및 정리
+        // 로컬 플레이어 정리 (사용하지 않지만 혹시 모르니)
         audioPlayer?.stop()
         audioPlayer = nil
         
-        debugLog("🔇 알람 사운드 정지")
+        // 실제 재생은 dismiss 버튼을 눌렀을 때만 정지
+        // onDisappear에서는 정지하지 않음 (백그라운드로 돌아갈 수 있으므로)
+        debugLog("🔇 AlarmAlertView 사라짐 (오디오는 계속 재생)")
     }
     
     private func startPulseAnimation() {

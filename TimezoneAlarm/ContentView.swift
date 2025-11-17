@@ -218,6 +218,11 @@ struct ContentView: View {
                 // 약간의 지연을 두어 ContentView가 완전히 준비된 후에 확인
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     checkRecentNotifications()
+                    // activeAlarm이 이미 설정되어 있으면 실행 화면 표시 (onChange가 트리거되지 않을 수 있음)
+                    if notificationDelegate.activeAlarm != nil {
+                        debugLog("🔔 ContentView onAppear (지연 후) - activeAlarm이 설정되어 있음, 실행 화면 표시")
+                        showAlarmAlert = true
+                    }
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
@@ -225,12 +230,22 @@ struct ContentView: View {
                 // 약간의 지연을 두어 ContentView가 완전히 준비된 후에 확인
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     checkRecentNotifications()
+                    // activeAlarm이 이미 설정되어 있으면 실행 화면 표시 (onChange가 트리거되지 않을 수 있음)
+                    if notificationDelegate.activeAlarm != nil {
+                        debugLog("🔔 백그라운드에서 포그라운드로 전환 (지연 후) - activeAlarm이 설정되어 있음, 실행 화면 표시")
+                        showAlarmAlert = true
+                    }
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                 // 앱이 활성화될 때도 최근 알림 확인
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     checkRecentNotifications()
+                    // activeAlarm이 이미 설정되어 있으면 실행 화면 표시 (onChange가 트리거되지 않을 수 있음)
+                    if notificationDelegate.activeAlarm != nil {
+                        debugLog("🔔 앱 활성화 (지연 후) - activeAlarm이 설정되어 있음, 실행 화면 표시")
+                        showAlarmAlert = true
+                    }
                 }
             }
             .onChange(of: viewModel.activeAlarm) { newValue in
@@ -290,11 +305,11 @@ struct ContentView: View {
                    let countryName = notification.request.content.userInfo["countryName"] as? String,
                    let countryFlag = notification.request.content.userInfo["countryFlag"] as? String {
                     
-                    // 알림이 최근 30초 이내에 도착했는지 확인 (백그라운드 오디오 유지)
+                    // 알림이 최근 2분 이내에 도착했는지 확인 (백그라운드 오디오 유지 및 푸시 탭 처리)
                     let notificationDate = notification.date
                     let timeSinceNotification = now.timeIntervalSince(notificationDate)
                     
-                    if timeSinceNotification <= 30.0 {
+                    if timeSinceNotification <= 120.0 { // 2분으로 확대
                         debugLog("🔔 최근 알람 알림 발견: \(alarmName) (도착 후 \(String(format: "%.1f", timeSinceNotification))초 경과)")
                         
                         // timezoneIdentifier로 City 찾기

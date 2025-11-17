@@ -24,8 +24,10 @@ class AlarmViewModel: ObservableObject {
         // 저장된 알람 로드
         loadAlarms()
         
-        // 앱 시작 시에는 스케줄링하지 않음 (알람 생성/수정 시에만 스케줄링)
-        // 타임존 변경 시에만 재스케줄링
+        // 앱 시작 시 스케줄링 확인 및 재스케줄링
+        Task { @MainActor in
+            await verifyAndRescheduleOnAppStart()
+        }
         
         // 타임존 변경 감지
         NotificationCenter.default.addObserver(
@@ -42,6 +44,25 @@ class AlarmViewModel: ObservableObject {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    // 앱 시작 시 스케줄링 확인 및 재스케줄링
+    private func verifyAndRescheduleOnAppStart() async {
+        debugLog("📋 앱 시작 시 스케줄링 확인 시작")
+        
+        // 권한 확인
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        guard settings.authorizationStatus == .authorized else {
+            debugLog("⚠️ 알림 권한이 없어 스케줄링 확인을 건너뜁니다")
+            return
+        }
+        
+        // 스케줄링 확인 및 필요시 재스케줄링
+        AlarmScheduler.shared.verifyAndRescheduleIfNeeded(alarms: alarms) { rescheduledCount in
+            if rescheduledCount > 0 {
+                debugLog("✅ \(rescheduledCount)개의 알람을 재스케줄링했습니다")
+            }
+        }
     }
     
     // 모든 알람 재스케줄링 (타임존 변경 시)
@@ -151,6 +172,9 @@ class AlarmViewModel: ObservableObject {
             if alarm.isEnabled {
                 AlarmScheduler.shared.scheduleAlarm(alarm)
             }
+            
+            // 알람이 수정되면 dismiss 상태 초기화 (새로운 알람으로 봄)
+            NotificationDelegate.shared.clearDismissedStatus(for: alarm.id)
             
             // Analytics 로깅
             AnalyticsService.shared.logAlarmUpdated(alarm: alarm)

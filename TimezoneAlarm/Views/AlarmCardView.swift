@@ -52,7 +52,7 @@ struct AlarmCardView: View {
                         Spacer()
                         
                         // 삭제 버튼과 토글을 위한 공간 (overlay로 실제 버튼이 올라감)
-                        HStack(spacing: 4) {
+                        HStack(spacing: 12) {
                             // 삭제 버튼
                             Button(action: {
                                 // 햅틱 피드백
@@ -76,7 +76,7 @@ struct AlarmCardView: View {
                                 ),
                                 accentColor: cardPalette.accent
                             )
-                            .frame(width: 56, height: 44) // 최소 터치 영역 44x44pt (iOS 가이드라인)
+                            .frame(width: 72, height: 48) // 터치 영역 확대 (iOS 가이드라인 44x44pt보다 넓게)
                             .contentShape(Rectangle())
                         }
                         .opacity(0) // 투명하게 만들어서 공간만 차지
@@ -186,7 +186,7 @@ struct AlarmCardView: View {
             // 삭제 버튼과 토글을 overlay로 위에 올려서 탭 우선순위를 높임
             // 타이틀 HStack과 정확히 같은 위치에 배치
             .overlay(alignment: .topTrailing) {
-                HStack(spacing: 4) {
+                HStack(spacing: 12) {
                     // 삭제 버튼
                     Button(action: {
                         // 햅틱 피드백
@@ -210,8 +210,9 @@ struct AlarmCardView: View {
                         ),
                         accentColor: cardPalette.accent
                     )
-                    .frame(width: 56, height: 44) // 최소 터치 영역 44x44pt (iOS 가이드라인)
+                    .frame(width: 72, height: 48) // 터치 영역 확대
                     .contentShape(Rectangle())
+                    .padding(.leading, -8) // 왼쪽 여백만 줄이기 (삭제 아이콘과 가까이)
                 }
                 .padding(.top, 16)
                 .padding(.trailing, 16)
@@ -259,7 +260,8 @@ struct CustomToggle: View {
                     .shadow(color: Color.black.opacity(0.2), radius: 2, x: 0, y: 1)
                     .padding(.horizontal, 2)
             }
-            .contentShape(Rectangle())
+            .frame(maxWidth: .infinity, maxHeight: .infinity) // 전체 터치 영역 사용
+            .contentShape(Rectangle()) // 전체 영역을 터치 가능하게
         }
         .buttonStyle(.plain)
     }
