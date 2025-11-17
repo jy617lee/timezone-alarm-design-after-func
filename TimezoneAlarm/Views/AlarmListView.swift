@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AlarmListView: View {
-    @Bindable var viewModel: AlarmViewModel
+    @ObservedObject var viewModel: AlarmViewModel
     @Binding var showAlarmForm: Bool
     @Binding var showSettings: Bool
     @Binding var editMode: EditMode

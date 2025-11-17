@@ -8,7 +8,9 @@
 import SwiftUI
 import UserNotifications
 import AVFoundation
+import AudioToolbox
 import FirebaseCore
+import FirebaseAnalytics
 
 @main
 struct TimezoneAlarmApp: App {
@@ -17,16 +19,17 @@ struct TimezoneAlarmApp: App {
         
         // Firebase 초기화
         FirebaseApp.configure()
-        debugLog("✅ Firebase 초기화 완료")
         
-        // 백그라운드 오디오 재생을 위한 오디오 세션 설정
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
-            try AVAudioSession.sharedInstance().setActive(true)
-            debugLog("✅ 백그라운드 오디오 세션 활성화")
-        } catch {
-            debugLog("⚠️ 오디오 세션 설정 실패: \(error.localizedDescription)")
-        }
+        // 디버그 모드에서는 Analytics 수집 비활성화
+        #if DEBUG
+        Analytics.setAnalyticsCollectionEnabled(false)
+        debugLog("✅ Firebase 초기화 완료 (Analytics 수집 비활성화 - DEBUG 모드)")
+        #else
+        debugLog("✅ Firebase 초기화 완료")
+        #endif
+        
+        // 오디오 세션은 실제로 오디오를 재생할 때만 설정
+        // 푸시 알림의 사운드는 iOS가 자동으로 처리
         
         // 알림 델리게이트 설정 (싱글톤 인스턴스 사용)
         UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
@@ -68,6 +71,12 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         AnalyticsService.shared.logAlarmDismissed(alarm: alarm)
     }
     
+    // dismiss 상태 초기화 (알람 수정 시 호출)
+    func clearDismissedStatus(for alarmId: UUID) {
+        dismissedAlarmIds.remove(alarmId)
+        debugLog("🔄 알람 dismiss 상태 초기화: \(alarmId.uuidString)")
+    }
+    
     // 알림이 앱이 포그라운드에 있을 때 표시
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let currentTime = Date()
@@ -92,12 +101,16 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             
             debugLog("✅ 알람 정보 추출 성공: \(alarmName)")
             
+            // timezoneIdentifier로 City 찾기
+            let cityName = City.popularCities.first(where: { $0.timezoneIdentifier == timezoneIdentifier })?.name ?? countryName
+            
             let alarm = Alarm(
                 id: UUID(uuidString: alarmId) ?? UUID(),
                 name: alarmName,
                 hour: alarmHour,
                 minute: alarmMinute,
                 timezoneIdentifier: timezoneIdentifier,
+                cityName: cityName,
                 countryName: countryName,
                 countryFlag: countryFlag
             )
@@ -107,14 +120,20 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             
             Task { @MainActor in
                 // dismiss된 알람인지 확인
+                // dismiss된 알람인지 확인 (체인 알림 예약만 막음)
+                // activeAlarm은 설정하여 실행 화면이 표시되도록 함
                 if self.dismissedAlarmIds.contains(alarm.id) {
                     debugLog("🚫 이미 dismiss된 알람입니다. 체인 알림 예약하지 않음: \(alarm.name)")
+                    // activeAlarm은 이미 설정했으므로 실행 화면은 표시됨
                     return
                 }
                 
                 debugLog("📱 activeAlarm 설정 중: \(alarm.name)")
                 self.activeAlarm = alarm
                 debugLog("✅ activeAlarm 설정 완료")
+                
+                // 진동 시작
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                 
                 // 백그라운드에서도 연속 사운드 재생 시작 (앱이 실행 중일 때만)
                 self.startBackgroundAudioPlayback(for: alarm)
@@ -165,12 +184,16 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             
             debugLog("✅ 알람 정보 추출 성공: \(alarmName)")
             
+            // timezoneIdentifier로 City 찾기
+            let cityName = City.popularCities.first(where: { $0.timezoneIdentifier == timezoneIdentifier })?.name ?? countryName
+            
             let alarm = Alarm(
                 id: UUID(uuidString: alarmId) ?? UUID(),
                 name: alarmName,
                 hour: alarmHour,
                 minute: alarmMinute,
                 timezoneIdentifier: timezoneIdentifier,
+                cityName: cityName,
                 countryName: countryName,
                 countryFlag: countryFlag
             )
@@ -178,24 +201,58 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             // 알림 ID를 로컬 변수로 추출 (데이터 레이스 방지)
             let notificationId = response.notification.request.identifier
             
+            // activeAlarm을 먼저 설정하여 ContentView의 onChange가 트리거되도록
             Task { @MainActor in
-                // dismiss된 알람인지 확인
+                debugLog("📱 activeAlarm 설정 중 (didReceive): \(alarm.name)")
+                
+                // onChange가 확실히 트리거되도록 항상 nil로 리셋한 후 새 알람으로 설정
+                // 이렇게 하면 같은 알람이 다시 와도, 다른 알람이 와도 onChange가 확실히 트리거됨
+                // 단, 오디오는 계속 재생되도록 유지 (activeAlarm = nil으로 설정해도 오디오는 중단하지 않음)
+                let previousAlarm = self.activeAlarm
+                let wasPlaying = self.isAudioPlaying // 오디오 재생 상태 저장
+                self.activeAlarm = nil
+                
+                // 약간의 지연을 두어 onChange가 트리거되도록
+                try? await Task.sleep(nanoseconds: 50_000_000) // 0.05초
+                
+                // activeAlarm 설정하여 ContentView의 onChange가 트리거되도록
+                // dismiss된 알람이어도 사용자가 푸시를 다시 탭하면 실행 화면이 떠야 함
+                self.activeAlarm = alarm
+                
+                debugLog("✅ activeAlarm 설정 완료: \(alarm.name) (이전: \(previousAlarm?.name ?? "nil"))")
+                
+                // dismiss된 알람인지 확인 (체인 알림 예약만 막음)
                 if self.dismissedAlarmIds.contains(alarm.id) {
                     debugLog("🚫 이미 dismiss된 알람입니다. 체인 알림 예약하지 않음: \(alarm.name)")
                     // 표시된 알림 제거
                     AlarmScheduler.shared.removeDeliveredNotification(for: alarm)
+                    // activeAlarm은 이미 설정했으므로 실행 화면은 표시됨
+                    // 하지만 체인 알림은 예약하지 않음
+                    // 오디오는 이미 재생 중이면 그대로 유지
+                    if !wasPlaying {
+                        // 오디오가 재생 중이 아니었으면 재생 시작
+                        self.startBackgroundAudioPlayback(for: alarm)
+                    }
                     return
                 }
                 
-                debugLog("📱 activeAlarm 설정 중 (didReceive): \(alarm.name)")
-                self.activeAlarm = alarm
-                // 표시된 알림 제거
-                AlarmScheduler.shared.removeDeliveredNotification(for: alarm)
+                // 표시된 알림 제거하지 않음 (홈화면으로 가도 푸시 알림이 보이도록)
+                // AlarmScheduler.shared.removeDeliveredNotification(for: alarm)
+                
+                // 진동 시작
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                 
                 // 백그라운드에서도 연속 사운드 재생 시작 (앱이 실행 중일 때만)
-                self.startBackgroundAudioPlayback(for: alarm)
+                // 홈버튼으로 홈화면으로 가도 소리가 계속 재생되도록
+                // 이미 재생 중이면 그대로 유지, 아니면 재생 시작
+                if !wasPlaying {
+                    self.startBackgroundAudioPlayback(for: alarm)
+                } else {
+                    // 이미 재생 중이면 볼륨만 확인
+                    self.ensureMaximumVolume()
+                }
                 
-                // 체인 알림 예약: 알림이 도착할 때마다 다음 알림(10초 후) 예약
+                // 체인 알림 예약: 알림이 도착할 때마다 다음 알림(5초 후) 예약
                 var chainIndex = 0
                 
                 if notificationId.contains("-chain-") {
@@ -214,50 +271,120 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
                 debugLog("🔗 다음 체인 알림 예약: chain-\(chainIndex)")
                 AlarmScheduler.shared.scheduleChainNotification(for: alarm, chainIndex: chainIndex)
             }
+            
+            // completionHandler는 Task 밖에서 즉시 호출 (데이터 레이스 방지)
+            // activeAlarm 설정은 Task에서 비동기로 처리되지만, UI 업데이트는 onChange에서 처리됨
+            completionHandler()
         } else {
             debugLog("❌ 알람 정보 추출 실패")
+            completionHandler()
         }
-        
-        completionHandler()
     }
     
-    // 백그라운드에서 연속 사운드 재생
+    // 백그라운드에서 연속 사운드 재생 (포그라운드에서도 동일한 플레이어 사용)
     private var backgroundAudioPlayer: AVAudioPlayer?
     private var backgroundAudioTimer: Timer?
     
-    func startBackgroundAudioPlayback(for alarm: Alarm) {
-        // 이미 재생 중이면 중복 시작 방지
-        if let player = backgroundAudioPlayer, player.isPlaying {
-            debugLog("🔊 백그라운드 오디오가 이미 재생 중입니다")
-            return
+    // 플레이어가 재생 중인지 확인
+    var isAudioPlaying: Bool {
+        return backgroundAudioPlayer?.isPlaying ?? false
+    }
+    
+    // 볼륨을 최대로 설정 (백그라운드 전환 시에도 호출)
+    func ensureMaximumVolume() {
+        if let player = backgroundAudioPlayer {
+            player.volume = 1.0
+            debugLog("🔊 볼륨 최대값으로 설정: 1.0")
+        }
+    }
+    
+    func startBackgroundAudioPlayback(for alarm: Alarm, forceRestart: Bool = false) {
+        // forceRestart가 true이면 기존 플레이어를 무조건 정리하고 새로 시작
+        if forceRestart {
+            debugLog("🔄 강제 재시작 모드 - 기존 플레이어 정리")
+            backgroundAudioPlayer?.stop()
+            backgroundAudioPlayer = nil
+            backgroundAudioTimer?.invalidate()
+            backgroundAudioTimer = nil
+        } else {
+            // 이미 재생 중이면 그대로 유지 (오디오 세션 건드리지 않음)
+            if let player = backgroundAudioPlayer, player.isPlaying {
+                debugLog("🔊 오디오가 이미 재생 중입니다 (재사용)")
+                // 볼륨만 최대값으로 유지
+                player.volume = 1.0
+                return
+            }
+            
+            // 재생 중이 아니지만 플레이어가 있으면 (멈춰있을 수 있음) 다시 재생 시작
+            if let player = backgroundAudioPlayer, !player.isPlaying {
+                debugLog("🔊 오디오 플레이어가 있지만 재생 중이 아닙니다. 재생 재개")
+                // 오디오 세션은 건드리지 않고 바로 재생
+                player.volume = 1.0
+                player.play()
+                debugLog("🔊 오디오 재생 재개 성공")
+                // 재생 재개 성공하면 return
+                if backgroundAudioPlayer?.isPlaying == true {
+                    return
+                }
+            }
         }
         
-        guard let soundURL = Bundle.main.url(forResource: "alarm", withExtension: "wav") else {
-            debugLog("⚠️ alarm.wav 파일을 찾을 수 없습니다")
+        // CAF 형식 우선 확인
+        let soundURL = Bundle.main.url(forResource: "alarm", withExtension: "caf") 
+            ?? Bundle.main.url(forResource: "alarm", withExtension: "wav")
+        
+        guard let soundURL = soundURL else {
+            debugLog("⚠️ alarm 파일을 찾을 수 없습니다")
             return
         }
         
         do {
-            // 오디오 세션 활성화 (백그라운드 재생 허용)
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
-            try AVAudioSession.sharedInstance().setActive(true)
-            
             // 기존 플레이어 정리
             backgroundAudioPlayer?.stop()
             backgroundAudioPlayer = nil
             
-            // 오디오 플레이어 생성 및 재생
+            // 푸시 알림의 사운드는 iOS가 자동으로 처리하므로 오디오 세션을 건드리지 않음
+            // 오디오 플레이어 생성 및 재생 (푸시 알림이 이미 오디오 세션을 활성화했을 것)
             backgroundAudioPlayer = try AVAudioPlayer(contentsOf: soundURL)
             backgroundAudioPlayer?.numberOfLoops = -1 // 무한 루프
-            backgroundAudioPlayer?.volume = 1.0
-            backgroundAudioPlayer?.play()
+            backgroundAudioPlayer?.volume = 1.0 // 최대 볼륨 (0.0 ~ 1.0)
+            backgroundAudioPlayer?.prepareToPlay() // 재생 준비 (지연 최소화)
             
-            debugLog("🔊 백그라운드 연속 사운드 재생 시작 (끊김 없이)")
+            // 재생 시작
+            let playResult = backgroundAudioPlayer?.play() ?? false
+            if !playResult {
+                debugLog("⚠️ play() 메서드가 false를 반환했습니다")
+            }
             
-            // 백그라운드에서도 계속 재생되도록 유지
+            // 재생 시작 후 다시 볼륨 확인 (일부 경우 재생 시작 시 볼륨이 리셋될 수 있음)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.backgroundAudioPlayer?.volume = 1.0
+                // 재생 상태 재확인
+                if let player = self.backgroundAudioPlayer, !player.isPlaying {
+                    debugLog("⚠️ 재생 시작 후에도 재생 중이 아닙니다 - 재시도")
+                    player.play()
+                }
+            }
+            
+            debugLog("🔊 오디오 재생 시작 (백그라운드/포그라운드 공용, 최대 볼륨)")
+            
+            // 진동 반복 (1초마다)
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            backgroundAudioTimer?.invalidate() // 기존 타이머 정리
+            backgroundAudioTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            }
+            
+            // 백그라운드/포그라운드 모두에서 계속 재생되도록 유지
             // dismiss 시 정지됨
         } catch {
-            debugLog("❌ 백그라운드 오디오 재생 실패: \(error.localizedDescription)")
+            debugLog("❌ 오디오 재생 실패: \(error.localizedDescription)")
+            debugLog("   - 에러 코드: \((error as NSError).code)")
+            debugLog("   - 에러 도메인: \((error as NSError).domain)")
+            
+            // 에러 발생 시 한 번만 재시도 (무한 루프 방지)
+            // 재시도는 AlarmAlertView에서 처리하도록 함
+            debugLog("⚠️ 오디오 재생 실패 - AlarmAlertView에서 재시도 처리 필요")
         }
     }
     
@@ -266,7 +393,7 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         backgroundAudioPlayer = nil
         backgroundAudioTimer?.invalidate()
         backgroundAudioTimer = nil
-        debugLog("🔇 백그라운드 오디오 재생 정지")
+        debugLog("🔇 오디오 재생 정지")
     }
 }
 

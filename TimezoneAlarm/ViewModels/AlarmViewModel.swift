@@ -9,10 +9,9 @@ import Foundation
 import SwiftUI
 
 @MainActor
-@Observable
-class AlarmViewModel {
-    var activeAlarm: Alarm? = nil
-    var alarms: [Alarm] = [] {
+class AlarmViewModel: ObservableObject {
+    @Published var activeAlarm: Alarm? = nil
+    @Published var alarms: [Alarm] = [] {
         didSet {
             // 알람이 변경될 때마다 저장
             saveAlarms()
@@ -25,8 +24,10 @@ class AlarmViewModel {
         // 저장된 알람 로드
         loadAlarms()
         
-        // 앱 시작 시에는 스케줄링하지 않음 (알람 생성/수정 시에만 스케줄링)
-        // 타임존 변경 시에만 재스케줄링
+        // 앱 시작 시 스케줄링 확인 및 재스케줄링
+        Task { @MainActor in
+            await verifyAndRescheduleOnAppStart()
+        }
         
         // 타임존 변경 감지
         NotificationCenter.default.addObserver(
@@ -43,6 +44,25 @@ class AlarmViewModel {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    // 앱 시작 시 스케줄링 확인 및 재스케줄링
+    private func verifyAndRescheduleOnAppStart() async {
+        debugLog("📋 앱 시작 시 스케줄링 확인 시작")
+        
+        // 권한 확인
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        guard settings.authorizationStatus == .authorized else {
+            debugLog("⚠️ 알림 권한이 없어 스케줄링 확인을 건너뜁니다")
+            return
+        }
+        
+        // 스케줄링 확인 및 필요시 재스케줄링
+        AlarmScheduler.shared.verifyAndRescheduleIfNeeded(alarms: alarms) { rescheduledCount in
+            if rescheduledCount > 0 {
+                debugLog("✅ \(rescheduledCount)개의 알람을 재스케줄링했습니다")
+            }
+        }
     }
     
     // 모든 알람 재스케줄링 (타임존 변경 시)
@@ -78,35 +98,6 @@ class AlarmViewModel {
         if let encoded = try? JSONEncoder().encode(alarms) {
             UserDefaults.standard.set(encoded, forKey: alarmsKey)
         }
-    }
-    
-    private func loadSampleData() {
-        alarms = [
-            Alarm(
-                name: "Morning Wake Up",
-                hour: 7,
-                minute: 30,
-                timezoneIdentifier: "Asia/Seoul",
-                countryName: "South Korea",
-                countryFlag: "🇰🇷",
-                selectedWeekdays: [2, 3, 4, 5, 6], // 월-금
-                isEnabled: true,
-                createdAt: Date().addingTimeInterval(-86400),
-                sortOrder: 0
-            ),
-            Alarm(
-                name: "Evening Reminder",
-                hour: 9,
-                minute: 0,
-                timezoneIdentifier: "America/New_York",
-                countryName: "United States",
-                countryFlag: "🇺🇸",
-                selectedWeekdays: [1, 7], // 일, 토
-                isEnabled: true,
-                createdAt: Date(),
-                sortOrder: 1
-            )
-        ]
     }
     
     // 생성일 기준 최신순 정렬 (sortOrder가 같으면)
@@ -181,6 +172,9 @@ class AlarmViewModel {
             if alarm.isEnabled {
                 AlarmScheduler.shared.scheduleAlarm(alarm)
             }
+            
+            // 알람이 수정되면 dismiss 상태 초기화 (새로운 알람으로 봄)
+            NotificationDelegate.shared.clearDismissedStatus(for: alarm.id)
             
             // Analytics 로깅
             AnalyticsService.shared.logAlarmUpdated(alarm: alarm)

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct InitialSetupView: View {
     @Binding var isSetupComplete: Bool
-    @State private var selectedCountry: Country?
-    @State private var showCountrySelection = false
+    @State private var selectedCity: City?
+    @State private var showCitySelection = false
     
     // 순차 페이드인 애니메이션을 위한 opacity 상태
     @State private var titleOpacity: Double = 0.0
@@ -21,7 +21,7 @@ struct InitialSetupView: View {
     @State private var buttonOpacity: Double = 0.0
     
     private var isFormValid: Bool {
-        selectedCountry != nil
+        selectedCity != nil
     }
     
     var body: some View {
@@ -105,20 +105,20 @@ struct InitialSetupView: View {
                             hideBackground: false
                         ) {
                             Button(action: {
-                                showCountrySelection = true
+                                showCitySelection = true
                             }) {
                                 HStack {
-                                    if let country = selectedCountry {
-                                        Text(country.flag)
+                                    if let city = selectedCity {
+                                        Text(city.countryFlag)
                                             .font(.geist(size: 24, weight: .regular))
-                                        Text(country.name)
+                                        Text(city.name)
                                             .font(.geist(size: 16, weight: .medium))
                                             .foregroundColor(.appTextPrimary)
                                     } else {
                                         Image(systemName: "globe")
                                             .font(.geist(size: 16, weight: .regular))
                                             .foregroundColor(.appTextSecondary)
-                                        Text(NSLocalizedString("initial_setup.select_primary_country", comment: "Select your primary country."))
+                                        Text(NSLocalizedString("initial_setup.select_primary_city", comment: "Select your primary city"))
                                             .font(.geist(size: 16, weight: .regular))
                                             .foregroundColor(.appTextSecondary)
                                     }
@@ -164,9 +164,9 @@ struct InitialSetupView: View {
                 Spacer()
             }
         }
-        .sheet(isPresented: $showCountrySelection) {
+        .sheet(isPresented: $showCitySelection) {
             NavigationView {
-                CountrySelectionView(selectedCountry: $selectedCountry)
+                CitySelectionView(selectedCity: $selectedCity)
             }
         }
         .onAppear {
@@ -198,8 +198,8 @@ struct InitialSetupView: View {
     }
     
     private func completeSetup() {
-        guard let country = selectedCountry else { return }
-        UserDefaults.standard.set(country.id, forKey: "defaultCountryId")
+        guard let city = selectedCity else { return }
+        UserDefaults.standard.set(city.timezoneIdentifier, forKey: "defaultTimezoneId")
         UserDefaults.standard.set(true, forKey: "hasCompletedInitialSetup")
         isSetupComplete = true
     }

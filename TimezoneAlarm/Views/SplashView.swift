@@ -27,7 +27,7 @@ struct SplashView: View {
                         .frame(height: geometry.size.height * 0.2)
                     
                     // 알람 아이콘
-                    Image("alarm-icon")
+                    Image.fromResources("alarm-icon")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 270, height: 270)

@@ -13,6 +13,7 @@ struct Alarm: Identifiable, Codable, Equatable {
     var hour: Int
     var minute: Int
     var timezoneIdentifier: String
+    var cityName: String // 도시 이름
     var countryName: String
     var countryFlag: String
     var selectedWeekdays: Set<Int> // 1=Sunday, 2=Monday, ..., 7=Saturday
@@ -27,6 +28,7 @@ struct Alarm: Identifiable, Codable, Equatable {
         hour: Int,
         minute: Int,
         timezoneIdentifier: String,
+        cityName: String,
         countryName: String,
         countryFlag: String,
         selectedWeekdays: Set<Int> = [],
@@ -40,6 +42,7 @@ struct Alarm: Identifiable, Codable, Equatable {
         self.hour = hour
         self.minute = minute
         self.timezoneIdentifier = timezoneIdentifier
+        self.cityName = cityName
         self.countryName = countryName
         self.countryFlag = countryFlag
         self.selectedWeekdays = selectedWeekdays

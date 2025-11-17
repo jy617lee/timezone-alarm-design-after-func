@@ -28,7 +28,7 @@ class AnalyticsService {
             "is_enabled": alarm.isEnabled,
             "has_weekdays": !alarm.selectedWeekdays.isEmpty,
             "has_date": alarm.selectedDate != nil,
-            "device_language": Locale.current.language.languageCode?.identifier ?? "unknown",
+            "device_language": Locale.current.languageCode ?? String(Locale.preferredLanguages.first?.prefix(2) ?? "unknown"),
             "device_timezone": TimeZone.current.identifier
         ]
         
@@ -49,7 +49,7 @@ class AnalyticsService {
             "is_enabled": alarm.isEnabled,
             "has_weekdays": !alarm.selectedWeekdays.isEmpty,
             "has_date": alarm.selectedDate != nil,
-            "device_language": Locale.current.language.languageCode?.identifier ?? "unknown",
+            "device_language": Locale.current.languageCode ?? String(Locale.preferredLanguages.first?.prefix(2) ?? "unknown"),
             "device_timezone": TimeZone.current.identifier
         ]
         
@@ -67,7 +67,7 @@ class AnalyticsService {
             "timezone_identifier": alarm.timezoneIdentifier,
             "country_name": alarm.countryName,
             "country_flag": alarm.countryFlag,
-            "device_language": Locale.current.language.languageCode?.identifier ?? "unknown",
+            "device_language": Locale.current.languageCode ?? String(Locale.preferredLanguages.first?.prefix(2) ?? "unknown"),
             "device_timezone": TimeZone.current.identifier
         ]
         
@@ -81,7 +81,7 @@ class AnalyticsService {
             "alarm_id": alarm.id.uuidString,
             "alarm_name": alarm.name,
             "is_enabled": isEnabled,
-            "device_language": Locale.current.language.languageCode?.identifier ?? "unknown",
+            "device_language": Locale.current.languageCode ?? String(Locale.preferredLanguages.first?.prefix(2) ?? "unknown"),
             "device_timezone": TimeZone.current.identifier
         ]
         
@@ -100,7 +100,7 @@ class AnalyticsService {
             "timezone_identifier": alarm.timezoneIdentifier,
             "country_name": alarm.countryName,
             "country_flag": alarm.countryFlag,
-            "device_language": Locale.current.language.languageCode?.identifier ?? "unknown",
+            "device_language": Locale.current.languageCode ?? String(Locale.preferredLanguages.first?.prefix(2) ?? "unknown"),
             "device_timezone": TimeZone.current.identifier
         ]
         

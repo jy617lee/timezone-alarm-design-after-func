@@ -2,7 +2,7 @@ name: TimezoneAlarm
 options:
   bundleIdPrefix: com.timezonealarm
   deploymentTarget:
-    iOS: "17.0"
+    iOS: "15.0"
   developmentLanguage: en
   xcodeVersion: "15.0"
 packages: {}
@@ -10,7 +10,7 @@ targets:
   TimezoneAlarm:
     type: application
     platform: iOS
-    deploymentTarget: "17.0"
+    deploymentTarget: "15.0"
     sources:
       - path: TimezoneAlarm
     settings:
@@ -19,6 +19,13 @@ targets:
         INFOPLIST_FILE: TimezoneAlarm/Info.plist
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: 9Q6XC7XQJN
+      configs:
+        Debug:
+          CODE_SIGN_IDENTITY: "Apple Development"
+        Release:
+          CODE_SIGN_IDENTITY: "Apple Distribution"
     info:
       path: TimezoneAlarm/Info.plist
       properties:
@@ -28,7 +35,7 @@ targets:
   TimezoneAlarmTests:
     type: bundle.unit-test
     platform: iOS
-    deploymentTarget: "17.0"
+    deploymentTarget: "15.0"
     sources:
       - path: TimezoneAlarmTests
     settings:

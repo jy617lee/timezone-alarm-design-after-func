@@ -9,12 +9,12 @@ import SwiftUI
 
 struct AlarmFormView: View {
     @Environment(\.dismiss) private var dismiss
-    @Bindable var viewModel: AlarmViewModel
+    @ObservedObject var viewModel: AlarmViewModel
     
     @State private var alarmName: String = ""
     @State private var selectedHour: Int = 7
     @State private var selectedMinute: Int = 0
-    @State private var selectedCountry: Country?
+    @State private var selectedCity: City?
     @State private var selectedDate: Date?
     @State private var selectedWeekdays: Set<Int> = []
     @State private var datePickerValue: Date = Date()
@@ -36,7 +36,7 @@ struct AlarmFormView: View {
         _alarmName = State(initialValue: "")
         _selectedHour = State(initialValue: 7)
         _selectedMinute = State(initialValue: 0)
-        _selectedCountry = State(initialValue: nil)
+        _selectedCity = State(initialValue: nil)
         _selectedDate = State(initialValue: nil)
         _selectedWeekdays = State(initialValue: [])
         _datePickerValue = State(initialValue: tomorrow)
@@ -58,15 +58,15 @@ struct AlarmFormView: View {
                 _datePickerValue = State(initialValue: date)
             }
             
-            // 국가 찾기
-            if let country = Country.popularCountries.first(where: { $0.timezoneIdentifier == alarm.timezoneIdentifier }) {
-                _selectedCountry = State(initialValue: country)
+            // 도시 찾기
+            if let city = City.popularCities.first(where: { $0.timezoneIdentifier == alarm.timezoneIdentifier }) {
+                _selectedCity = State(initialValue: city)
             }
         } else {
-            // 새 알람 생성 시 기본 국가 로드
-            if let countryId = UserDefaults.standard.string(forKey: "defaultCountryId"),
-               let country = Country.popularCountries.first(where: { $0.id == countryId }) {
-                _selectedCountry = State(initialValue: country)
+            // 새 알람 생성 시 기본 도시 로드
+            if let timezoneId = UserDefaults.standard.string(forKey: "defaultTimezoneId"),
+               let city = City.popularCities.first(where: { $0.timezoneIdentifier == timezoneId }) {
+                _selectedCity = State(initialValue: city)
             }
             // 새 알람 생성 시 날짜 초기값을 내일 날짜로 설정
             _selectedDate = State(initialValue: tomorrow)
@@ -75,12 +75,12 @@ struct AlarmFormView: View {
     
     private var isFormValid: Bool {
         !alarmName.isEmpty && 
-        selectedCountry != nil &&
+        selectedCity != nil &&
         (!selectedWeekdays.isEmpty || selectedDate != nil)
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             ZStack {
                 // 그라데이션 백그라운드
                 LinearGradient(
@@ -100,6 +100,10 @@ struct AlarmFormView: View {
                             TextField(NSLocalizedString("alarm_form.alarm_name", comment: "Alarm name placeholder"), text: $alarmName)
                                 .font(.geist(size: 16, weight: .light))
                                 .foregroundColor(.appTextPrimary)
+                                .textFieldStyle(.plain)
+                                .autocapitalization(.words)
+                                .autocorrectionDisabled()
+                                .submitLabel(.done)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
             
@@ -116,35 +120,42 @@ struct AlarmFormView: View {
                                 tempTime = Calendar.current.date(from: components) ?? Date()
                                 showTimePicker = true
                             }) {
-                                Text(String(format: "%d:%02d %@", 
-                                              selectedHour > 12 ? selectedHour - 12 : (selectedHour == 0 ? 12 : selectedHour),
-                                              selectedMinute,
-                                              selectedHour >= 12 ? "PM" : "AM"))
-                                    .font(.geist(size: 16, weight: .light))
-                                    .foregroundColor(.appTextPrimary)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                HStack {
+                                    Text(String(format: "%d:%02d %@", 
+                                                  selectedHour > 12 ? selectedHour - 12 : (selectedHour == 0 ? 12 : selectedHour),
+                                                  selectedMinute,
+                                                  selectedHour >= 12 ? "PM" : "AM"))
+                                        .font(.geist(size: 16, weight: .light))
+                                        .foregroundColor(.appTextPrimary)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.geist(size: 14, weight: .medium))
+                                        .foregroundColor(.appTextSecondary)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        // 국가 선택 (필수)
+                        // 도시 선택 (필수)
                         FormSection(
-                            title: NSLocalizedString("alarm_form.country", comment: "Country header"),
+                            title: NSLocalizedString("alarm_form.city", comment: "City header"),
                             isRequired: true
                         ) {
                             NavigationLink {
-                                CountrySelectionView(selectedCountry: $selectedCountry)
+                                CitySelectionView(selectedCity: $selectedCity)
                             } label: {
                                 HStack {
-                                    if let country = selectedCountry {
-                                        Text(country.flag)
+                                    if let city = selectedCity {
+                                        Text(city.countryFlag)
                                             .font(.geist(size: 24, weight: .regular))
-                                        Text(country.name)
+                                        Text(city.name)
                                             .font(.geist(size: 16, weight: .light))
                                             .foregroundColor(.appTextPrimary)
                                     } else {
-                                        Text(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
+                                        Text(NSLocalizedString("alarm_form.select_city", comment: "Select city"))
                                             .font(.geist(size: 16, weight: .light))
                                             .foregroundColor(.appTextSecondary)
                                     }
@@ -161,31 +172,28 @@ struct AlarmFormView: View {
                         FormSection(
                             title: NSLocalizedString("alarm_form.date", comment: "Date header")
                         ) {
-                            HStack {
-                                if let date = selectedDate {
-                                    Button(action: {
-                                        showDatePicker = true
-                                    }) {
+                            Button(action: {
+                                showDatePicker = true
+                            }) {
+                                HStack {
+                                    if let date = selectedDate {
                                         Text(formatDate(date))
                                             .font(.geist(size: 16, weight: .light))
                                             .foregroundColor(.appTextPrimary)
-                                    }
-                                    .buttonStyle(.plain)
-                                } else {
-                                    Button(action: {
-                                        showDatePicker = true
-                                    }) {
+                                    } else {
                                         Text(NSLocalizedString("alarm_form.date_not_selected", comment: "Not selected"))
                                             .font(.geist(size: 16, weight: .light))
                                             .foregroundColor(.appTextSecondary)
                                     }
-                                    .buttonStyle(.plain)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.geist(size: 14, weight: .medium))
+                                        .foregroundColor(.appTextSecondary)
                                 }
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(.geist(size: 14, weight: .medium))
-                                    .foregroundColor(.appTextSecondary)
+                                .frame(maxWidth: .infinity)
+                                .contentShape(Rectangle())
                             }
+                            .buttonStyle(.plain)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
@@ -207,20 +215,19 @@ struct AlarmFormView: View {
                     .padding(.bottom, 100)
                     .frame(maxWidth: .infinity)
                 }
-                .scrollContentBackground(.hidden)
             }
             .navigationTitle(editingAlarm == nil ? NSLocalizedString("alarm_form.title.new", comment: "New alarm") : NSLocalizedString("alarm_form.title.edit", comment: "Edit alarm"))
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
-            .toolbarBackground(Color.appHeaderBackground, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.light, for: .navigationBar)
             .onAppear {
-                // NavigationBar 버튼 배경 완전히 제거
+                // NavigationBar 헤더 백그라운드 설정 (홈화면과 동일)
                 let appearance = UINavigationBarAppearance()
-                appearance.configureWithTransparentBackground()
-                appearance.backgroundColor = UIColor.clear
-                appearance.shadowColor = .clear
+                appearance.configureWithDefaultBackground()
+                // appHeaderBackground: 그라데이션 시작색 #FFF6F6 80% opacity
+                let headerColor = UIColor(red: 255/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1.0)
+                appearance.backgroundColor = headerColor
+                appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+                appearance.shadowColor = UIColor.clear
                 
                 // 버튼 배경 완전히 제거
                 let buttonAppearance = UIBarButtonItemAppearance()
@@ -283,6 +290,8 @@ struct AlarmFormView: View {
                         Image(systemName: "chevron.left")
                             .renderingMode(.template)
                             .foregroundColor(.brown)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                     .tint(.brown)
@@ -306,7 +315,7 @@ struct AlarmFormView: View {
                 }
             }
             .sheet(isPresented: $showDatePicker) {
-                NavigationStack {
+                NavigationView {
                     ZStack {
                         // 그라데이션 백그라운드
                         LinearGradient(
@@ -320,12 +329,49 @@ struct AlarmFormView: View {
                             DatePicker(NSLocalizedString("alarm_form.date", comment: "Date"), selection: $datePickerValue, displayedComponents: .date)
                                 .datePickerStyle(.wheel)
                                 .labelsHidden()
+                                .tint(.appTextPrimary)
+                                .foregroundColor(.appTextPrimary)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .contentShape(Rectangle())
                             
                             Spacer()
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .contentShape(Rectangle())
+                        .onAppear {
+                            // DatePicker 휠 텍스트 색상 변경 (iOS 15 호환)
+                            let brownColor = UIColor(red: 107/255.0, green: 68/255.0, blue: 35/255.0, alpha: 1.0)
+                            // 여러 방법으로 텍스트 색상 변경 시도
+                            UILabel.appearance(whenContainedInInstancesOf: [UIDatePicker.self]).textColor = brownColor
+                            UILabel.appearance(whenContainedInInstancesOf: [UIPickerView.self]).textColor = brownColor
                         }
                     }
                     .navigationTitle(NSLocalizedString("alarm_form.select_date", comment: "Select date"))
                     .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarBackButtonHidden(true)
+                    .onAppear {
+                        // NavigationBar 헤더 백그라운드 설정 (홈화면과 동일)
+                        let appearance = UINavigationBarAppearance()
+                        appearance.configureWithDefaultBackground()
+                        // appHeaderBackground: 그라데이션 시작색 #FFF6F6 80% opacity
+                        let headerColor = UIColor(red: 255/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1.0)
+                        appearance.backgroundColor = headerColor
+                        appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+                        appearance.shadowColor = UIColor.clear
+                        
+                        // 버튼 배경 완전히 제거
+                        let buttonAppearance = UIBarButtonItemAppearance()
+                        buttonAppearance.normal.backgroundImage = UIImage()
+                        buttonAppearance.highlighted.backgroundImage = UIImage()
+                        buttonAppearance.disabled.backgroundImage = UIImage()
+                        appearance.buttonAppearance = buttonAppearance
+                        appearance.doneButtonAppearance = buttonAppearance
+                        appearance.backButtonAppearance = buttonAppearance
+                        
+                        UINavigationBar.appearance().standardAppearance = appearance
+                        UINavigationBar.appearance().compactAppearance = appearance
+                        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+                    }
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             Text(NSLocalizedString("alarm_form.select_date", comment: "Select date"))
@@ -333,14 +379,21 @@ struct AlarmFormView: View {
                                 .foregroundColor(.appTextPrimary)
                         }
                         ToolbarItem(placement: .navigationBarLeading) {
-                            Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
+                            Button(action: {
                                 showDatePicker = false
+                            }) {
+                                Image(systemName: "chevron.left")
+                                    .renderingMode(.template)
+                                    .foregroundColor(.brown)
+                                    .frame(width: 44, height: 44)
+                                    .contentShape(Rectangle())
                             }
-                            .font(.geist(size: 16, weight: .regular))
-                            .foregroundColor(.appTextPrimary)
+                            .buttonStyle(.plain)
+                            .tint(.brown)
+                            .accentColor(.brown)
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(NSLocalizedString("button.done", comment: "Done button")) {
+                            Button(action: {
                                 // 선택한 날짜와 시간을 조합하여 알람 시간 생성
                                 let calendar = Calendar.current
                                 
@@ -368,17 +421,20 @@ struct AlarmFormView: View {
                                 selectedDate = datePickerValue
                                 selectedWeekdays = []
                                 showDatePicker = false
+                            }) {
+                                Text(NSLocalizedString("button.done", comment: "Done button"))
+                                    .font(.geist(size: 16, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                    .background(Color.appPrimary)
+                                    .cornerRadius(20)
                             }
-                            .font(.geist(size: 16, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(Color.appPrimary)
-                            .cornerRadius(20)
+                            .buttonStyle(.plain)
+                            .background(Color.clear)
                         }
                     }
                 }
-                .presentationDetents([.medium])
             }
             .overlay(
                 // 토스트 메시지
@@ -400,12 +456,49 @@ struct AlarmFormView: View {
                             DatePicker(NSLocalizedString("alarm_form.time", comment: "Time"), selection: $tempTime, displayedComponents: .hourAndMinute)
                                 .datePickerStyle(.wheel)
                                 .labelsHidden()
+                                .tint(.appTextPrimary)
+                                .foregroundColor(.appTextPrimary)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .contentShape(Rectangle())
                             
                             Spacer()
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .contentShape(Rectangle())
+                        .onAppear {
+                            // DatePicker 휠 텍스트 색상 변경 (iOS 15 호환)
+                            let brownColor = UIColor(red: 107/255.0, green: 68/255.0, blue: 35/255.0, alpha: 1.0)
+                            // 여러 방법으로 텍스트 색상 변경 시도
+                            UILabel.appearance(whenContainedInInstancesOf: [UIDatePicker.self]).textColor = brownColor
+                            UILabel.appearance(whenContainedInInstancesOf: [UIPickerView.self]).textColor = brownColor
                         }
                     }
                     .navigationTitle(NSLocalizedString("alarm_form.select_time", comment: "Select time"))
                     .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarBackButtonHidden(true)
+                    .onAppear {
+                        // NavigationBar 헤더 백그라운드 설정 (홈화면과 동일)
+                        let appearance = UINavigationBarAppearance()
+                        appearance.configureWithDefaultBackground()
+                        // appHeaderBackground: 그라데이션 시작색 #FFF6F6 80% opacity
+                        let headerColor = UIColor(red: 255/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1.0)
+                        appearance.backgroundColor = headerColor
+                        appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+                        appearance.shadowColor = UIColor.clear
+                        
+                        // 버튼 배경 완전히 제거
+                        let buttonAppearance = UIBarButtonItemAppearance()
+                        buttonAppearance.normal.backgroundImage = UIImage()
+                        buttonAppearance.highlighted.backgroundImage = UIImage()
+                        buttonAppearance.disabled.backgroundImage = UIImage()
+                        appearance.buttonAppearance = buttonAppearance
+                        appearance.doneButtonAppearance = buttonAppearance
+                        appearance.backButtonAppearance = buttonAppearance
+                        
+                        UINavigationBar.appearance().standardAppearance = appearance
+                        UINavigationBar.appearance().compactAppearance = appearance
+                        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+                    }
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             Text(NSLocalizedString("alarm_form.select_time", comment: "Select time"))
@@ -413,14 +506,21 @@ struct AlarmFormView: View {
                                 .foregroundColor(.appTextPrimary)
                         }
                         ToolbarItem(placement: .navigationBarLeading) {
-                            Button(NSLocalizedString("button.cancel", comment: "Cancel button")) {
+                            Button(action: {
                                 showTimePicker = false
+                            }) {
+                                Image(systemName: "chevron.left")
+                                    .renderingMode(.template)
+                                    .foregroundColor(.brown)
+                                    .frame(width: 44, height: 44)
+                                    .contentShape(Rectangle())
                             }
-                            .font(.geist(size: 16, weight: .regular))
-                            .foregroundColor(.appTextPrimary)
+                            .buttonStyle(.plain)
+                            .tint(.brown)
+                            .accentColor(.brown)
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(NSLocalizedString("button.done", comment: "Done button")) {
+                            Button(action: {
                                 // 선택한 날짜와 시간을 조합하여 알람 시간 생성
                                 let calendar = Calendar.current
                                 let selectedDateForValidation = selectedDate ?? Date() // 날짜가 없으면 오늘
@@ -451,13 +551,17 @@ struct AlarmFormView: View {
                                 selectedHour = components.hour ?? 7
                                 selectedMinute = components.minute ?? 0
                                 showTimePicker = false
+                            }) {
+                                Text(NSLocalizedString("button.done", comment: "Done button"))
+                                    .font(.geist(size: 16, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                    .background(Color.appPrimary)
+                                    .cornerRadius(20)
                             }
-                            .font(.geist(size: 16, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background(Color.appPrimary)
-                            .cornerRadius(20)
+                            .buttonStyle(.plain)
+                            .background(Color.clear)
                         }
                     }
                 }
@@ -466,16 +570,17 @@ struct AlarmFormView: View {
     }
     
     private func saveAlarm() {
-        guard let country = selectedCountry else { return }
+        guard let city = selectedCity else { return }
         
         let alarm = Alarm(
             id: editingAlarm?.id ?? UUID(),
             name: alarmName,
             hour: selectedHour,
             minute: selectedMinute,
-            timezoneIdentifier: country.timezoneIdentifier,
-            countryName: country.name,
-            countryFlag: country.flag,
+            timezoneIdentifier: city.timezoneIdentifier,
+            cityName: city.name,
+            countryName: city.countryName,
+            countryFlag: city.countryFlag,
             selectedWeekdays: selectedWeekdays,
             selectedDate: selectedDate,
             isEnabled: editingAlarm?.isEnabled ?? true, // 수정 시 기존 상태 유지, 새 알람은 기본값 true
@@ -602,17 +707,18 @@ struct WeekdaySelectionView: View {
 }
 
 // 국가 선택 뷰
-struct CountrySelectionView: View {
-    @Binding var selectedCountry: Country?
+struct CitySelectionView: View {
+    @Binding var selectedCity: City?
     @Environment(\.dismiss) private var dismiss
     @State private var searchText: String = ""
     
-    private var filteredCountries: [Country] {
+    private var filteredCities: [City] {
         if searchText.isEmpty {
-            return Country.popularCountries
+            return City.popularCities
         } else {
-            return Country.popularCountries.filter { country in
-                country.name.localizedCaseInsensitiveContains(searchText)
+            return City.popularCities.filter { city in
+                city.name.localizedCaseInsensitiveContains(searchText) ||
+                city.countryName.localizedCaseInsensitiveContains(searchText)
             }
         }
     }
@@ -629,19 +735,24 @@ struct CountrySelectionView: View {
             
             ScrollView {
                 VStack(spacing: 12) {
-                    ForEach(filteredCountries) { country in
+                    ForEach(filteredCities) { city in
                         Button(action: {
-                            selectedCountry = country
+                            selectedCity = city
                             dismiss()
                         }) {
                             HStack {
-                                Text(country.flag)
+                                Text(city.countryFlag)
                                     .font(.geist(size: 22, weight: .regular))
-                                Text(country.name)
-                                    .font(.geist(size: 16, weight: .regular))
-                                    .foregroundColor(.appTextPrimary)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(city.name)
+                                        .font(.geist(size: 16, weight: .regular))
+                                        .foregroundColor(.appTextPrimary)
+                                    Text(city.countryName)
+                                        .font(.geist(size: 13, weight: .regular))
+                                        .foregroundColor(.appTextSecondary)
+                                }
                                 Spacer()
-                                if selectedCountry?.id == country.id {
+                                if selectedCity?.id == city.id {
                                     Image(systemName: "checkmark")
                                         .font(.geist(size: 16, weight: .semibold))
                                         .foregroundColor(.appPrimary)
@@ -664,14 +775,52 @@ struct CountrySelectionView: View {
                 .padding(.bottom, 20)
             }
         }
-        .searchable(text: $searchText, prompt: NSLocalizedString("alarm_form.search_countries", comment: "Search countries"))
-        .navigationTitle(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
+        .searchable(text: $searchText, prompt: NSLocalizedString("alarm_form.search_cities", comment: "Search cities"))
+        .navigationTitle(NSLocalizedString("alarm_form.select_city", comment: "Select city"))
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .onAppear {
+            // NavigationBar 헤더 백그라운드 설정 (홈화면과 동일)
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithDefaultBackground()
+            // appHeaderBackground: 그라데이션 시작색 #FFF6F6 80% opacity
+            let headerColor = UIColor(red: 255/255.0, green: 246/255.0, blue: 246/255.0, alpha: 1.0)
+            appearance.backgroundColor = headerColor
+            appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+            appearance.shadowColor = UIColor.clear
+            
+            // 버튼 배경 완전히 제거
+            let buttonAppearance = UIBarButtonItemAppearance()
+            buttonAppearance.normal.backgroundImage = UIImage()
+            buttonAppearance.highlighted.backgroundImage = UIImage()
+            buttonAppearance.disabled.backgroundImage = UIImage()
+            appearance.buttonAppearance = buttonAppearance
+            appearance.doneButtonAppearance = buttonAppearance
+            appearance.backButtonAppearance = buttonAppearance
+            
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().compactAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        }
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text(NSLocalizedString("alarm_form.select_country", comment: "Select country"))
+                Text(NSLocalizedString("alarm_form.select_city", comment: "Select city"))
                     .font(.geist(size: 18, weight: .semibold))
                     .foregroundColor(.appTextPrimary)
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .renderingMode(.template)
+                        .foregroundColor(.brown)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .tint(.brown)
+                .accentColor(.brown)
             }
         }
     }
@@ -758,6 +907,7 @@ struct ToastView: View {
         }
     }
 }
+
 
 #Preview {
     AlarmFormView(viewModel: AlarmViewModel())
