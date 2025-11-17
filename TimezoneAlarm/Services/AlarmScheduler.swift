@@ -226,10 +226,17 @@ final class AlarmScheduler: @unchecked Sendable {
         calendar.timeZone = alarmTimezone
         
         // 알람 시간대에서 현재 날짜/시간 가져오기
-        let alarmTimezoneNow = date // date는 UTC이지만, 알람 시간대에서 해석
-        var alarmComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: alarmTimezoneNow)
+        // date는 UTC이지만, calendar.timeZone이 alarmTimezone이므로 알람 시간대에서 해석됨
+        let alarmTimezoneComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
         
-        // 알람 시간 설정
+        // 알람 시간대의 현재 시간을 UTC Date로 변환 (비교용)
+        guard let alarmTimezoneNow = calendar.date(from: alarmTimezoneComponents) else {
+            debugLog("⚠️ findNextAlarmDate: 알람 시간대 현재 시간 생성 실패")
+            return date
+        }
+        
+        // 알람 시간 설정 (알람 시간대의 오늘 날짜에 알람 시간)
+        var alarmComponents = alarmTimezoneComponents
         alarmComponents.hour = alarm.hour
         alarmComponents.minute = alarm.minute
         alarmComponents.second = 0
@@ -248,9 +255,8 @@ final class AlarmScheduler: @unchecked Sendable {
         // 알람 시간이 이미 지났다면 다음 날로
         if todayAlarmTime <= alarmTimezoneNow {
             // 다음 날의 알람 시간 계산
-            var nextDayComponents = alarmComponents
             if let nextDay = calendar.date(byAdding: .day, value: 1, to: todayAlarmTime) {
-                nextDayComponents = calendar.dateComponents([.year, .month, .day], from: nextDay)
+                var nextDayComponents = calendar.dateComponents([.year, .month, .day], from: nextDay)
                 nextDayComponents.hour = alarm.hour
                 nextDayComponents.minute = alarm.minute
                 nextDayComponents.second = 0
