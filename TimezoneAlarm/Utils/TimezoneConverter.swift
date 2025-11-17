@@ -82,30 +82,5 @@ enum TimezoneConverter {
         // 현재 시간은 이미 UTC 기준이므로 직접 비교
         return alarmTimeUTC <= now
     }
-    
-    /// 알람 시간대의 시간을 로컬 시간대 Date로 변환
-    /// - Parameters:
-    ///   - hour: 알람 시간대의 시간 (0-23)
-    ///   - minute: 알람 시간대의 분 (0-59)
-    ///   - alarmTimezone: 알람이 설정된 시간대
-    ///   - date: 기준 날짜 (알람 시간을 만들기 위한 날짜, 알람 시간대 기준)
-    /// - Returns: 로컬 시간대 Date (nil이면 변환 실패)
-    static func convertToLocalDate(
-        hour: Int,
-        minute: Int,
-        alarmTimezone: TimeZone,
-        date: Date
-    ) -> Date? {
-        guard let localComponents = convertToLocalComponents(
-            hour: hour,
-            minute: minute,
-            alarmTimezone: alarmTimezone,
-            date: date
-        ) else {
-            return nil
-        }
-        
-        return Calendar.current.date(from: localComponents)
-    }
 }
 
