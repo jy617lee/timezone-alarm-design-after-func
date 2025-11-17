@@ -27,23 +27,14 @@ final class TimezoneConversionTests: XCTestCase {
         let calendar = Calendar.current
         let now = Date()
         
-        // 현재 시간을 기준으로 다음 목요일 찾기
-        var targetDate = now
-        let todayComponents = calendar.dateComponents(in: seoulTimezone, from: now)
-        if todayComponents.weekday == 5 {
-            // 오늘이 목요일이면 오늘 사용
-            targetDate = now
-        } else {
-            // 다음 주 목요일로
-            targetDate = calendar.date(byAdding: .weekOfYear, value: 1, to: now) ?? now
-        }
-        
-        // 서울 시간대에서 목요일 9시를 UTC로 변환
-        var seoulComponents = calendar.dateComponents(in: seoulTimezone, from: targetDate)
+        // 고정된 날짜 사용: 2024년 11월 21일 (목요일)
+        var seoulComponents = DateComponents()
+        seoulComponents.year = 2024
+        seoulComponents.month = 11
+        seoulComponents.day = 21
         seoulComponents.hour = 9
         seoulComponents.minute = 0
         seoulComponents.second = 0
-        seoulComponents.weekday = 5 // 목요일
         seoulComponents.timeZone = seoulTimezone
         
         guard let seoulTimeUTC = calendar.date(from: seoulComponents) else {
