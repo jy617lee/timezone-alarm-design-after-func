@@ -19,12 +19,15 @@
 "alarm_form.alarm_name" = "Nama Alarm";
 "alarm_form.time" = "Waktu";
 "alarm_form.select_time" = "Pilih Waktu";
+"alarm_form.city" = "Kota";
+"alarm_form.select_city" = "Pilih Kota";
 "alarm_form.country" = "Negara";
 "alarm_form.select_country" = "Pilih Negara";
 "alarm_form.date" = "Tanggal";
 "alarm_form.date_not_selected" = "Tidak dipilih";
 "alarm_form.select_date" = "Pilih Tanggal";
 "alarm_form.repeat" = "Ulangi";
+"alarm_form.search_cities" = "Cari kota";
 "alarm_form.search_countries" = "Cari negara";
 
 /* Weekdays */
@@ -41,5 +44,14 @@
 
 /* SettingsView */
 "settings.title" = "Pengaturan";
+"settings.default_city" = "Kota Default";
+"settings.select_city" = "Pilih Kota";
 "settings.default_country" = "Negara Default";
 "settings.select_country" = "Pilih Negara";
+
+/* InitialSetupView */
+"initial_setup.description" = "Atur alarm untuk berbagai kota.\nMereka akan selalu berbunyi pada waktu yang tepat.";
+"initial_setup.select_primary_city" = "Pilih kota utama Anda";
+"initial_setup.continue" = "Lanjutkan";
+"initial_setup.change_later" = "Anda dapat mengubahnya kapan saja di Pengaturan.";
+"initial_setup.skip" = "Lewati";

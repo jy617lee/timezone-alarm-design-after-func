@@ -45,7 +45,6 @@
 "settings.select_city" = "Select City";
 
 /* InitialSetupView */
-"initial_setup.title" = "Stay in sync with\nevery city.";
 "initial_setup.description" = "Set alarms for different cities.\nThey'll always ring at the right time.";
 "initial_setup.select_primary_city" = "Select your primary city";
 "initial_setup.continue" = "Continue";

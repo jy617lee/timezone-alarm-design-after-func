@@ -19,12 +19,15 @@
 "alarm_form.alarm_name" = "アラーム名";
 "alarm_form.time" = "時間";
 "alarm_form.select_time" = "時間を選択";
+"alarm_form.city" = "都市";
+"alarm_form.select_city" = "都市を選択";
 "alarm_form.country" = "国";
 "alarm_form.select_country" = "国を選択";
 "alarm_form.date" = "日付";
 "alarm_form.date_not_selected" = "選択なし";
 "alarm_form.select_date" = "日付を選択";
 "alarm_form.repeat" = "繰り返し";
+"alarm_form.search_cities" = "都市を検索";
 "alarm_form.search_countries" = "国を検索";
 
 /* Weekdays */
@@ -41,5 +44,14 @@
 
 /* SettingsView */
 "settings.title" = "設定";
+"settings.default_city" = "デフォルトの都市";
+"settings.select_city" = "都市を選択";
 "settings.default_country" = "デフォルトの国";
 "settings.select_country" = "国を選択";
+
+/* InitialSetupView */
+"initial_setup.description" = "さまざまな都市のアラームを設定します。\n常に正確な時間に鳴ります。";
+"initial_setup.select_primary_city" = "主に使用する都市を選択してください";
+"initial_setup.continue" = "続ける";
+"initial_setup.change_later" = "設定でいつでも変更できます。";
+"initial_setup.skip" = "スキップ";
