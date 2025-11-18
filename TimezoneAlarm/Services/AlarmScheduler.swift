@@ -241,16 +241,27 @@ final class AlarmScheduler: @unchecked Sendable {
         // 알람 시간이 이미 지났다면 다음 날로
         if todayAlarmTime <= alarmTimezoneNow {
             // 다음 날의 알람 시간 계산
-            if let nextDay = calendar.date(byAdding: .day, value: 1, to: todayAlarmTime) {
-                if let nextAlarmTime = TimezoneConverter.convertToUTCDate(
-                    alarmHour: alarm.hour,
-                    alarmMinute: alarm.minute,
-                    alarmTimezone: alarmTimezone,
-                    alarmDate: nextDay
-                ) {
-                    debugLog("   - 다음 날로 이동: \(nextAlarmTime)")
-                    return nextAlarmTime
-                }
+            // todayAlarmTime은 UTC Date이므로, UTC에 직접 24시간을 더함
+            let nextDayUTC = todayAlarmTime.addingTimeInterval(24 * 60 * 60)
+            
+            // 다음 날을 알람 시간대 기준으로 해석
+            guard let nextDayInAlarmTimezone = TimezoneConverter.interpretDateInAlarmTimezone(
+                date: nextDayUTC,
+                alarmTimezone: alarmTimezone
+            ) else {
+                debugLog("   - 다음 날 해석 실패, 오늘 사용")
+                return todayAlarmTime
+            }
+            
+            // 다음 날 알람 시간 생성
+            if let nextAlarmTime = TimezoneConverter.convertToUTCDate(
+                alarmHour: alarm.hour,
+                alarmMinute: alarm.minute,
+                alarmTimezone: alarmTimezone,
+                alarmDate: nextDayInAlarmTimezone
+            ) {
+                debugLog("   - 다음 날로 이동: \(nextAlarmTime)")
+                return nextAlarmTime
             }
             debugLog("   - 다음 날 계산 실패, 오늘 사용")
             return todayAlarmTime
