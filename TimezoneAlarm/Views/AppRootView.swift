@@ -47,9 +47,20 @@ struct AppRootView: View {
             }
         }
         .onChange(of: scenePhase) { newPhase in
-            // 앱 상태 변경 시 오디오는 건드리지 않음
-            // 오디오 세션은 앱 시작 시와 재생 시작 시에만 설정됨
-            // 이미 재생 중이면 그대로 유지
+            // 백그라운드/포그라운드 전환 시 오디오 세션 재설정
+            // 백그라운드에서 소리가 작아지는 문제 해결
+            if newPhase == .background || newPhase == .active {
+                // 오디오가 재생 중이면 오디오 세션 재설정
+                if NotificationDelegate.shared.isAudioPlaying {
+                    Task { @MainActor in
+                        // 약간의 지연을 두어 전환이 완료된 후 재설정
+                        try? await Task.sleep(nanoseconds: 100_000_000) // 0.1초
+                        NotificationDelegate.shared.ensureMaximumVolume()
+                        // 오디오 세션 재설정을 위해 setupAudioSession 호출
+                        // (내부적으로 호출되도록 ensureMaximumVolume에서 처리하거나 별도 메서드 필요)
+                    }
+                }
+            }
         }
     }
     
