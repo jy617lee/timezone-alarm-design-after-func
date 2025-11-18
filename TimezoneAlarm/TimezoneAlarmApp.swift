@@ -318,7 +318,8 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             // 재생 중이 아니지만 플레이어가 있으면 (멈춰있을 수 있음) 다시 재생 시작
             if let player = backgroundAudioPlayer, !player.isPlaying {
                 debugLog("🔊 오디오 플레이어가 있지만 재생 중이 아닙니다. 재생 재개")
-                // 오디오 세션은 건드리지 않고 바로 재생
+                // 오디오 세션 활성화 확인
+                setupAudioSession()
                 player.volume = 1.0
                 player.play()
                 debugLog("🔊 오디오 재생 재개 성공")
@@ -339,12 +340,14 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         }
         
         do {
+            // 오디오 세션 설정 (백그라운드 재생 활성화)
+            setupAudioSession()
+            
             // 기존 플레이어 정리
             backgroundAudioPlayer?.stop()
             backgroundAudioPlayer = nil
             
-            // 푸시 알림의 사운드는 iOS가 자동으로 처리하므로 오디오 세션을 건드리지 않음
-            // 오디오 플레이어 생성 및 재생 (푸시 알림이 이미 오디오 세션을 활성화했을 것)
+            // 오디오 플레이어 생성 및 재생
             backgroundAudioPlayer = try AVAudioPlayer(contentsOf: soundURL)
             backgroundAudioPlayer?.numberOfLoops = -1 // 무한 루프
             backgroundAudioPlayer?.volume = 1.0 // 최대 볼륨 (0.0 ~ 1.0)
@@ -385,6 +388,18 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
             // 에러 발생 시 한 번만 재시도 (무한 루프 방지)
             // 재시도는 AlarmAlertView에서 처리하도록 함
             debugLog("⚠️ 오디오 재생 실패 - AlarmAlertView에서 재시도 처리 필요")
+        }
+    }
+    
+    // 오디오 세션 설정 (백그라운드 재생 활성화)
+    private func setupAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playback, mode: .default, options: [])
+            try audioSession.setActive(true)
+            debugLog("✅ 오디오 세션 활성화 완료 (.playback 카테고리)")
+        } catch {
+            debugLog("❌ 오디오 세션 설정 실패: \(error.localizedDescription)")
         }
     }
     
