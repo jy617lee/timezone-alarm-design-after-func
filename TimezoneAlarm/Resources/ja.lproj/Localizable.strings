@@ -10,8 +10,8 @@
 
 /* ContentView */
 "content.empty.title" = "No Alarms";
-"content.empty.description" = "+ ボタンをタップして最初のアラームを追加";
-"content.empty.add_button" = "新しいアラームを追加";
+"content.empty.description" = "＋ボタンをタップして、最初のアラームを設定しましょう";
+"content.empty.add_button" = "新しいアラームを設定";
 
 /* AlarmFormView */
 "alarm_form.title.new" = "新しいアラーム";
