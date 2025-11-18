@@ -23,19 +23,19 @@ struct ContentView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                // 그라데이션 백그라운드
-                LinearGradient(
-                    colors: [Color.appBackgroundTop, Color.appBackgroundBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .ignoresSafeArea()
-                
-                VStack(spacing: 0) {
-                    // 커스텀 헤더 (배경색, 블러, 그림자 적용)
-                    HStack {
+            GeometryReader { geometry in
+                ZStack {
+                    // 그라데이션 백그라운드
+                    LinearGradient(
+                        colors: [Color.appBackgroundTop, Color.appBackgroundBottom],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .ignoresSafeArea()
+                    
+                    VStack(spacing: 0) {
+                        // 커스텀 헤더 (배경색, 블러, 그림자 적용)
+                        HStack {
                             Text("Syncly")
                                 .font(.geist(size: 24, weight: .bold))
                                 .foregroundColor(.appTextPrimary)
@@ -212,83 +212,83 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
-            }
-            .onAppear {
-                // 앱이 포그라운드로 올 때 최근 알림 확인 (백그라운드에서 알림이 왔을 때 처리)
-                // 약간의 지연을 두어 ContentView가 완전히 준비된 후에 확인
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    checkRecentNotifications()
+        }
+        .onAppear {
+            // 앱이 포그라운드로 올 때 최근 알림 확인 (백그라운드에서 알림이 왔을 때 처리)
+            // 약간의 지연을 두어 ContentView가 완전히 준비된 후에 확인
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                checkRecentNotifications()
                     // activeAlarm이 이미 설정되어 있으면 실행 화면 표시 (onChange가 트리거되지 않을 수 있음)
                     if notificationDelegate.activeAlarm != nil {
                         debugLog("🔔 ContentView onAppear (지연 후) - activeAlarm이 설정되어 있음, 실행 화면 표시")
                         showAlarmAlert = true
                     }
-                }
             }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                // 앱이 백그라운드에서 포그라운드로 올 때 최근 알림 확인
-                // 약간의 지연을 두어 ContentView가 완전히 준비된 후에 확인
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    checkRecentNotifications()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            // 앱이 백그라운드에서 포그라운드로 올 때 최근 알림 확인
+            // 약간의 지연을 두어 ContentView가 완전히 준비된 후에 확인
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                checkRecentNotifications()
                     // activeAlarm이 이미 설정되어 있으면 실행 화면 표시 (onChange가 트리거되지 않을 수 있음)
                     if notificationDelegate.activeAlarm != nil {
                         debugLog("🔔 백그라운드에서 포그라운드로 전환 (지연 후) - activeAlarm이 설정되어 있음, 실행 화면 표시")
                         showAlarmAlert = true
                     }
-                }
             }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                // 앱이 활성화될 때도 최근 알림 확인
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    checkRecentNotifications()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            // 앱이 활성화될 때도 최근 알림 확인
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                checkRecentNotifications()
                     // activeAlarm이 이미 설정되어 있으면 실행 화면 표시 (onChange가 트리거되지 않을 수 있음)
                     if notificationDelegate.activeAlarm != nil {
                         debugLog("🔔 앱 활성화 (지연 후) - activeAlarm이 설정되어 있음, 실행 화면 표시")
                         showAlarmAlert = true
                     }
-                }
             }
+        }
             .onChange(of: viewModel.activeAlarm) { newValue in
                 debugLog("🔄 viewModel.activeAlarm 변경: \(newValue?.name ?? "nil")")
-                if newValue != nil {
-                    debugLog("🔔 알람 알림 화면 표시: \(newValue?.name ?? "Unknown")")
-                    showAlarmAlert = true
-                }
+            if newValue != nil {
+                debugLog("🔔 알람 알림 화면 표시: \(newValue?.name ?? "Unknown")")
+                showAlarmAlert = true
             }
+        }
             .onChange(of: notificationDelegate.activeAlarm) { newValue in
                 debugLog("🔄 notificationDelegate.activeAlarm 변경: \(newValue?.name ?? "nil")")
-                if newValue != nil {
-                    debugLog("🔔 알림에서 알람 실행: \(newValue?.name ?? "Unknown")")
-                    // 커스텀 알림 뷰 표시 (체인 알림이 계속 도착하면서 계속 표시됨)
-                    notificationAlarm = newValue
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                        showCustomNotification = true
-                    }
-                    showAlarmAlert = true
-                } else {
-                    // activeAlarm이 nil이 되면 커스텀 알림 뷰 숨김
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                        showCustomNotification = false
-                    }
-                    notificationAlarm = nil
+            if newValue != nil {
+                debugLog("🔔 알림에서 알람 실행: \(newValue?.name ?? "Unknown")")
+                // 커스텀 알림 뷰 표시 (체인 알림이 계속 도착하면서 계속 표시됨)
+                notificationAlarm = newValue
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    showCustomNotification = true
+                }
+                showAlarmAlert = true
+            } else {
+                // activeAlarm이 nil이 되면 커스텀 알림 뷰 숨김
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    showCustomNotification = false
+                }
+                notificationAlarm = nil
+            }
+        }
+        .overlay(alignment: .top) {
+            // 커스텀 알림 뷰 (분홍색 배경, Geist 폰트)
+            if showCustomNotification, let alarm = notificationAlarm {
+                CustomNotificationView(alarm: alarm)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .fullScreenCover(isPresented: $showAlarmAlert) {
+            if let alarm = viewModel.activeAlarm ?? notificationDelegate.activeAlarm {
+                AlarmAlertView(alarm: alarm) {
+                    viewModel.activeAlarm = nil
+                    notificationDelegate.activeAlarm = nil
+                    showAlarmAlert = false
                 }
             }
-            .overlay(alignment: .top) {
-                // 커스텀 알림 뷰 (분홍색 배경, Geist 폰트)
-                if showCustomNotification, let alarm = notificationAlarm {
-                    CustomNotificationView(alarm: alarm)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                }
-            }
-            .fullScreenCover(isPresented: $showAlarmAlert) {
-                if let alarm = viewModel.activeAlarm ?? notificationDelegate.activeAlarm {
-                    AlarmAlertView(alarm: alarm) {
-                        viewModel.activeAlarm = nil
-                        notificationDelegate.activeAlarm = nil
-                        showAlarmAlert = false
-                    }
-                }
-            }
+        }
     }
     
     // 최근 알림 확인 (백그라운드에서 알림이 왔을 때 처리)

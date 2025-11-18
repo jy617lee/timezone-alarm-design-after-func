@@ -52,11 +52,11 @@ struct AlarmAlertView: View {
                         .font(.geist(size: 56, weight: .light))
                         .foregroundColor(.appTextPrimary)
                     
-                    // 국가
+                    // 도시
                     HStack(spacing: 10) {
                         Text(alarm.countryFlag)
                             .font(.geist(size: 28, weight: .regular))
-                        Text(alarm.countryName)
+                        Text(alarm.cityName)
                             .font(.geist(size: 18, weight: .regular))
                             .foregroundColor(.appTextSecondary)
                     }

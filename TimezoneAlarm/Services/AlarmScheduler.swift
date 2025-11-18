@@ -310,7 +310,7 @@ final class AlarmScheduler: @unchecked Sendable {
     private func createNotificationContent(for alarm: Alarm) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = alarm.name
-        content.body = "\(alarm.formattedTime) - \(alarm.countryFlag) \(alarm.countryName)"
+        content.body = "\(alarm.formattedTime) - \(alarm.countryFlag) \(alarm.cityName)"
         
         // 알람 사운드 설정
         // 백그라운드에서도 제대로 울리도록 확장자를 포함한 파일명 사용
