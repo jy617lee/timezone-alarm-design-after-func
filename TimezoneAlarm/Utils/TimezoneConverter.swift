@@ -19,10 +19,14 @@ enum TimezoneConverter {
         date: Date,
         alarmTimezone: TimeZone
     ) -> Date? {
-        var alarmCalendar = Calendar.current
+        // 알람 시간대 전용 Calendar 생성 (기기 시간대 변경에 영향받지 않도록)
+        var alarmCalendar = Calendar(identifier: .gregorian)
         alarmCalendar.timeZone = alarmTimezone
         
-        let alarmDateComponents = alarmCalendar.dateComponents([.year, .month, .day], from: date)
+        var alarmDateComponents = alarmCalendar.dateComponents([.year, .month, .day], from: date)
+        // DateComponents에 명시적으로 timeZone 설정
+        alarmDateComponents.timeZone = alarmTimezone
+        
         return alarmCalendar.date(from: alarmDateComponents)
     }
     
@@ -39,15 +43,20 @@ enum TimezoneConverter {
         alarmTimezone: TimeZone,
         alarmDate: Date
     ) -> Date? {
-        var alarmCalendar = Calendar.current
+        // 알람 시간대 전용 Calendar 생성 (기기 시간대 변경에 영향받지 않도록)
+        var alarmCalendar = Calendar(identifier: .gregorian)
         alarmCalendar.timeZone = alarmTimezone
         
-        let alarmDateComponents = alarmCalendar.dateComponents([.year, .month, .day], from: alarmDate)
+        var alarmDateComponents = alarmCalendar.dateComponents([.year, .month, .day], from: alarmDate)
+        // DateComponents에 명시적으로 timeZone 설정
+        alarmDateComponents.timeZone = alarmTimezone
         
         var alarmComponents = alarmDateComponents
         alarmComponents.hour = alarmHour
         alarmComponents.minute = alarmMinute
         alarmComponents.second = 0
+        // alarmComponents에도 명시적으로 timeZone 설정
+        alarmComponents.timeZone = alarmTimezone
         
         return alarmCalendar.date(from: alarmComponents)
     }
@@ -74,9 +83,14 @@ enum TimezoneConverter {
             return nil
         }
         
-        let localCalendar = Calendar.current
+        // 로컬 시간대(기기 시간대) 전용 Calendar 생성
+        // 기기 시간대가 변경되어도 현재 기기 시간대를 사용해야 함
+        let localCalendar = Calendar(identifier: .gregorian)
         var localComponents = localCalendar.dateComponents([.year, .month, .day, .hour, .minute, .weekday], from: alarmTime)
         localComponents.second = 0
+        // DateComponents에 명시적으로 현재 기기 시간대 설정
+        // UNCalendarNotificationTrigger는 로컬 시간대를 사용하므로 현재 기기 시간대를 설정
+        localComponents.timeZone = TimeZone.current
         
         return localComponents
     }

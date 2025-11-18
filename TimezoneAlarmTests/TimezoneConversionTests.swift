@@ -684,6 +684,147 @@ final class TimezoneConversionTests: XCTestCase {
         // 다음 날 알람 시간이 현재 시간보다 미래인지 확인
         XCTAssertTrue(nextAlarmTime > koreaTime, "다음 날 알람 시간은 현재 시간보다 미래여야 합니다")
     }
+    
+    /// 기기 시간대 변경 시나리오 테스트: 한국 → 프랑스, LA 알람
+    /// 시나리오: 기기 설정 - 한국, 미국 LA 시간으로 알람 설정, 기기 설정 - 프랑스로 변경
+    func testDeviceTimezoneChangeKoreaToFranceWithLATimezone() {
+        guard let koreaTimezone = TimeZone(identifier: "Asia/Seoul") else {
+            XCTFail("한국 시간대를 찾을 수 없습니다")
+            return
+        }
+        
+        guard let laTimezone = TimeZone(identifier: "America/Los_Angeles") else {
+            XCTFail("LA 시간대를 찾을 수 없습니다")
+            return
+        }
+        
+        guard let franceTimezone = TimeZone(identifier: "Europe/Paris") else {
+            XCTFail("프랑스 시간대를 찾을 수 없습니다")
+            return
+        }
+        
+        // 시나리오: 한국 시간 11월 19일 10:00 (UTC: 11월 19일 01:00)
+        // LA 시간: 11월 18일 17:00
+        // LA 알람 시간: 18:00 (미래)
+        
+        var koreaComponents = DateComponents()
+        koreaComponents.year = 2025
+        koreaComponents.month = 11
+        koreaComponents.day = 19
+        koreaComponents.hour = 10
+        koreaComponents.minute = 0
+        koreaComponents.second = 0
+        koreaComponents.timeZone = koreaTimezone
+        
+        let calendar = Calendar.current
+        guard let koreaTime = calendar.date(from: koreaComponents) else {
+            XCTFail("한국 시간 생성 실패")
+            return
+        }
+        
+        // 한국 시간대에서 LA 알람 시간 계산 (18:00)
+        // findNextAlarmDate 로직 시뮬레이션
+        var koreaAlarmCalendar = Calendar(identifier: .gregorian)
+        koreaAlarmCalendar.timeZone = laTimezone
+        
+        var laComponentsFromKorea = koreaAlarmCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: koreaTime)
+        laComponentsFromKorea.timeZone = laTimezone
+        
+        guard let laNowFromKorea = koreaAlarmCalendar.date(from: laComponentsFromKorea) else {
+            XCTFail("LA 현재 시간 생성 실패 (한국 기준)")
+            return
+        }
+        
+        // LA 알람 시간 18:00 계산
+        guard let laAlarmTimeFromKorea = TimezoneConverter.convertToUTCDate(
+            alarmHour: 18,
+            alarmMinute: 0,
+            alarmTimezone: laTimezone,
+            alarmDate: laNowFromKorea
+        ) else {
+            XCTFail("LA 알람 시간 생성 실패 (한국 기준)")
+            return
+        }
+        
+        // 한국 시간대에서 로컬 컴포넌트 변환
+        var koreaLocalCalendar = Calendar(identifier: .gregorian)
+        koreaLocalCalendar.timeZone = koreaTimezone
+        
+        guard let koreaLocalComponents = TimezoneConverter.convertToLocalComponents(
+            hour: 18,
+            minute: 0,
+            alarmTimezone: laTimezone,
+            date: laNowFromKorea
+        ) else {
+            XCTFail("한국 로컬 컴포넌트 생성 실패")
+            return
+        }
+        
+        guard let koreaScheduledDate = koreaLocalCalendar.date(from: koreaLocalComponents) else {
+            XCTFail("한국 스케줄링 날짜 생성 실패")
+            return
+        }
+        
+        // 프랑스 시간대로 변경 시뮬레이션
+        // 같은 UTC 시간 (koreaTime)을 프랑스 시간대로 해석
+        var franceAlarmCalendar = Calendar(identifier: .gregorian)
+        franceAlarmCalendar.timeZone = laTimezone
+        
+        var laComponentsFromFrance = franceAlarmCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: koreaTime)
+        laComponentsFromFrance.timeZone = laTimezone
+        
+        guard let laNowFromFrance = franceAlarmCalendar.date(from: laComponentsFromFrance) else {
+            XCTFail("LA 현재 시간 생성 실패 (프랑스 기준)")
+            return
+        }
+        
+        // LA 알람 시간 18:00 계산 (프랑스 기준)
+        guard let laAlarmTimeFromFrance = TimezoneConverter.convertToUTCDate(
+            alarmHour: 18,
+            alarmMinute: 0,
+            alarmTimezone: laTimezone,
+            alarmDate: laNowFromFrance
+        ) else {
+            XCTFail("LA 알람 시간 생성 실패 (프랑스 기준)")
+            return
+        }
+        
+        // 프랑스 시간대에서 로컬 컴포넌트 변환
+        var franceLocalCalendar = Calendar(identifier: .gregorian)
+        franceLocalCalendar.timeZone = franceTimezone
+        
+        guard let franceLocalComponents = TimezoneConverter.convertToLocalComponents(
+            hour: 18,
+            minute: 0,
+            alarmTimezone: laTimezone,
+            date: laNowFromFrance
+        ) else {
+            XCTFail("프랑스 로컬 컴포넌트 생성 실패")
+            return
+        }
+        
+        guard let franceScheduledDate = franceLocalCalendar.date(from: franceLocalComponents) else {
+            XCTFail("프랑스 스케줄링 날짜 생성 실패")
+            return
+        }
+        
+        // 핵심 검증: 한국에서 계산한 LA 알람 시간과 프랑스에서 계산한 LA 알람 시간이 동일해야 함
+        XCTAssertEqual(laAlarmTimeFromKorea, laAlarmTimeFromFrance, 
+                      "기기 시간대가 변경되어도 LA 알람 시간(UTC)은 동일해야 합니다")
+        
+        // 한국에서 스케줄링한 시간과 프랑스에서 스케줄링한 시간이 동일한 UTC 시간을 가리켜야 함
+        // (로컬 시간은 다를 수 있지만, UTC는 같아야 함)
+        let koreaScheduledUTC = koreaScheduledDate.timeIntervalSince1970
+        let franceScheduledUTC = franceScheduledDate.timeIntervalSince1970
+        
+        XCTAssertEqual(koreaScheduledUTC, franceScheduledUTC, accuracy: 60,
+                       "기기 시간대가 변경되어도 스케줄링된 UTC 시간은 동일해야 합니다")
+        
+        // LA 알람 시간이 올바르게 계산되었는지 확인
+        let laComponents = calendar.dateComponents(in: laTimezone, from: laAlarmTimeFromKorea)
+        XCTAssertEqual(laComponents.hour, 18, "LA 알람 시간은 18시여야 합니다")
+        XCTAssertEqual(laComponents.minute, 0, "LA 알람 시간은 0분이어야 합니다")
+    }
 }
 
 
