@@ -9,9 +9,9 @@
 "button.dismiss" = "解除";
 
 /* ContentView */
-"content.empty.title" = "No Alarms";
-"content.empty.description" = "＋ボタンをタップして、最初のアラームを設定しましょう";
-"content.empty.add_button" = "新しいアラームを設定";
+"content.empty.title" = "アラームはありません";
+"content.empty.description" = "＋から作成できます";
+"content.empty.add_button" = "新しいアラームを作成";
 
 /* AlarmFormView */
 "alarm_form.title.new" = "新しいアラーム";
