@@ -19,12 +19,15 @@
 "alarm_form.alarm_name" = "Nome do Alarme";
 "alarm_form.time" = "Hora";
 "alarm_form.select_time" = "Selecionar Hora";
+"alarm_form.city" = "Cidade";
+"alarm_form.select_city" = "Selecionar Cidade";
 "alarm_form.country" = "País";
 "alarm_form.select_country" = "Selecionar País";
 "alarm_form.date" = "Data";
 "alarm_form.date_not_selected" = "Não selecionado";
 "alarm_form.select_date" = "Selecionar Data";
 "alarm_form.repeat" = "Repetir";
+"alarm_form.search_cities" = "Buscar cidades";
 "alarm_form.search_countries" = "Buscar países";
 
 /* Weekdays */
@@ -41,5 +44,14 @@
 
 /* SettingsView */
 "settings.title" = "Configurações";
+"settings.default_city" = "Cidade Padrão";
+"settings.select_city" = "Selecionar Cidade";
 "settings.default_country" = "País Padrão";
 "settings.select_country" = "Selecionar País";
+
+/* InitialSetupView */
+"initial_setup.description" = "Defina alarmes para diferentes cidades.\nEles sempre tocarão no horário certo.";
+"initial_setup.select_primary_city" = "Selecione sua cidade principal";
+"initial_setup.continue" = "Continuar";
+"initial_setup.change_later" = "Você pode alterar isso a qualquer momento nas Configurações.";
+"initial_setup.skip" = "Pular";
