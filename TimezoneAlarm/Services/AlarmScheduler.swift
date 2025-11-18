@@ -207,15 +207,19 @@ final class AlarmScheduler: @unchecked Sendable {
     
     /// 다음 알람 날짜 찾기 (단일 알람용)
     private func findNextAlarmDate(alarm: Alarm, alarmTimezone: TimeZone, from date: Date) -> Date {
-        var calendar = Calendar.current
-        calendar.timeZone = alarmTimezone
+        // 알람 시간대 전용 Calendar 생성 (기기 시간대 변경에 영향받지 않도록)
+        var alarmCalendar = Calendar(identifier: .gregorian)
+        alarmCalendar.timeZone = alarmTimezone
         
         // 알람 시간대에서 현재 날짜/시간 가져오기
-        // date는 UTC이지만, calendar.timeZone이 alarmTimezone이므로 알람 시간대에서 해석됨
-        let alarmTimezoneComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+        // date는 UTC이지만, alarmCalendar.timeZone이 alarmTimezone이므로 알람 시간대에서 해석됨
+        var alarmTimezoneComponents = alarmCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+        
+        // DateComponents에 명시적으로 timeZone 설정 (기기 시간대 변경에 영향받지 않도록)
+        alarmTimezoneComponents.timeZone = alarmTimezone
         
         // 알람 시간대의 현재 시간을 UTC Date로 변환 (비교용)
-        guard let alarmTimezoneNow = calendar.date(from: alarmTimezoneComponents) else {
+        guard let alarmTimezoneNow = alarmCalendar.date(from: alarmTimezoneComponents) else {
             debugLog("⚠️ findNextAlarmDate: 알람 시간대 현재 시간 생성 실패")
             return date
         }
