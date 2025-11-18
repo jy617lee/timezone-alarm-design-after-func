@@ -293,8 +293,10 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
     // 볼륨을 최대로 설정 (백그라운드 전환 시에도 호출)
     func ensureMaximumVolume() {
         if let player = backgroundAudioPlayer {
+            // 오디오 세션 재설정 (백그라운드에서 소리가 작아지는 문제 해결)
+            setupAudioSession()
             player.volume = 1.0
-            debugLog("🔊 볼륨 최대값으로 설정: 1.0")
+            debugLog("🔊 볼륨 최대값으로 설정: 1.0 (오디오 세션 재설정)")
         }
     }
     
@@ -395,9 +397,11 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
     private func setupAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [])
+            // .duckOthers: 다른 오디오를 줄이고 알람 소리를 최대화
+            // 백그라운드에서도 최대 볼륨 유지
+            try audioSession.setCategory(.playback, mode: .default, options: [.duckOthers])
             try audioSession.setActive(true)
-            debugLog("✅ 오디오 세션 활성화 완료 (.playback 카테고리)")
+            debugLog("✅ 오디오 세션 활성화 완료 (.playback 카테고리, .duckOthers 옵션)")
         } catch {
             debugLog("❌ 오디오 세션 설정 실패: \(error.localizedDescription)")
         }
