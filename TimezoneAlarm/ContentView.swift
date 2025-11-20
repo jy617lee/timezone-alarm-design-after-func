@@ -294,7 +294,7 @@ struct ContentView: View {
     // 최근 알림 확인 (백그라운드에서 알림이 왔을 때 처리)
     private func checkRecentNotifications() {
         UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
-            // 최근 알람 알림 찾기 (30초 이내 - 백그라운드 오디오가 계속 재생되도록)
+            // 최근 알람 알림 찾기 (2분 이내 - 포그라운드에서 오디오 재생 및 푸시 탭 처리)
             let now = Date()
             for notification in notifications {
                 if let alarmId = notification.request.content.userInfo["alarmId"] as? String,
@@ -305,7 +305,7 @@ struct ContentView: View {
                    let countryName = notification.request.content.userInfo["countryName"] as? String,
                    let countryFlag = notification.request.content.userInfo["countryFlag"] as? String {
                     
-                    // 알림이 최근 2분 이내에 도착했는지 확인 (백그라운드 오디오 유지 및 푸시 탭 처리)
+                    // 알림이 최근 2분 이내에 도착했는지 확인 (포그라운드 오디오 재생 및 푸시 탭 처리)
                     let notificationDate = notification.date
                     let timeSinceNotification = now.timeIntervalSince(notificationDate)
                     
@@ -328,7 +328,8 @@ struct ContentView: View {
                         
                         Task { @MainActor in
                             notificationDelegate.activeAlarm = alarm
-                            // 백그라운드에서도 연속 사운드 재생 시작 (이미 재생 중이면 재시작하지 않음)
+                            // 포그라운드에서 연속 사운드 재생 시작 (이미 재생 중이면 재시작하지 않음)
+                            // 백그라운드에서는 UNNotification 사운드가 자동으로 재생됨
                             notificationDelegate.startBackgroundAudioPlayback(for: alarm)
                             // 표시된 알림 제거하지 않음 (계속 표시되어야 함)
                         }
