@@ -24,9 +24,6 @@ struct ContentView: View {
         UserDefaults.standard.string(forKey: "defaultTimezoneId") != nil
     }
     
-    // 마지막으로 표시된 기기 모드 상태를 저장하는 UserDefaults 키
-    private let lastShownDeviceModeKey = "lastShownDeviceMode"
-    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -229,11 +226,9 @@ struct ContentView: View {
                         showAlarmAlert = true
                     }
                 }
-                // 초기 설정 완료 후 무음모드/방해금지모드 확인
-                if hasDefaultCity {
-                    Task {
-                        await checkDeviceModeAndShowNotification()
-                    }
+                // 앱 오픈 시 무음모드/방해금지모드 확인
+                Task {
+                    await checkDeviceModeAndShowNotification()
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
@@ -259,10 +254,8 @@ struct ContentView: View {
                     }
                 }
                 // 앱이 활성화될 때 무음모드/방해금지모드 확인
-                if hasDefaultCity {
-                    Task {
-                        await checkDeviceModeAndShowNotification()
-                    }
+                Task {
+                    await checkDeviceModeAndShowNotification()
                 }
             }
             .onChange(of: viewModel.activeAlarm) { newValue in
@@ -328,22 +321,22 @@ struct ContentView: View {
         let deviceModeChecker = DeviceModeChecker.shared
         let currentMode = await deviceModeChecker.checkDeviceMode()
         
-        // normal 모드가 아니고, 초기 설정이 완료된 경우에만 확인
-        guard currentMode != .normal, hasDefaultCity else {
+        // normal 모드인 경우 팝업 표시하지 않음
+        guard currentMode != .normal else {
             return
         }
         
-        // 마지막으로 표시된 모드 상태 확인
-        let lastShownModeRaw = UserDefaults.standard.string(forKey: lastShownDeviceModeKey)
-        let lastShownMode = DeviceModeState(rawValue: lastShownModeRaw ?? "")
-        
-        // 모드가 변경되었거나 처음 표시하는 경우에만 팝업 표시
-        if lastShownMode != currentMode {
-            detectedDeviceMode = currentMode
-            showSilentModeNotification = true
-            // 마지막으로 표시된 모드 상태 저장
-            UserDefaults.standard.set(currentMode.rawValue, forKey: lastShownDeviceModeKey)
+        // 방해금지모드인 경우, 예외 앱으로 등록되어 있으면 팝업 표시하지 않음
+        if currentMode == .doNotDisturb || currentMode == .both {
+            let isException = await deviceModeChecker.isAppInDoNotDisturbException()
+            if isException {
+                return
+            }
         }
+        
+        // 조건을 만족하면 팝업 표시
+        detectedDeviceMode = currentMode
+        showSilentModeNotification = true
     }
     
     // 확인 버튼 처리
