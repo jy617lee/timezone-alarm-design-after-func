@@ -33,10 +33,12 @@ final class DeviceModeCheckerTests: XCTestCase {
     
     /// checkDeviceMode가 정상적으로 동작하는지 확인
     /// 실제 기기 설정에 따라 결과가 달라질 수 있으므로, 에러가 발생하지 않는지만 확인
+    /// 방해금지모드인데 예외 앱으로 등록되어 있으면 .normal을 반환해야 함
     func testCheckDeviceMode() async {
         let mode = await deviceModeChecker.checkDeviceMode()
         
         // DeviceModeState는 enum이므로 항상 유효한 값이어야 함
+        // 방해금지모드인데 예외 앱이면 .normal을 반환하므로, .doNotDisturb나 .both는 예외가 아닌 경우에만 반환됨
         switch mode {
         case .normal, .silentMode, .doNotDisturb, .both:
             // 정상적인 경우

@@ -52,6 +52,7 @@ final class DeviceModeChecker: Sendable {
     private init() {}
     
     /// 현재 기기의 무음 모드 및 방해금지 모드 상태를 확인합니다.
+    /// 방해금지모드인데 예외 앱으로 등록되어 있으면 .normal을 반환합니다.
     /// - Returns: DeviceModeState (normal, silentMode, doNotDisturb, both)
     func checkDeviceMode() async -> DeviceModeState {
         let center = UNUserNotificationCenter.current()
@@ -68,10 +69,14 @@ final class DeviceModeChecker: Sendable {
         }
         
         // 방해금지모드 감지
-        // alertSetting이 disabled이거나, soundSetting이 disabled인 경우를 방해금지모드로 간주합니다.
-        // iOS 15+에서는 scheduledDeliverySetting을 사용할 수 있지만, 하위 호환성을 위해 soundSetting을 사용합니다.
-        if settings.alertSetting == .disabled || settings.soundSetting == .disabled {
+        // alertSetting이 disabled인 경우를 방해금지모드로 간주합니다.
+        if settings.alertSetting == .disabled {
             isDoNotDisturb = true
+        }
+        
+        // 방해금지모드인데 예외 앱으로 등록되어 있으면 .normal 반환
+        if isDoNotDisturb && settings.soundSetting == .enabled {
+            return .normal
         }
         
         // 두 모드가 모두 활성화된 경우

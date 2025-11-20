@@ -9,7 +9,8 @@ struct DeviceModeNotificationModifier: ViewModifier {
         content
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                 Task {
-                    deviceMode = await getDeviceMode()
+                    let mode = await getDeviceModeToShow()
+                    deviceMode = mode != .normal ? mode : nil
                 }
             }
             .overlay {
@@ -29,22 +30,9 @@ struct DeviceModeNotificationModifier: ViewModifier {
     }
     
     @MainActor
-    private func getDeviceMode() async -> DeviceModeState? {
+    private func getDeviceModeToShow() async -> DeviceModeState {
         let deviceModeChecker = DeviceModeChecker.shared
-        let currentMode = await deviceModeChecker.checkDeviceMode()
-        
-        guard currentMode != .normal else {
-            return nil
-        }
-        
-        if currentMode == .doNotDisturb || currentMode == .both {
-            let isException = await deviceModeChecker.isDoNotDisturbException()
-            if isException {
-                return nil
-            }
-        }
-        
-        return currentMode
+        return await deviceModeChecker.checkDeviceMode()
     }
     
     private func handleConfirmButton(mode: DeviceModeState) {
