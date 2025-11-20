@@ -3,25 +3,25 @@
 import SwiftUI
 
 struct DeviceModeNotificationModifier: ViewModifier {
-    @State private var deviceModeToShow: DeviceModeState? = nil
+    @State private var deviceMode: DeviceModeState? = nil
     
     func body(content: Content) -> some View {
         content
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                 Task {
-                    deviceModeToShow = await shouldShowDeviceModeNotification()
+                    deviceMode = await getDeviceMode()
                 }
             }
             .overlay {
-                if let mode = deviceModeToShow {
+                if let mode = deviceMode {
                     SilentModeNotificationView(
                         deviceMode: mode,
                         onDismiss: {
-                            deviceModeToShow = nil
+                            deviceMode = nil
                         },
                         onConfirm: {
                             handleConfirmButton(mode: mode)
-                            deviceModeToShow = nil
+                            deviceMode = nil
                         }
                     )
                 }
@@ -29,7 +29,7 @@ struct DeviceModeNotificationModifier: ViewModifier {
     }
     
     @MainActor
-    private func shouldShowDeviceModeNotification() async -> DeviceModeState? {
+    private func getDeviceMode() async -> DeviceModeState? {
         let deviceModeChecker = DeviceModeChecker.shared
         let currentMode = await deviceModeChecker.checkDeviceMode()
         
