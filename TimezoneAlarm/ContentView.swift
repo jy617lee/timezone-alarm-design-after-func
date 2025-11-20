@@ -16,8 +16,7 @@ struct ContentView: View {
     @State private var editMode: EditMode = .inactive
     @State private var showCustomNotification = false
     @State private var notificationAlarm: Alarm?
-    @State private var showSilentModeNotification: Bool = false
-    @State private var detectedDeviceMode: DeviceModeState = .normal
+    @State private var deviceModeToShow: DeviceModeState? = nil
     @EnvironmentObject var notificationDelegate: NotificationDelegate
     
     private var hasDefaultCity: Bool {
@@ -228,7 +227,7 @@ struct ContentView: View {
                 }
                 // 앱 오픈 시 무음모드/방해금지모드 확인
                 Task {
-                    await checkDeviceModeAndShowNotification()
+                    deviceModeToShow = await checkDeviceMode()
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
@@ -255,7 +254,7 @@ struct ContentView: View {
                 }
                 // 앱이 활성화될 때 무음모드/방해금지모드 확인
                 Task {
-                    await checkDeviceModeAndShowNotification()
+                    deviceModeToShow = await checkDeviceMode()
                 }
             }
             .onChange(of: viewModel.activeAlarm) { newValue in
@@ -301,50 +300,48 @@ struct ContentView: View {
             }
             .overlay {
                 // 무음모드/방해금지모드 안내 팝업
-                if showSilentModeNotification && detectedDeviceMode != .normal {
+                if let mode = deviceModeToShow {
                     SilentModeNotificationView(
-                        deviceMode: detectedDeviceMode,
+                        deviceMode: mode,
                         onDismiss: {
-                            showSilentModeNotification = false
+                            deviceModeToShow = nil
                         },
                         onConfirm: {
-                            handleConfirmButton()
+                            handleConfirmButton(mode: mode)
+                            deviceModeToShow = nil
                         }
                     )
                 }
             }
     }
     
-    // 기기 모드 확인 및 팝업 표시
+    // 기기 모드 확인 (팝업을 표시해야 하는 모드인지 확인)
     @MainActor
-    private func checkDeviceModeAndShowNotification() async {
+    private func checkDeviceMode() async -> DeviceModeState? {
         let deviceModeChecker = DeviceModeChecker.shared
         let currentMode = await deviceModeChecker.checkDeviceMode()
         
         // normal 모드인 경우 팝업 표시하지 않음
         guard currentMode != .normal else {
-            return
+            return nil
         }
         
         // 방해금지모드인 경우, 예외 앱으로 등록되어 있으면 팝업 표시하지 않음
         if currentMode == .doNotDisturb || currentMode == .both {
             let isException = await deviceModeChecker.isAppInDoNotDisturbException()
             if isException {
-                return
+                return nil
             }
         }
         
-        // 조건을 만족하면 팝업 표시
-        detectedDeviceMode = currentMode
-        showSilentModeNotification = true
+        // 조건을 만족하면 해당 모드 반환
+        return currentMode
     }
     
     // 확인 버튼 처리
-    private func handleConfirmButton() {
-        showSilentModeNotification = false
-        
+    private func handleConfirmButton(mode: DeviceModeState) {
         // 방해금지모드인 경우 설정 페이지로 이동
-        if detectedDeviceMode == .doNotDisturb || detectedDeviceMode == .both {
+        if mode == .doNotDisturb || mode == .both {
             Task {
                 let deviceModeChecker = DeviceModeChecker.shared
                 let isException = await deviceModeChecker.isAppInDoNotDisturbException()
