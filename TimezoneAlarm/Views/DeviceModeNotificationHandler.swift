@@ -16,7 +16,6 @@ struct DeviceModeNotificationModifier: ViewModifier {
             .overlay {
                 if showNotification {
                     SilentModeNotificationView(
-                        deviceMode: .doNotDisturb,
                         onDismiss: {
                             showNotification = false
                         },

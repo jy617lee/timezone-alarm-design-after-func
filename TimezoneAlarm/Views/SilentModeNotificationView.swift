@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SilentModeNotificationView: View {
-    let deviceMode: DeviceModeState
     let onDismiss: () -> Void
     let onConfirm: () -> Void
     
@@ -91,7 +90,6 @@ struct SilentModeNotificationView: View {
 
 #Preview {
     SilentModeNotificationView(
-        deviceMode: .silentMode,
         onDismiss: {},
         onConfirm: {}
     )

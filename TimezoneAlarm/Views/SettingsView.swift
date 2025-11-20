@@ -112,7 +112,6 @@ struct SettingsView: View {
             .overlay {
                 if showAlarmNotificationPopup {
                     SilentModeNotificationView(
-                        deviceMode: .doNotDisturb,
                         onDismiss: {
                             showAlarmNotificationPopup = false
                         },
