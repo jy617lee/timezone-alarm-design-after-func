@@ -38,7 +38,7 @@ struct DeviceModeNotificationModifier: ViewModifier {
         }
         
         if currentMode == .doNotDisturb || currentMode == .both {
-            let isException = await deviceModeChecker.isAppInDoNotDisturbException()
+            let isException = await deviceModeChecker.isDoNotDisturbException()
             if isException {
                 return nil
             }
@@ -51,7 +51,7 @@ struct DeviceModeNotificationModifier: ViewModifier {
         if mode == .doNotDisturb || mode == .both {
             Task {
                 let deviceModeChecker = DeviceModeChecker.shared
-                let isException = await deviceModeChecker.isAppInDoNotDisturbException()
+                let isException = await deviceModeChecker.isDoNotDisturbException()
                 
                 if !isException {
                     if let url = deviceModeChecker.getDoNotDisturbSettingsURL() {
