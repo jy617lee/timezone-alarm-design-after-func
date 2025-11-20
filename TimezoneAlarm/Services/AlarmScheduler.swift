@@ -328,9 +328,9 @@ final class AlarmScheduler: @unchecked Sendable {
         content.body = "\(alarm.formattedTime) - \(alarm.countryFlag) \(alarm.cityName)"
         
         // 알람 사운드 설정
-        // 백그라운드에서도 제대로 울리도록 확장자를 포함한 파일명 사용
+        // UNNotification 사운드는 UIBackgroundModes 없이도 백그라운드에서 자동으로 재생됩니다.
+        // 확장자를 포함한 파일명 사용 (백그라운드에서도 제대로 작동)
         if Bundle.main.url(forResource: "alarm", withExtension: "caf") != nil {
-            // 백그라운드에서 제대로 울리려면 확장자를 포함해야 함
             content.sound = UNNotificationSound(named: UNNotificationSoundName("alarm.caf"))
             debugLog("   - 커스텀 알람 사운드 사용: alarm.caf")
         } else if Bundle.main.url(forResource: "alarm", withExtension: "wav") != nil {
