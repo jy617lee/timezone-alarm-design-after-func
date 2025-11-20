@@ -289,9 +289,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .overlay {
-                DeviceModeNotificationHandler()
-            }
+            .deviceModeNotification()
     }
     
     // 최근 알림 확인 (백그라운드에서 알림이 왔을 때 처리)

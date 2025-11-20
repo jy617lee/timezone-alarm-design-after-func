@@ -7,20 +7,14 @@
 
 import SwiftUI
 
-/// 무음모드/방해금지모드 체크 및 팝업 표시를 담당하는 View
-struct DeviceModeNotificationHandler: View {
+/// 무음모드/방해금지모드 체크 및 팝업 표시를 담당하는 ViewModifier
+struct DeviceModeNotificationModifier: ViewModifier {
     @State private var deviceModeToShow: DeviceModeState? = nil
     
-    var body: some View {
-        Color.clear
-            .onAppear {
-                // 앱 오픈 시 무음모드/방해금지모드 확인
-                Task {
-                    await checkAndShowDeviceMode()
-                }
-            }
+    func body(content: Content) -> some View {
+        content
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                // 앱이 활성화될 때 무음모드/방해금지모드 확인
+                // 앱이 활성화될 때 무음모드/방해금지모드 확인 (앱 오픈 시 및 백그라운드에서 포그라운드로 올 때)
                 Task {
                     await checkAndShowDeviceMode()
                 }
@@ -83,6 +77,13 @@ struct DeviceModeNotificationHandler: View {
                 }
             }
         }
+    }
+}
+
+extension View {
+    /// 무음모드/방해금지모드 체크 및 팝업 표시를 추가하는 modifier
+    func deviceModeNotification() -> some View {
+        modifier(DeviceModeNotificationModifier())
     }
 }
 
