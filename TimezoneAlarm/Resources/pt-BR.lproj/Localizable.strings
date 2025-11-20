@@ -57,8 +57,11 @@
 "initial_setup.skip" = "Pular";
 
 /* SilentModeNotificationView */
-"silent_mode_notification.title" = "O Alarme Pode Não Tocar";
+"silent_mode_notification.title" = "Altere as Configurações";
 "silent_mode_notification.description" = "No Modo Silencioso ou Modo Não Perturbe, os alarmes podem não tocar";
 "silent_mode_notification.button.confirm" = "Confirmar";
 "silent_mode_notification.image_silent_mode_description" = "Ícone do modo silencioso";
 "silent_mode_notification.image_dnd_mode_description" = "Ícone do modo Não Perturbe";
+"silent_mode_notification.instruction.silent" = "Desative o Modo Silencioso";
+"silent_mode_notification.instruction.dnd" = "Desative o Modo Não Perturbe ou adicione Syncly aos aplicativos de exceção";
+"silent_mode_notification.instruction.both" = "Desative o Modo Silencioso\nDesative o Modo Não Perturbe ou adicione Syncly aos aplicativos de exceção";

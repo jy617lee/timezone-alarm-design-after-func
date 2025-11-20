@@ -57,8 +57,11 @@
 "initial_setup.skip" = "Lewati";
 
 /* SilentModeNotificationView */
-"silent_mode_notification.title" = "Alarm Mungkin Tidak Berbunyi";
+"silent_mode_notification.title" = "Ubah Pengaturan";
 "silent_mode_notification.description" = "Dalam Mode Senyap atau Mode Jangan Ganggu, alarm mungkin tidak berbunyi";
 "silent_mode_notification.button.confirm" = "Konfirmasi";
 "silent_mode_notification.image_silent_mode_description" = "Ikon mode senyap";
 "silent_mode_notification.image_dnd_mode_description" = "Ikon mode Jangan Ganggu";
+"silent_mode_notification.instruction.silent" = "Matikan Mode Senyap";
+"silent_mode_notification.instruction.dnd" = "Matikan Mode Jangan Ganggu atau tambahkan Syncly ke aplikasi pengecualian";
+"silent_mode_notification.instruction.both" = "Matikan Mode Senyap\nMatikan Mode Jangan Ganggu atau tambahkan Syncly ke aplikasi pengecualian";

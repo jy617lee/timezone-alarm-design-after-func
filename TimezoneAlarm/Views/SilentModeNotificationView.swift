@@ -20,6 +20,19 @@ struct SilentModeNotificationView: View {
         NSLocalizedString("silent_mode_notification.description", comment: "Silent mode or Do Not Disturb mode description")
     }
     
+    var instructionText: String {
+        switch deviceMode {
+        case .silentMode:
+            return NSLocalizedString("silent_mode_notification.instruction.silent", comment: "Silent mode instruction")
+        case .doNotDisturb:
+            return NSLocalizedString("silent_mode_notification.instruction.dnd", comment: "Do Not Disturb mode instruction")
+        case .both:
+            return NSLocalizedString("silent_mode_notification.instruction.both", comment: "Both modes instruction")
+        case .normal:
+            return ""
+        }
+    }
+    
     var body: some View {
         ZStack {
             // 배경 오버레이
@@ -87,6 +100,14 @@ struct SilentModeNotificationView: View {
                         }
                     }
                     .padding(.vertical, 20)
+                    
+                    // 모드별 안내 문구
+                    Text(instructionText)
+                        .font(.geist(size: 14, weight: .regular))
+                        .foregroundColor(.appTextSecondary)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(4)
+                        .padding(.horizontal, 20)
                     
                     // 확인 버튼
                     Button(action: onConfirm) {

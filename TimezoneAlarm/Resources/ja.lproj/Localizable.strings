@@ -57,8 +57,11 @@
 "initial_setup.skip" = "スキップ";
 
 /* SilentModeNotificationView */
-"silent_mode_notification.title" = "アラームが鳴らない可能性があります";
+"silent_mode_notification.title" = "設定を変更してください";
 "silent_mode_notification.description" = "サイレントモード / おやすみモードではアラームが鳴りません";
 "silent_mode_notification.button.confirm" = "確認";
 "silent_mode_notification.image_silent_mode_description" = "サイレントモードのアイコン";
 "silent_mode_notification.image_dnd_mode_description" = "おやすみモードのアイコン";
+"silent_mode_notification.instruction.silent" = "サイレントモードをオフにしてください";
+"silent_mode_notification.instruction.dnd" = "おやすみモードをオフにするか、例外アプリにSynclyを登録してください";
+"silent_mode_notification.instruction.both" = "サイレントモードをオフにしてください\nおやすみモードをオフにするか、例外アプリにSynclyを登録してください";

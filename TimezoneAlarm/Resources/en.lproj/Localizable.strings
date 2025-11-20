@@ -52,8 +52,11 @@
 "initial_setup.skip" = "Skip";
 
 /* SilentModeNotificationView */
-"silent_mode_notification.title" = "Alarm May Not Sound";
+"silent_mode_notification.title" = "Change Settings";
 "silent_mode_notification.description" = "In Silent Mode or Do Not Disturb Mode, alarms may not sound";
 "silent_mode_notification.button.confirm" = "Confirm";
 "silent_mode_notification.image_silent_mode_description" = "Silent mode icon";
 "silent_mode_notification.image_dnd_mode_description" = "Do Not Disturb icon";
+"silent_mode_notification.instruction.silent" = "Turn off Silent Mode";
+"silent_mode_notification.instruction.dnd" = "Turn off Do Not Disturb Mode or add Syncly to exception apps";
+"silent_mode_notification.instruction.both" = "Turn off Silent Mode\nTurn off Do Not Disturb Mode or add Syncly to exception apps";
