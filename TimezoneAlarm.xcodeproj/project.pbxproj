@@ -61,6 +61,8 @@
 
 /* Begin PBXFileReference section */
 		00D013649BF8D3C5938D2598 /* Pods-TimezoneAlarm.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TimezoneAlarm.release.xcconfig"; path = "Target Support Files/Pods-TimezoneAlarm/Pods-TimezoneAlarm.release.xcconfig"; sourceTree = "<group>"; };
+		0d531177a8524c6eaff0cb65 /* SilentModeNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentModeNotificationView.swift; sourceTree = "<group>"; };
+		0d531177a8524c6eaff0cb67 /* DeviceModeNotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModeNotificationHandler.swift; sourceTree = "<group>"; };
 		1E68077AEA736E39192BAAF9 /* Pods_TimezoneAlarm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TimezoneAlarm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2055e47b01704302b9a69f9c /* AlarmListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmListView.swift; sourceTree = "<group>"; };
 		23c1b019e3ca48f99a2512ba /* Alarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
@@ -70,8 +72,6 @@
 		6257a08d2a254cb4a78efde9368ba791 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = TimezoneAlarm/Resources/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		69189974529b46abb4ddc4567e78fd49 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = TimezoneAlarm/Resources/id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7BB57D6CC548EA702320A886 /* TimezoneAlarmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneAlarmApp.swift; sourceTree = "<group>"; };
-		0d531177a8524c6eaff0cb65 /* SilentModeNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentModeNotificationView.swift; sourceTree = "<group>"; };
-		0d531177a8524c6eaff0cb67 /* DeviceModeNotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModeNotificationHandler.swift; sourceTree = "<group>"; };
 		7cf857b200ed4242858a4214 /* AlarmCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCardView.swift; sourceTree = "<group>"; };
 		8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3 /* alarm.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = alarm.caf; sourceTree = "<group>"; };
 		8fded048a8c64ccb9bc49a2ad8ac407a /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = TimezoneAlarm/Resources/ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -549,7 +549,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 9Q6XC7XQJN;
 				INFOPLIST_FILE = TimezoneAlarm/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -557,7 +557,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.app;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -600,7 +600,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 9Q6XC7XQJN;
 				INFOPLIST_FILE = TimezoneAlarm/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -608,7 +608,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.timezonealarm.app;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;

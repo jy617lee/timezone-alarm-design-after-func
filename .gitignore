@@ -92,3 +92,8 @@ iOSInjectionProject/
 # macOS
 .DS_Store
 
+# App Store Connect Assets
+AppstoreAsset/
+AppStoreAsset/
+*.appstoreasset
+
