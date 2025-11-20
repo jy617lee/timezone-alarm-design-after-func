@@ -9,7 +9,7 @@ struct DeviceModeNotificationModifier: ViewModifier {
         content
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                 Task {
-                    let mode = await getDeviceModeToShow()
+                    let mode = await DeviceModeChecker.shared.checkDeviceMode()
                     deviceMode = mode != .normal ? mode : nil
                 }
             }
@@ -27,12 +27,6 @@ struct DeviceModeNotificationModifier: ViewModifier {
                     )
                 }
             }
-    }
-    
-    @MainActor
-    private func getDeviceModeToShow() async -> DeviceModeState {
-        let deviceModeChecker = DeviceModeChecker.shared
-        return await deviceModeChecker.checkDeviceMode()
     }
     
     private func handleConfirmButton(mode: DeviceModeState) {
