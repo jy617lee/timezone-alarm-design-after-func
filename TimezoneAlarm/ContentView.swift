@@ -227,7 +227,9 @@ struct ContentView: View {
                 }
                 // 앱 오픈 시 무음모드/방해금지모드 확인
                 Task {
-                    deviceModeToShow = await checkDeviceMode()
+                    if let mode = await checkDeviceMode() {
+                        showDeviceModeNotification(mode: mode)
+                    }
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
@@ -254,7 +256,9 @@ struct ContentView: View {
                 }
                 // 앱이 활성화될 때 무음모드/방해금지모드 확인
                 Task {
-                    deviceModeToShow = await checkDeviceMode()
+                    if let mode = await checkDeviceMode() {
+                        showDeviceModeNotification(mode: mode)
+                    }
                 }
             }
             .onChange(of: viewModel.activeAlarm) { newValue in
@@ -336,6 +340,11 @@ struct ContentView: View {
         
         // 조건을 만족하면 해당 모드 반환
         return currentMode
+    }
+    
+    // 기기 모드 팝업 표시
+    private func showDeviceModeNotification(mode: DeviceModeState) {
+        deviceModeToShow = mode
     }
     
     // 확인 버튼 처리
