@@ -77,7 +77,7 @@ struct SilentModeNotificationView: View {
                     Image(imageName)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(maxWidth: 200, maxHeight: 200)
+                        .frame(maxWidth: 300, maxHeight: 300)
                         .padding(.vertical, 20)
                     
                     // 확인 버튼
