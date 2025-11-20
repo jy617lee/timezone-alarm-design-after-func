@@ -16,7 +16,6 @@ struct ContentView: View {
     @State private var editMode: EditMode = .inactive
     @State private var showCustomNotification = false
     @State private var notificationAlarm: Alarm?
-    @State private var deviceModeToShow: DeviceModeState? = nil
     @EnvironmentObject var notificationDelegate: NotificationDelegate
     
     private var hasDefaultCity: Bool {
@@ -225,10 +224,6 @@ struct ContentView: View {
                         showAlarmAlert = true
                     }
                 }
-                // 앱 오픈 시 무음모드/방해금지모드 확인
-                Task {
-                    deviceModeToShow = await checkDeviceMode()
-                }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
                 // 앱이 백그라운드에서 포그라운드로 올 때 최근 알림 확인
@@ -251,10 +246,6 @@ struct ContentView: View {
                         debugLog("🔔 앱 활성화 (지연 후) - activeAlarm이 설정되어 있음, 실행 화면 표시")
                         showAlarmAlert = true
                     }
-                }
-                // 앱이 활성화될 때 무음모드/방해금지모드 확인
-                Task {
-                    deviceModeToShow = await checkDeviceMode()
                 }
             }
             .onChange(of: viewModel.activeAlarm) { newValue in
@@ -299,61 +290,8 @@ struct ContentView: View {
                 }
             }
             .overlay {
-                // 무음모드/방해금지모드 안내 팝업
-                if let mode = deviceModeToShow {
-                    SilentModeNotificationView(
-                        deviceMode: mode,
-                        onDismiss: {
-                            deviceModeToShow = nil
-                        },
-                        onConfirm: {
-                            handleConfirmButton(mode: mode)
-                            deviceModeToShow = nil
-                        }
-                    )
-                }
+                DeviceModeNotificationHandler()
             }
-    }
-    
-    // 기기 모드 확인 (팝업을 표시해야 하는 모드인지 확인)
-    @MainActor
-    private func checkDeviceMode() async -> DeviceModeState? {
-        let deviceModeChecker = DeviceModeChecker.shared
-        let currentMode = await deviceModeChecker.checkDeviceMode()
-        
-        // normal 모드인 경우 팝업 표시하지 않음
-        guard currentMode != .normal else {
-            return nil
-        }
-        
-        // 방해금지모드인 경우, 예외 앱으로 등록되어 있으면 팝업 표시하지 않음
-        if currentMode == .doNotDisturb || currentMode == .both {
-            let isException = await deviceModeChecker.isAppInDoNotDisturbException()
-            if isException {
-                return nil
-            }
-        }
-        
-        // 조건을 만족하면 해당 모드 반환
-        return currentMode
-    }
-    
-    // 확인 버튼 처리
-    private func handleConfirmButton(mode: DeviceModeState) {
-        // 방해금지모드인 경우 설정 페이지로 이동
-        if mode == .doNotDisturb || mode == .both {
-            Task {
-                let deviceModeChecker = DeviceModeChecker.shared
-                let isException = await deviceModeChecker.isAppInDoNotDisturbException()
-                
-                // 예외 앱으로 등록되어 있지 않은 경우에만 설정 페이지로 이동
-                if !isException {
-                    if let url = deviceModeChecker.getDoNotDisturbSettingsURL() {
-                        await UIApplication.shared.open(url)
-                    }
-                }
-            }
-        }
     }
     
     // 최근 알림 확인 (백그라운드에서 알림이 왔을 때 처리)
