@@ -43,6 +43,8 @@
 "settings.title" = "설정";
 "settings.default_city" = "기본 도시";
 "settings.select_city" = "도시 선택";
+"settings.faq" = "FAQ";
+"settings.faq.alarm_not_sounding" = "알람이 울리지 않아요";
 
 /* InitialSetupView */
 "initial_setup.description" = "다양한 도시의 알람을 설정하세요.\n항상 정확한 시간에 울립니다.";
@@ -52,11 +54,6 @@
 "initial_setup.skip" = "건너뛰기";
 
 /* SilentModeNotificationView */
-"silent_mode_notification.title" = "설정을 변경하세요";
-"silent_mode_notification.description" = "무음모드 / 방해금지모드에서는 알람이 울리지 않아요";
+"silent_mode_notification.title" = "알람이 울리지 않아요";
+"silent_mode_notification.description" = "무음모드나 방해금지모드에서는 알람이 울리지 않을 수 있어요. 모드를 해제하거나, 방해금지모드에서 예외에 Syncly를 등록해주세요";
 "silent_mode_notification.button.confirm" = "확인";
-"silent_mode_notification.image_silent_mode_description" = "무음 모드 아이콘";
-"silent_mode_notification.image_dnd_mode_description" = "방해금지 모드 아이콘";
-"silent_mode_notification.instruction.silent" = "무음모드는 해제";
-"silent_mode_notification.instruction.dnd" = "방해금지모드는 해제하거나 예외 앱에 Syncly를 등록해주세요";
-"silent_mode_notification.instruction.both" = "무음모드는 해제\n방해금지모드는 해제하거나 예외 앱에 Syncly를 등록해주세요";

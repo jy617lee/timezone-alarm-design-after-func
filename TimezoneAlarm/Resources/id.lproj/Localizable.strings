@@ -48,6 +48,8 @@
 "settings.select_city" = "Pilih Kota";
 "settings.default_country" = "Negara Default";
 "settings.select_country" = "Pilih Negara";
+"settings.faq" = "FAQ";
+"settings.faq.alarm_not_sounding" = "Alarm tidak berbunyi";
 
 /* InitialSetupView */
 "initial_setup.description" = "Atur alarm untuk berbagai kota.\nMereka akan selalu berbunyi pada waktu yang tepat.";

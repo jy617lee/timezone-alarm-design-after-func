@@ -39,7 +39,6 @@
 		F8E9D0A1B2C3D4E5F6A7B8C9 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F5 /* Logger.swift */; };
 		T1E2S3T4F5I6L7E8A9B0C1D2E3F4A5 /* TimezoneConversionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1E2S3T4F5I6L7E8A9B0C1D2E3F4A6 /* TimezoneConversionTests.swift */; };
 		T1E2S3T4F5I6L7E8A9B0C1D2E3F4A7 /* DaylightSavingTimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1E2S3T4F5I6L7E8A9B0C1D2E3F4A8 /* DaylightSavingTimeTests.swift */; };
-		T1E2S3T4F5I6L7E8A9B0C1D2E3F4A9 /* DeviceModeCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1E2S3T4F5I6L7E8A9B0C1D2E3F4AA /* DeviceModeCheckerTests.swift */; };
 		T1Z2C3O4N5V6E7R8T9E0R1A2B3C4D5E6 /* TimezoneConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = T1Z2C3O4N5V6E7R8T9E0R1A2B3C4D5E7 /* TimezoneConverter.swift */; };
 		a1b2c3d4e5f6a7b8c9d0e1f3 /* AlarmAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = a1b2c3d4e5f6a7b8c9d0e1f4 /* AlarmAlertView.swift */; };
 		a9b8c7d6e5f4a3b2c1d0e9f8 /* TrashIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = b0c1d2e3f4a5b6c7d8e9f0a1 /* TrashIconView.swift */; };
@@ -97,7 +96,6 @@
 		F8A9B0C1D2E3F4A5B6C7D8E9 /* Geist-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Bold.ttf"; sourceTree = "<group>"; };
 		T1E2S3T4F5I6L7E8A9B0C1D2E3F4A6 /* TimezoneConversionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneConversionTests.swift; sourceTree = "<group>"; };
 		T1E2S3T4F5I6L7E8A9B0C1D2E3F4A8 /* DaylightSavingTimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaylightSavingTimeTests.swift; sourceTree = "<group>"; };
-		T1E2S3T4F5I6L7E8A9B0C1D2E3F4AA /* DeviceModeCheckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModeCheckerTests.swift; sourceTree = "<group>"; };
 		T1Z2C3O4N5V6E7R8T9E0R1A2B3C4D5E7 /* TimezoneConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneConverter.swift; sourceTree = "<group>"; };
 		a1b2c3d4e5f6a7b8c9d0e1f2 /* AlarmScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmScheduler.swift; sourceTree = "<group>"; };
 		a1b2c3d4e5f6a7b8c9d0e1f4 /* AlarmAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmAlertView.swift; sourceTree = "<group>"; };
@@ -159,7 +157,6 @@
 			children = (
 				T1E2S3T4F5I6L7E8A9B0C1D2E3F4A6 /* TimezoneConversionTests.swift */,
 				T1E2S3T4F5I6L7E8A9B0C1D2E3F4A8 /* DaylightSavingTimeTests.swift */,
-				T1E2S3T4F5I6L7E8A9B0C1D2E3F4AA /* DeviceModeCheckerTests.swift */,
 			);
 			path = TimezoneAlarmTests;
 			sourceTree = "<group>";
@@ -451,7 +448,6 @@
 			files = (
 				T1E2S3T4F5I6L7E8A9B0C1D2E3F4A5 /* TimezoneConversionTests.swift in Sources */,
 				T1E2S3T4F5I6L7E8A9B0C1D2E3F4A7 /* DaylightSavingTimeTests.swift in Sources */,
-				T1E2S3T4F5I6L7E8A9B0C1D2E3F4A9 /* DeviceModeCheckerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

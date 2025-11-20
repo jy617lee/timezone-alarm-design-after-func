@@ -1,42 +1,36 @@
-/// 무음모드/방해금지모드 체크 및 팝업 표시를 담당하는 ViewModifier
-/// 앱이 활성화될 때마다 기기 모드를 확인하고, 필요시 사용자에게 알림을 표시합니다.
+/// 앱 최초 실행 시 한번 팝업을 띄우는 ViewModifier
 import SwiftUI
 
 struct DeviceModeNotificationModifier: ViewModifier {
-    @State private var deviceMode: DeviceModeState? = nil
+    @State private var showNotification = false
+    @AppStorage("hasShownInitialDeviceModeNotification") private var hasShownInitialNotification = false
     
     func body(content: Content) -> some View {
         content
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                Task {
-                    let mode = await DeviceModeChecker.shared.checkDeviceMode()
-                    deviceMode = mode != .normal ? mode : nil
+            .onAppear {
+                if !hasShownInitialNotification {
+                    showNotification = true
+                    hasShownInitialNotification = true
                 }
             }
             .overlay {
-                if let mode = deviceMode {
+                if showNotification {
                     SilentModeNotificationView(
-                        deviceMode: mode,
+                        deviceMode: .doNotDisturb,
                         onDismiss: {
-                            deviceMode = nil
+                            showNotification = false
                         },
                         onConfirm: {
-                            handleConfirmButton(mode: mode)
-                            deviceMode = nil
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                Task {
+                                    await UIApplication.shared.open(url)
+                                }
+                            }
+                            showNotification = false
                         }
                     )
                 }
             }
-    }
-    
-    private func handleConfirmButton(mode: DeviceModeState) {
-        if mode == .doNotDisturb || mode == .both {
-            if let url = DeviceModeChecker.shared.getDoNotDisturbSettingsURL() {
-                Task {
-                    await UIApplication.shared.open(url)
-                }
-            }
-        }
     }
 }
 

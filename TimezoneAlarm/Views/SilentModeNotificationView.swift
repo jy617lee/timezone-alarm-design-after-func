@@ -13,24 +13,11 @@ struct SilentModeNotificationView: View {
     let onConfirm: () -> Void
     
     var title: String {
-        NSLocalizedString("silent_mode_notification.title", comment: "Alarm may not sound title")
+        NSLocalizedString("silent_mode_notification.title", comment: "Alarm not sounding title")
     }
     
     var description: String {
         NSLocalizedString("silent_mode_notification.description", comment: "Silent mode or Do Not Disturb mode description")
-    }
-    
-    var instructionText: String {
-        switch deviceMode {
-        case .silentMode:
-            return NSLocalizedString("silent_mode_notification.instruction.silent", comment: "Silent mode instruction")
-        case .doNotDisturb:
-            return NSLocalizedString("silent_mode_notification.instruction.dnd", comment: "Do Not Disturb mode instruction")
-        case .both:
-            return NSLocalizedString("silent_mode_notification.instruction.both", comment: "Both modes instruction")
-        case .normal:
-            return ""
-        }
     }
     
     var body: some View {
@@ -73,41 +60,12 @@ struct SilentModeNotificationView: View {
                         .lineSpacing(4)
                         .padding(.horizontal, 20)
                     
-                    // 이미지 플레이스홀더 (나중에 제공될 예정)
-                    HStack(spacing: 30) {
-                        // 무음모드 아이콘
-                        VStack(spacing: 8) {
-                            Image(systemName: "speaker.slash.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 60, height: 60)
-                                .foregroundColor(.appTextPrimary)
-                            Text(NSLocalizedString("silent_mode_notification.image_silent_mode_description", comment: "Silent mode icon description"))
-                                .font(.geist(size: 12, weight: .regular))
-                                .foregroundColor(.appTextSecondary)
-                        }
-                        
-                        // 방해금지모드 아이콘
-                        VStack(spacing: 8) {
-                            Image(systemName: "moon.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 60, height: 60)
-                                .foregroundColor(.appTextPrimary)
-                            Text(NSLocalizedString("silent_mode_notification.image_dnd_mode_description", comment: "Do Not Disturb icon description"))
-                                .font(.geist(size: 12, weight: .regular))
-                                .foregroundColor(.appTextSecondary)
-                        }
-                    }
-                    .padding(.vertical, 20)
-                    
-                    // 모드별 안내 문구
-                    Text(instructionText)
-                        .font(.geist(size: 14, weight: .regular))
-                        .foregroundColor(.appTextSecondary)
-                        .multilineTextAlignment(.center)
-                        .lineSpacing(4)
-                        .padding(.horizontal, 20)
+                    // 이미지 (한/영/JP 각각 다르게 제공될 예정)
+                    Image("alarm-not-sounding-image")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxWidth: 200, maxHeight: 200)
+                        .padding(.vertical, 20)
                     
                     // 확인 버튼
                     Button(action: onConfirm) {

@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedCity: City?
+    @State private var showAlarmNotificationPopup = false
     
     private var isFormValid: Bool {
         selectedCity != nil
@@ -54,6 +55,25 @@ struct SettingsView: View {
                                 }
                             }
                         }
+                        
+                        FormSection(
+                            title: NSLocalizedString("settings.faq", comment: "FAQ header")
+                        ) {
+                            Button(action: {
+                                showAlarmNotificationPopup = true
+                            }) {
+                                HStack {
+                                    Text(NSLocalizedString("settings.faq.alarm_not_sounding", comment: "Alarm not sounding FAQ"))
+                                        .font(.geist(size: 16, weight: .regular))
+                                        .foregroundColor(.appTextPrimary)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.geist(size: 14, weight: .medium))
+                                        .foregroundColor(.appTextSecondary)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 28)
@@ -88,6 +108,24 @@ struct SettingsView: View {
                 UINavigationBar.appearance().scrollEdgeAppearance = appearance
                 
                 loadDefaultCity()
+            }
+            .overlay {
+                if showAlarmNotificationPopup {
+                    SilentModeNotificationView(
+                        deviceMode: .doNotDisturb,
+                        onDismiss: {
+                            showAlarmNotificationPopup = false
+                        },
+                        onConfirm: {
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                Task {
+                                    await UIApplication.shared.open(url)
+                                }
+                            }
+                            showAlarmNotificationPopup = false
+                        }
+                    )
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
