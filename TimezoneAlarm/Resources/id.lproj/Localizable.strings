@@ -60,5 +60,5 @@
 
 /* SilentModeNotificationView */
 "silent_mode_notification.title" = "Alarm tidak berbunyi";
-"silent_mode_notification.description" = "Dalam Mode Senyap atau Mode Jangan Ganggu, alarm mungkin tidak berbunyi. Nonaktifkan mode atau daftarkan Syncly sebagai aplikasi pengecualian di Mode Jangan Ganggu";
+"silent_mode_notification.description" = "Dalam Mode Senyap atau Mode Jangan Ganggu (DND Mode), alarm mungkin tidak berbunyi. Nonaktifkan mode atau daftarkan Syncly sebagai aplikasi pengecualian di DND Mode";
 "silent_mode_notification.button.confirm" = "Konfirmasi";

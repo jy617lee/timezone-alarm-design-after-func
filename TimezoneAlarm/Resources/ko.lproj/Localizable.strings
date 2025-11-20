@@ -55,5 +55,5 @@
 
 /* SilentModeNotificationView */
 "silent_mode_notification.title" = "알람이 울리지 않아요";
-"silent_mode_notification.description" = "무음모드나 방해금지모드에서는 알람이 울리지 않을 수 있어요. 모드를 해제하거나, 방해금지모드에서 예외에 Syncly를 등록해주세요";
+"silent_mode_notification.description" = "무음모드나 방해금지모드(DND 모드)에서는 알람이 울리지 않을 수 있어요. 모드를 해제하거나, DND 모드에서 예외에 Syncly를 등록해주세요";
 "silent_mode_notification.button.confirm" = "확인";

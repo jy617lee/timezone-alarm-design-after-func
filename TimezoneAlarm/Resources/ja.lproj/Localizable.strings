@@ -60,5 +60,5 @@
 
 /* SilentModeNotificationView */
 "silent_mode_notification.title" = "アラームが鳴らない";
-"silent_mode_notification.description" = "サイレントモードまたはおやすみモードではアラームが鳴らない場合があります。モードをオフにするか、おやすみモードで例外アプリにSynclyを登録してください";
+"silent_mode_notification.description" = "サイレントモードまたはおやすみモード(DNDモード)ではアラームが鳴らない場合があります。モードをオフにするか、DNDモードで例外アプリにSynclyを登録してください";
 "silent_mode_notification.button.confirm" = "確認";

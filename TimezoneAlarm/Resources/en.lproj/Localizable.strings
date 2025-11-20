@@ -55,5 +55,5 @@
 
 /* SilentModeNotificationView */
 "silent_mode_notification.title" = "Alarm is not sounding";
-"silent_mode_notification.description" = "In Silent Mode or Do Not Disturb Mode, alarms may not sound. Please turn off the mode or add Syncly to exception apps in Do Not Disturb Mode";
+"silent_mode_notification.description" = "In Silent Mode or Do Not Disturb Mode(DND) Mode, alarms may not sound. Please turn off the mode or add Syncly to exception apps in DND Mode";
 "silent_mode_notification.button.confirm" = "Confirm";

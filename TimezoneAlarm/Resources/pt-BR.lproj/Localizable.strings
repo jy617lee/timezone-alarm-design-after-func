@@ -60,5 +60,5 @@
 
 /* SilentModeNotificationView */
 "silent_mode_notification.title" = "O alarme não está tocando";
-"silent_mode_notification.description" = "No Modo Silencioso ou Modo Não Perturbe, os alarmes podem não tocar. Desative o modo ou adicione Syncly aos aplicativos de exceção no Modo Não Perturbe";
+"silent_mode_notification.description" = "No Modo Silencioso ou Modo Não Perturbe (DND Mode), os alarmes podem não tocar. Desative o modo ou adicione Syncly aos aplicativos de exceção no DND Mode";
 "silent_mode_notification.button.confirm" = "Confirmar";
