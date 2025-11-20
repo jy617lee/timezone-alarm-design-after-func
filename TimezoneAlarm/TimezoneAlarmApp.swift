@@ -87,7 +87,7 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         debugLog("   - 트리거 타입: \(type(of: notification.request.trigger))")
         
         // 포그라운드에서 커스텀 알림 뷰를 사용하므로 시스템 배너는 숨김
-        // 사운드 없음 - 백그라운드 오디오만 사용
+        // 사운드 없음 - 포그라운드 오디오 플레이어만 사용 (백그라운드에서는 UNNotification 사운드 사용)
         completionHandler([])
         
         // 알람 정보 추출
@@ -135,7 +135,8 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
                 // 진동 시작
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                 
-                // 백그라운드에서도 연속 사운드 재생 시작 (앱이 실행 중일 때만)
+                // 포그라운드에서 연속 사운드 재생 시작 (앱이 실행 중일 때만)
+                // 백그라운드에서는 UNNotification 사운드가 자동으로 재생됨
                 self.startBackgroundAudioPlayback(for: alarm)
                 
                 // 체인 알림 예약: 알림이 도착할 때마다 다음 알림(10초 후) 예약
@@ -242,8 +243,8 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
                 // 진동 시작
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                 
-                // 백그라운드에서도 연속 사운드 재생 시작 (앱이 실행 중일 때만)
-                // 홈버튼으로 홈화면으로 가도 소리가 계속 재생되도록
+                // 포그라운드에서 연속 사운드 재생 시작 (앱이 실행 중일 때만)
+                // 백그라운드에서는 UNNotification 사운드가 자동으로 재생됨
                 // 이미 재생 중이면 그대로 유지, 아니면 재생 시작
                 if !wasPlaying {
                     self.startBackgroundAudioPlayback(for: alarm)
@@ -281,7 +282,9 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         }
     }
     
-    // 백그라운드에서 연속 사운드 재생 (포그라운드에서도 동일한 플레이어 사용)
+    // 포그라운드에서 연속 사운드 재생용 플레이어
+    // Note: UIBackgroundModes의 audio가 제거되었으므로 포그라운드에서만 작동합니다.
+    // 백그라운드에서는 UNNotification 사운드가 자동으로 재생됩니다.
     private var backgroundAudioPlayer: AVAudioPlayer?
     private var backgroundAudioTimer: Timer?
     
@@ -300,6 +303,9 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         }
     }
     
+    /// 포그라운드에서 알람 오디오 재생 시작
+    /// Note: UIBackgroundModes의 audio가 제거되었으므로 이 함수는 포그라운드에서만 작동합니다.
+    /// 백그라운드에서는 UNNotification의 사운드가 자동으로 재생됩니다.
     func startBackgroundAudioPlayback(for alarm: Alarm, forceRestart: Bool = false) {
         // forceRestart가 true이면 기존 플레이어를 무조건 정리하고 새로 시작
         if forceRestart {
@@ -371,7 +377,7 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
                 }
             }
             
-            debugLog("🔊 오디오 재생 시작 (백그라운드/포그라운드 공용, 최대 볼륨)")
+            debugLog("🔊 오디오 재생 시작 (포그라운드 전용, 최대 볼륨)")
             
             // 진동 반복 (1초마다)
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
@@ -380,7 +386,8 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
             }
             
-            // 백그라운드/포그라운드 모두에서 계속 재생되도록 유지
+            // 포그라운드에서 계속 재생되도록 유지
+            // 백그라운드에서는 UNNotification 사운드가 자동으로 재생됨
             // dismiss 시 정지됨
         } catch {
             debugLog("❌ 오디오 재생 실패: \(error.localizedDescription)")
@@ -393,12 +400,12 @@ class NotificationDelegate: NSObject, ObservableObject, UNUserNotificationCenter
         }
     }
     
-    // 오디오 세션 설정 (백그라운드 재생 활성화)
+    // 오디오 세션 설정 (포그라운드 재생용)
+    // Note: UIBackgroundModes의 audio가 제거되었으므로 포그라운드에서만 작동합니다.
     private func setupAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
             // .duckOthers: 다른 오디오를 줄이고 알람 소리를 최대화
-            // 백그라운드에서도 최대 볼륨 유지
             try audioSession.setCategory(.playback, mode: .default, options: [.duckOthers])
             try audioSession.setActive(true)
             debugLog("✅ 오디오 세션 활성화 완료 (.playback 카테고리, .duckOthers 옵션)")
