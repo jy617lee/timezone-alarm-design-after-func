@@ -8,9 +8,12 @@ struct DeviceModeNotificationModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onAppear {
-                if !hasShownInitialNotification {
-                    showNotification = true
-                    hasShownInitialNotification = true
+                // 약간의 지연을 두어 뷰가 완전히 렌더링된 후 팝업 표시
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    if !hasShownInitialNotification {
+                        showNotification = true
+                        hasShownInitialNotification = true
+                    }
                 }
             }
             .overlay {
@@ -20,11 +23,6 @@ struct DeviceModeNotificationModifier: ViewModifier {
                             showNotification = false
                         },
                         onConfirm: {
-                            if let url = URL(string: UIApplication.openSettingsURLString) {
-                                Task {
-                                    await UIApplication.shared.open(url)
-                                }
-                            }
                             showNotification = false
                         }
                     )

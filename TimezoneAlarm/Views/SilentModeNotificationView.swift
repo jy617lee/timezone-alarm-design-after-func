@@ -19,6 +19,20 @@ struct SilentModeNotificationView: View {
         NSLocalizedString("silent_mode_notification.description", comment: "Silent mode or Do Not Disturb mode description")
     }
     
+    var imageName: String {
+        let languageCode = Locale.current.languageCode ?? "en"
+        switch languageCode {
+        case "ko":
+            return "alarm-not-sounding-image-ko"
+        case "ja":
+            return "alarm-not-sounding-image-ja"
+        case "en":
+            return "alarm-not-sounding-image-en"
+        default:
+            return "alarm-not-sounding-image-en"
+        }
+    }
+    
     var body: some View {
         ZStack {
             // 배경 오버레이
@@ -59,8 +73,8 @@ struct SilentModeNotificationView: View {
                         .lineSpacing(4)
                         .padding(.horizontal, 20)
                     
-                    // 이미지 (한/영/JP 각각 다르게 제공될 예정)
-                    Image("alarm-not-sounding-image")
+                    // 이미지 (한/영/JP 각각 다르게 제공)
+                    Image(imageName)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(maxWidth: 200, maxHeight: 200)

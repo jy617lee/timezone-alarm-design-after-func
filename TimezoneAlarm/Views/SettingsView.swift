@@ -109,22 +109,16 @@ struct SettingsView: View {
                 
                 loadDefaultCity()
             }
-            .overlay {
-                if showAlarmNotificationPopup {
-                    SilentModeNotificationView(
-                        onDismiss: {
-                            showAlarmNotificationPopup = false
-                        },
-                        onConfirm: {
-                            if let url = URL(string: UIApplication.openSettingsURLString) {
-                                Task {
-                                    await UIApplication.shared.open(url)
-                                }
-                            }
-                            showAlarmNotificationPopup = false
-                        }
-                    )
-                }
+            .fullScreenCover(isPresented: $showAlarmNotificationPopup) {
+                SilentModeNotificationView(
+                    onDismiss: {
+                        showAlarmNotificationPopup = false
+                    },
+                    onConfirm: {
+                        showAlarmNotificationPopup = false
+                    }
+                )
+                .ignoresSafeArea()
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
