@@ -207,15 +207,19 @@ final class AlarmScheduler: @unchecked Sendable {
     
     /// 다음 알람 날짜 찾기 (단일 알람용)
     private func findNextAlarmDate(alarm: Alarm, alarmTimezone: TimeZone, from date: Date) -> Date {
-        var calendar = Calendar.current
-        calendar.timeZone = alarmTimezone
+        // 알람 시간대 전용 Calendar 생성 (기기 시간대 변경에 영향받지 않도록)
+        var alarmCalendar = Calendar(identifier: .gregorian)
+        alarmCalendar.timeZone = alarmTimezone
         
         // 알람 시간대에서 현재 날짜/시간 가져오기
-        // date는 UTC이지만, calendar.timeZone이 alarmTimezone이므로 알람 시간대에서 해석됨
-        let alarmTimezoneComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+        // date는 UTC이지만, alarmCalendar.timeZone이 alarmTimezone이므로 알람 시간대에서 해석됨
+        var alarmTimezoneComponents = alarmCalendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+        
+        // DateComponents에 명시적으로 timeZone 설정 (기기 시간대 변경에 영향받지 않도록)
+        alarmTimezoneComponents.timeZone = alarmTimezone
         
         // 알람 시간대의 현재 시간을 UTC Date로 변환 (비교용)
-        guard let alarmTimezoneNow = calendar.date(from: alarmTimezoneComponents) else {
+        guard let alarmTimezoneNow = alarmCalendar.date(from: alarmTimezoneComponents) else {
             debugLog("⚠️ findNextAlarmDate: 알람 시간대 현재 시간 생성 실패")
             return date
         }
@@ -241,16 +245,27 @@ final class AlarmScheduler: @unchecked Sendable {
         // 알람 시간이 이미 지났다면 다음 날로
         if todayAlarmTime <= alarmTimezoneNow {
             // 다음 날의 알람 시간 계산
-            if let nextDay = calendar.date(byAdding: .day, value: 1, to: todayAlarmTime) {
-                if let nextAlarmTime = TimezoneConverter.convertToUTCDate(
-                    alarmHour: alarm.hour,
-                    alarmMinute: alarm.minute,
-                    alarmTimezone: alarmTimezone,
-                    alarmDate: nextDay
-                ) {
-                    debugLog("   - 다음 날로 이동: \(nextAlarmTime)")
-                    return nextAlarmTime
-                }
+            // todayAlarmTime은 UTC Date이므로, UTC에 직접 24시간을 더함
+            let nextDayUTC = todayAlarmTime.addingTimeInterval(24 * 60 * 60)
+            
+            // 다음 날을 알람 시간대 기준으로 해석
+            guard let nextDayInAlarmTimezone = TimezoneConverter.interpretDateInAlarmTimezone(
+                date: nextDayUTC,
+                alarmTimezone: alarmTimezone
+            ) else {
+                debugLog("   - 다음 날 해석 실패, 오늘 사용")
+                return todayAlarmTime
+            }
+            
+            // 다음 날 알람 시간 생성
+            if let nextAlarmTime = TimezoneConverter.convertToUTCDate(
+                alarmHour: alarm.hour,
+                alarmMinute: alarm.minute,
+                alarmTimezone: alarmTimezone,
+                alarmDate: nextDayInAlarmTimezone
+            ) {
+                debugLog("   - 다음 날로 이동: \(nextAlarmTime)")
+                return nextAlarmTime
             }
             debugLog("   - 다음 날 계산 실패, 오늘 사용")
             return todayAlarmTime
@@ -310,7 +325,7 @@ final class AlarmScheduler: @unchecked Sendable {
     private func createNotificationContent(for alarm: Alarm) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = alarm.name
-        content.body = "\(alarm.formattedTime) - \(alarm.countryFlag) \(alarm.countryName)"
+        content.body = "\(alarm.formattedTime) - \(alarm.countryFlag) \(alarm.cityName)"
         
         // 알람 사운드 설정
         // 백그라운드에서도 제대로 울리도록 확장자를 포함한 파일명 사용
