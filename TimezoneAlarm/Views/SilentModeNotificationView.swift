@@ -57,13 +57,14 @@ struct SilentModeNotificationView: View {
                 .padding(.trailing, 16)
                 
                 // 메인 컨텐츠
-                VStack(spacing: 20) {
+                VStack(spacing: 0) {
                     // 제목
                     Text(title)
                         .font(.geist(size: 22, weight: .bold))
                         .foregroundColor(.appTextPrimary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 20)
+                        .padding(.top, 20)
                     
                     // 설명 텍스트
                     Text(description)
@@ -72,13 +73,15 @@ struct SilentModeNotificationView: View {
                         .multilineTextAlignment(.center)
                         .lineSpacing(4)
                         .padding(.horizontal, 20)
+                        .padding(.top, 20)
                     
-                    // 이미지 (한/영/JP 각각 다르게 제공)
+                    // 이미지 (한/영/JP 각각 다르게 제공) - 텍스트와 버튼 사이 공간을 꽉 채움
+                    Spacer(minLength: 20)
                     Image(imageName)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(maxWidth: 300, maxHeight: 300)
-                        .padding(.vertical, 20)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    Spacer(minLength: 20)
                     
                     // 확인 버튼
                     Button(action: onConfirm) {
