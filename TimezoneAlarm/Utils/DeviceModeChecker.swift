@@ -15,6 +15,34 @@ enum DeviceModeState: Equatable {
     case silentMode
     case doNotDisturb
     case both
+    
+    var rawValue: String {
+        switch self {
+        case .normal:
+            return "normal"
+        case .silentMode:
+            return "silentMode"
+        case .doNotDisturb:
+            return "doNotDisturb"
+        case .both:
+            return "both"
+        }
+    }
+    
+    init?(rawValue: String) {
+        switch rawValue {
+        case "normal":
+            self = .normal
+        case "silentMode":
+            self = .silentMode
+        case "doNotDisturb":
+            self = .doNotDisturb
+        case "both":
+            self = .both
+        default:
+            return nil
+        }
+    }
 }
 
 /// 무음모드 및 방해금지모드 감지 유틸리티
