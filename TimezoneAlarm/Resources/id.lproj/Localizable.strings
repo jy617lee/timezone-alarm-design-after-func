@@ -55,3 +55,10 @@
 "initial_setup.continue" = "Lanjutkan";
 "initial_setup.change_later" = "Anda dapat mengubahnya kapan saja di Pengaturan.";
 "initial_setup.skip" = "Lewati";
+
+/* SilentModeNotificationView */
+"silent_mode_notification.title" = "Alarm Mungkin Tidak Berbunyi";
+"silent_mode_notification.description" = "Dalam Mode Senyap atau Mode Jangan Ganggu, alarm mungkin tidak berbunyi";
+"silent_mode_notification.button.confirm" = "Konfirmasi";
+"silent_mode_notification.image_silent_mode_description" = "Ikon mode senyap";
+"silent_mode_notification.image_dnd_mode_description" = "Ikon mode Jangan Ganggu";

@@ -50,3 +50,10 @@
 "initial_setup.continue" = "Continue";
 "initial_setup.change_later" = "You can change it anytime in Settings.";
 "initial_setup.skip" = "Skip";
+
+/* SilentModeNotificationView */
+"silent_mode_notification.title" = "Alarm May Not Sound";
+"silent_mode_notification.description" = "In Silent Mode or Do Not Disturb Mode, alarms may not sound";
+"silent_mode_notification.button.confirm" = "Confirm";
+"silent_mode_notification.image_silent_mode_description" = "Silent mode icon";
+"silent_mode_notification.image_dnd_mode_description" = "Do Not Disturb icon";
