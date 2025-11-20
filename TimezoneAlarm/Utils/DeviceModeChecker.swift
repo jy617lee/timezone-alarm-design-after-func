@@ -91,17 +91,6 @@ final class DeviceModeChecker: Sendable {
         }
     }
     
-    /// 앱이 방해금지모드 예외 앱으로 등록되어 있는지 확인합니다.
-    /// - Returns: true면 예외 앱으로 등록됨, false면 등록되지 않음
-    func isDoNotDisturbException() async -> Bool {
-        let center = UNUserNotificationCenter.current()
-        let settings = await center.notificationSettings()
-        
-        // soundSetting이 enabled이면 예외 앱으로 등록된 것으로 간주
-        // 방해금지모드에서도 소리가 나면 예외 앱으로 등록된 것
-        return settings.soundSetting == .enabled
-    }
-    
     /// 방해금지모드 설정 페이지 URL을 반환합니다.
     /// - Returns: 방해금지모드 설정 URL
     func getDoNotDisturbSettingsURL() -> URL? {

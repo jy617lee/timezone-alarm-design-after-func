@@ -46,14 +46,6 @@ final class DeviceModeCheckerTests: XCTestCase {
         }
     }
     
-    /// isDoNotDisturbException이 정상적으로 동작하는지 확인
-    func testIsDoNotDisturbException() async {
-        let isException = await deviceModeChecker.isDoNotDisturbException()
-        
-        // Boolean 값이 반환되는지만 확인
-        XCTAssertTrue(isException == true || isException == false, "Boolean 값이 반환되어야 합니다")
-    }
-    
     /// getDoNotDisturbSettingsURL이 올바른 URL을 반환하는지 확인
     func testGetDoNotDisturbSettingsURL() {
         let url = deviceModeChecker.getDoNotDisturbSettingsURL()

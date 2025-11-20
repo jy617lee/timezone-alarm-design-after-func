@@ -31,14 +31,9 @@ struct DeviceModeNotificationModifier: ViewModifier {
     
     private func handleConfirmButton(mode: DeviceModeState) {
         if mode == .doNotDisturb || mode == .both {
-            Task {
-                let deviceModeChecker = DeviceModeChecker.shared
-                let isException = await deviceModeChecker.isDoNotDisturbException()
-                
-                if !isException {
-                    if let url = deviceModeChecker.getDoNotDisturbSettingsURL() {
-                        await UIApplication.shared.open(url)
-                    }
+            if let url = DeviceModeChecker.shared.getDoNotDisturbSettingsURL() {
+                Task {
+                    await UIApplication.shared.open(url)
                 }
             }
         }
