@@ -10,6 +10,8 @@
 		0144a2d85809419290ca5416 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = a53bffc5b8d7435f85512728 /* Country.swift */; };
 		0926bbd73f084171927045e9 /* AlarmCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7cf857b200ed4242858a4214 /* AlarmCardView.swift */; };
 		0d531177a8524c6eaff0cb63 /* AlarmFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = f1c854c0da854c6da495d9c1 /* AlarmFormView.swift */; };
+		0d531177a8524c6eaff0cb64 /* SilentModeNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0d531177a8524c6eaff0cb65 /* SilentModeNotificationView.swift */; };
+		0d531177a8524c6eaff0cb66 /* DeviceModeNotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0d531177a8524c6eaff0cb67 /* DeviceModeNotificationHandler.swift */; };
 		1D0FB537CB6FB6CB1768AB27 /* Pods_TimezoneAlarm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E68077AEA736E39192BAAF9 /* Pods_TimezoneAlarm.framework */; };
 		1ea0cb3bc98c478aaf71ec71 /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23c1b019e3ca48f99a2512ba /* Alarm.swift */; };
 		326a5c5aa7784ad8a4b63fcf /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326a5c5aa7784ad8a4b63fce /* City.swift */; };
@@ -68,6 +70,8 @@
 		6257a08d2a254cb4a78efde9368ba791 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = TimezoneAlarm/Resources/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		69189974529b46abb4ddc4567e78fd49 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = TimezoneAlarm/Resources/id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7BB57D6CC548EA702320A886 /* TimezoneAlarmApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneAlarmApp.swift; sourceTree = "<group>"; };
+		0d531177a8524c6eaff0cb65 /* SilentModeNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentModeNotificationView.swift; sourceTree = "<group>"; };
+		0d531177a8524c6eaff0cb67 /* DeviceModeNotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModeNotificationHandler.swift; sourceTree = "<group>"; };
 		7cf857b200ed4242858a4214 /* AlarmCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCardView.swift; sourceTree = "<group>"; };
 		8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3 /* alarm.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = alarm.caf; sourceTree = "<group>"; };
 		8fded048a8c64ccb9bc49a2ad8ac407a /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = TimezoneAlarm/Resources/ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -241,6 +245,8 @@
 				7cf857b200ed4242858a4214 /* AlarmCardView.swift */,
 				2055e47b01704302b9a69f9c /* AlarmListView.swift */,
 				f1c854c0da854c6da495d9c1 /* AlarmFormView.swift */,
+				0d531177a8524c6eaff0cb65 /* SilentModeNotificationView.swift */,
+				0d531177a8524c6eaff0cb67 /* DeviceModeNotificationHandler.swift */,
 				a1b2c3d4e5f6a7b8c9d0e1f4 /* AlarmAlertView.swift */,
 				c3d4e5f6a7b8c9d0e1f2a3b4 /* SettingsView.swift */,
 				b0c1d2e3f4a5b6c7d8e9f0a1 /* TrashIconView.swift */,
@@ -413,6 +419,8 @@
 				0926bbd73f084171927045e9 /* AlarmCardView.swift in Sources */,
 				f3fa27104f814f279aea8cf6 /* AlarmListView.swift in Sources */,
 				0d531177a8524c6eaff0cb63 /* AlarmFormView.swift in Sources */,
+				0d531177a8524c6eaff0cb64 /* SilentModeNotificationView.swift in Sources */,
+				0d531177a8524c6eaff0cb66 /* DeviceModeNotificationHandler.swift in Sources */,
 				a9b8c7d6e5f4a3b2c1d0e9f8 /* TrashIconView.swift in Sources */,
 				a1b2c3d4e5f6a7b8c9d0e1f3 /* AlarmAlertView.swift in Sources */,
 				b2c3d4e5f6a7b8c9d0e1f2a3 /* SettingsView.swift in Sources */,

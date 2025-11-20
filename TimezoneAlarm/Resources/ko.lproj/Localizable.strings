@@ -43,6 +43,8 @@
 "settings.title" = "설정";
 "settings.default_city" = "기본 도시";
 "settings.select_city" = "도시 선택";
+"settings.faq" = "FAQ";
+"settings.faq.alarm_not_sounding" = "알람이 울리지 않아요";
 
 /* InitialSetupView */
 "initial_setup.description" = "다양한 도시의 알람을 설정하세요.\n항상 정확한 시간에 울립니다.";
@@ -50,3 +52,8 @@
 "initial_setup.continue" = "계속하기";
 "initial_setup.change_later" = "설정에서 언제든지 변경할 수 있습니다.";
 "initial_setup.skip" = "건너뛰기";
+
+/* SilentModeNotificationView */
+"silent_mode_notification.title" = "알람이 울리지 않아요";
+"silent_mode_notification.description" = "무음모드나 방해금지모드(DND 모드)에서는 알람이 울리지 않아요. 모드를 해제하거나, DND 모드에서 예외에 Syncly를 등록해주세요";
+"silent_mode_notification.button.confirm" = "확인";

@@ -93,7 +93,7 @@ struct AlarmCardView: View {
                                 .font(.geist(size: 14, weight: .semibold))
                                 .foregroundColor(alarm.isEnabled ? .appTextSecondary : .appTextSecondary.opacity(0.6))
                         }
-                        .frame(width: 140, alignment: .leading)
+                        .frame(width: 130, alignment: .leading)
                         
                         // 도시 정보
                         HStack(spacing: 8) {

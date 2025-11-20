@@ -48,6 +48,8 @@
 "settings.select_city" = "Selecionar Cidade";
 "settings.default_country" = "País Padrão";
 "settings.select_country" = "Selecionar País";
+"settings.faq" = "FAQ";
+"settings.faq.alarm_not_sounding" = "O alarme não está tocando";
 
 /* InitialSetupView */
 "initial_setup.description" = "Defina alarmes para diferentes cidades.\nEles sempre tocarão no horário certo.";
@@ -55,3 +57,8 @@
 "initial_setup.continue" = "Continuar";
 "initial_setup.change_later" = "Você pode alterar isso a qualquer momento nas Configurações.";
 "initial_setup.skip" = "Pular";
+
+/* SilentModeNotificationView */
+"silent_mode_notification.title" = "O alarme não está tocando";
+"silent_mode_notification.description" = "No Modo Silencioso ou Modo Não Perturbe (DND Mode), os alarmes não tocam. Desative o modo ou adicione Syncly aos aplicativos de exceção no DND Mode";
+"silent_mode_notification.button.confirm" = "Confirmar";

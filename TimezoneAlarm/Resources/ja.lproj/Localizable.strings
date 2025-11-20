@@ -48,6 +48,8 @@
 "settings.select_city" = "都市を選択";
 "settings.default_country" = "デフォルトの国";
 "settings.select_country" = "国を選択";
+"settings.faq" = "FAQ";
+"settings.faq.alarm_not_sounding" = "アラームが鳴らない";
 
 /* InitialSetupView */
 "initial_setup.description" = "さまざまな都市のアラームを設定します。\n常に正確な時間に鳴ります。";
@@ -55,3 +57,8 @@
 "initial_setup.continue" = "続ける";
 "initial_setup.change_later" = "設定でいつでも変更できます。";
 "initial_setup.skip" = "スキップ";
+
+/* SilentModeNotificationView */
+"silent_mode_notification.title" = "アラームが鳴らない";
+"silent_mode_notification.description" = "サイレントモードまたはおやすみモード(DNDモード)ではアラームが鳴りません。モードをオフにするか、DNDモードで例外アプリにSynclyを登録してください";
+"silent_mode_notification.button.confirm" = "確認";

@@ -48,6 +48,8 @@
 "settings.select_city" = "Pilih Kota";
 "settings.default_country" = "Negara Default";
 "settings.select_country" = "Pilih Negara";
+"settings.faq" = "FAQ";
+"settings.faq.alarm_not_sounding" = "Alarm tidak berbunyi";
 
 /* InitialSetupView */
 "initial_setup.description" = "Atur alarm untuk berbagai kota.\nMereka akan selalu berbunyi pada waktu yang tepat.";
@@ -55,3 +57,8 @@
 "initial_setup.continue" = "Lanjutkan";
 "initial_setup.change_later" = "Anda dapat mengubahnya kapan saja di Pengaturan.";
 "initial_setup.skip" = "Lewati";
+
+/* SilentModeNotificationView */
+"silent_mode_notification.title" = "Alarm tidak berbunyi";
+"silent_mode_notification.description" = "Dalam Mode Senyap atau Mode Jangan Ganggu (DND Mode), alarm tidak berbunyi. Nonaktifkan mode atau daftarkan Syncly sebagai aplikasi pengecualian di DND Mode";
+"silent_mode_notification.button.confirm" = "Konfirmasi";
